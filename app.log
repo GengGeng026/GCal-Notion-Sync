@@ -1,0 +1,20 @@
+google.auth.transport.requests - DEBUG - Making request: POST https://oauth2.googleapis.com/token
+urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): oauth2.googleapis.com:443
+urllib3.connectionpool - DEBUG - https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
+googleapiclient.discovery - DEBUG - URL being requested: GET https://www.googleapis.com/calendar/v3/calendars/primary?alt=json
+httpcore.connection - DEBUG - connect_tcp.started host='api.notion.com' port=443 local_address=None timeout=60.0 socket_options=None
+httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.sync.SyncStream object at 0x10435ed80>
+httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x1041b1450> server_hostname='api.notion.com' timeout=60.0
+httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.sync.SyncStream object at 0x10435ed20>
+httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+httpcore.http11 - DEBUG - send_request_headers.complete
+httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+httpcore.http11 - DEBUG - send_request_body.complete
+httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Sat, 27 Apr 2024 10:02:17 GMT'), (b'Content-Type', b'application/json; charset=utf-8'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'x-powered-by', b'Express'), (b'x-notion-request-id', b'249c1f6c-f4a7-4430-af8c-0dcb5f8dfefd'), (b'etag', b'W/"95cc-3l8hv4DwhPKjhY0HK7UKL4dGgMk"'), (b'vary', b'Accept-Encoding'), (b'Content-Encoding', b'gzip'), (b'CF-Cache-Status', b'DYNAMIC'), (b'Set-Cookie', b'__cf_bm=hIi7lpvS3IZqzK3hVIuttnx0jvUrxJb4AcKGiSB9.Rc-1714212137-1.0.1.1-gdYXHWFTGxjcBMWxdxMCiiEN4nqAQZVibv_9X338qhVVttHwHOS.LzD0V_nBwpEc4HMJ_wTpIAIrvT_hx9q2xQ; path=/; expires=Sat, 27-Apr-24 10:32:17 GMT; domain=.notion.com; HttpOnly; Secure; SameSite=None'), (b'Server', b'cloudflare'), (b'CF-RAY', b'87adf9cdde8728b4-KUL')])
+httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+httpcore.http11 - DEBUG - receive_response_body.complete
+httpcore.http11 - DEBUG - response_closed.started
+httpcore.http11 - DEBUG - response_closed.complete
