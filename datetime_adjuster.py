@@ -230,7 +230,7 @@ logging.basicConfig(filename='app.log', filemode='w', format='%(name)s - %(level
 token_lock = threading.Lock()
 
 # Constants
-CREDENTIALS_LOCATION = os.getenv("GOOGLE_CALENDAR_CREDENTIALS_LOCATION")
+GOOGLE_CALENDAR_CREDENTIALS_LOCATION = os.getenv("GOOGLE_CALENDAR_CREDENTIALS_LOCATION")
 CLIENT_SECRET_FILE = os.getenv("GOOGLE_CALENDAR_CLI_SECRET_FILE")
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly', 'https://www.googleapis.com/auth/calendar.events']
 DEFAULT_CALENDAR_ID = 'primary'  # Replace with your Calendar ID
@@ -238,20 +238,20 @@ DEFAULT_CALENDAR_ID = 'primary'  # Replace with your Calendar ID
 # Function to refresh token
 def refresh_token():
     credentials = None
-    if os.path.exists(CREDENTIALS_LOCATION):
-        with open(CREDENTIALS_LOCATION, 'rb') as token:
+    if os.path.exists(GOOGLE_CALENDAR_CREDENTIALS_LOCATION):
+        with open(GOOGLE_CALENDAR_CREDENTIALS_LOCATION, 'rb') as token:
             credentials = pickle.load(token)
     if not credentials or not credentials.valid:
         if credentials and credentials.expired and credentials.refresh_token:
             try:
                 credentials.refresh(Request())
             except RefreshError:
-                os.remove(CREDENTIALS_LOCATION)
+                os.remove(GOOGLE_CALENDAR_CREDENTIALS_LOCATION)
                 return refresh_token()
         else:
             flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRET_FILE, SCOPES)
             credentials = flow.run_local_server(port=0)
-        with open(CREDENTIALS_LOCATION, 'wb') as token:
+        with open(GOOGLE_CALENDAR_CREDENTIALS_LOCATION, 'wb') as token:
             pickle.dump(credentials, token)
         print(f"\n{formatted_successful} Authentication / Refresh Token\n")
     return credentials
