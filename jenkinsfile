@@ -12,7 +12,7 @@ pipeline {
             script {
                 // 设置webhook URL和自定义的payload
                 def webhookUrl = 'https://hooks.slack.com/services/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'
-                def payload = '{"message": "Custom message"}'
+                def payload = '{"text": "Custom message"}'
 
                 // 使用curl发送POST请求
                 sh "curl -X POST -H 'Content-Type: application/json' -d '${payload}' ${webhookUrl}"
