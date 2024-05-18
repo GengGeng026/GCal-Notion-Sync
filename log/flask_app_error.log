@@ -1,0 +1,2804 @@
+2024-05-18 17:12:47,333 - root - INFO - This is an info message.
+2024-05-18 17:12:47,334 - root - ERROR - This is an error message.
+2024-05-18 17:12:47,897 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-05-18 17:12:47,897 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-05-18 17:14:26,780 - werkzeug - INFO - 127.0.0.1 - - [18/May/2024 17:14:26] "POST /slack/events HTTP/1.0" 200 -
+2024-05-18 17:14:27,686 - werkzeug - INFO - 127.0.0.1 - - [18/May/2024 17:14:27] "POST /slack/events HTTP/1.0" 200 -
+2024-05-18 17:14:39,674 - werkzeug - INFO - 127.0.0.1 - - [18/May/2024 17:14:39] "POST /slack/events HTTP/1.0" 200 -
+2024-05-18 17:14:40,726 - werkzeug - INFO - 127.0.0.1 - - [18/May/2024 17:14:40] "POST /slack/events HTTP/1.0" 200 -
+2024-05-18 17:14:58,928 - werkzeug - INFO - 127.0.0.1 - - [18/May/2024 17:14:58] "POST /slack/events HTTP/1.0" 200 -
+2024-05-18 17:14:59,978 - werkzeug - INFO - 127.0.0.1 - - [18/May/2024 17:14:59] "POST /slack/events HTTP/1.0" 200 -
+2024-05-18 17:15:55,027 - werkzeug - INFO - 127.0.0.1 - - [18/May/2024 17:15:55] "POST /slack/events HTTP/1.0" 200 -
+2024-05-18 17:15:56,190 - werkzeug - INFO - 127.0.0.1 - - [18/May/2024 17:15:56] "POST /slack/events HTTP/1.0" 200 -
+2024-05-18 17:17:46,015 - root - INFO - This is an info message.
+2024-05-18 17:17:46,016 - root - ERROR - This is an error message.
+2024-05-18 17:17:46,550 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-05-18 17:17:46,550 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-05-18 17:19:41,294 - werkzeug - INFO - 127.0.0.1 - - [18/May/2024 17:19:41] "POST /slack/events HTTP/1.0" 200 -
+2024-05-18 17:19:42,179 - werkzeug - INFO - 127.0.0.1 - - [18/May/2024 17:19:42] "POST /slack/events HTTP/1.0" 200 -
+2024-05-18 17:19:56,753 - werkzeug - INFO - 127.0.0.1 - - [18/May/2024 17:19:56] "POST /slack/events HTTP/1.0" 200 -
+2024-05-18 17:19:57,823 - werkzeug - INFO - 127.0.0.1 - - [18/May/2024 17:19:57] "POST /slack/events HTTP/1.0" 200 -
+2024-05-18 17:24:28,330 - root - INFO - This is an info message.
+2024-05-18 17:24:28,331 - root - ERROR - This is an error message.
+2024-05-18 17:24:28,877 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-05-18 17:24:28,877 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-05-18 17:25:09,304 - werkzeug - INFO - 127.0.0.1 - - [18/May/2024 17:25:09] "POST /slack/events HTTP/1.0" 200 -
+2024-05-18 17:25:10,594 - werkzeug - INFO - 127.0.0.1 - - [18/May/2024 17:25:10] "POST /slack/events HTTP/1.0" 200 -
+2024-05-18 17:47:16,703 - werkzeug - INFO - 127.0.0.1 - - [18/May/2024 17:47:16] "POST /slack/events HTTP/1.0" 200 -
+2024-05-18 17:47:17,657 - werkzeug - INFO - 127.0.0.1 - - [18/May/2024 17:47:17] "POST /slack/events HTTP/1.0" 200 -
+2024-05-18 17:47:20,018 - werkzeug - INFO - 127.0.0.1 - - [18/May/2024 17:47:20] "POST /slack/events HTTP/1.0" 200 -
+2024-05-18 17:47:21,063 - werkzeug - INFO - 127.0.0.1 - - [18/May/2024 17:47:21] "POST /slack/events HTTP/1.0" 200 -
+2024-05-18 17:49:31,787 - werkzeug - INFO - 127.0.0.1 - - [18/May/2024 17:49:31] "POST /slack/events HTTP/1.0" 200 -
+2024-05-18 17:49:33,212 - werkzeug - INFO - 127.0.0.1 - - [18/May/2024 17:49:33] "POST /slack/events HTTP/1.0" 200 -
+2024-05-18 19:20:01,215 - root - INFO - This is an info message.
+2024-05-18 19:20:01,268 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:20:11,212 - root - INFO - This is an info message.
+2024-05-18 19:20:11,212 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:20:21,991 - root - INFO - This is an info message.
+2024-05-18 19:20:21,991 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:20:32,904 - root - INFO - This is an info message.
+2024-05-18 19:20:32,904 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:20:43,711 - root - INFO - This is an info message.
+2024-05-18 19:20:43,711 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:20:54,581 - root - INFO - This is an info message.
+2024-05-18 19:20:54,581 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:21:05,353 - root - INFO - This is an info message.
+2024-05-18 19:21:05,356 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:21:16,058 - root - INFO - This is an info message.
+2024-05-18 19:21:16,058 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:21:27,267 - root - INFO - This is an info message.
+2024-05-18 19:21:27,267 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:21:37,138 - root - INFO - This is an info message.
+2024-05-18 19:21:37,138 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:21:48,348 - root - INFO - This is an info message.
+2024-05-18 19:21:48,351 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:21:58,218 - root - INFO - This is an info message.
+2024-05-18 19:21:58,218 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:22:09,215 - root - INFO - This is an info message.
+2024-05-18 19:22:09,216 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:22:19,694 - root - INFO - This is an info message.
+2024-05-18 19:22:19,695 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:22:29,641 - root - INFO - This is an info message.
+2024-05-18 19:22:29,642 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:22:40,643 - root - INFO - This is an info message.
+2024-05-18 19:22:40,644 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:22:51,446 - root - INFO - This is an info message.
+2024-05-18 19:22:51,446 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:23:02,150 - root - INFO - This is an info message.
+2024-05-18 19:23:02,153 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:23:13,072 - root - INFO - This is an info message.
+2024-05-18 19:23:13,072 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:23:23,000 - root - INFO - This is an info message.
+2024-05-18 19:23:23,000 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:23:34,315 - root - INFO - This is an info message.
+2024-05-18 19:23:34,315 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:23:44,537 - root - INFO - This is an info message.
+2024-05-18 19:23:44,538 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:23:54,454 - root - INFO - This is an info message.
+2024-05-18 19:23:54,454 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:24:05,357 - root - INFO - This is an info message.
+2024-05-18 19:24:05,358 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:24:16,193 - root - INFO - This is an info message.
+2024-05-18 19:24:16,193 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:24:27,037 - root - INFO - This is an info message.
+2024-05-18 19:24:27,037 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:24:38,137 - root - INFO - This is an info message.
+2024-05-18 19:24:38,138 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:24:48,028 - root - INFO - This is an info message.
+2024-05-18 19:24:48,028 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:24:58,852 - root - INFO - This is an info message.
+2024-05-18 19:24:58,855 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:25:09,771 - root - INFO - This is an info message.
+2024-05-18 19:25:09,771 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:25:20,573 - root - INFO - This is an info message.
+2024-05-18 19:25:20,574 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:25:31,553 - root - INFO - This is an info message.
+2024-05-18 19:25:31,554 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:25:41,647 - root - INFO - This is an info message.
+2024-05-18 19:25:41,648 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:25:51,735 - root - INFO - This is an info message.
+2024-05-18 19:25:51,735 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:26:04,087 - root - INFO - This is an info message.
+2024-05-18 19:26:04,088 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:26:12,713 - root - INFO - This is an info message.
+2024-05-18 19:26:12,713 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:26:22,622 - root - INFO - This is an info message.
+2024-05-18 19:26:22,623 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:26:33,420 - root - INFO - This is an info message.
+2024-05-18 19:26:33,420 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:26:44,381 - root - INFO - This is an info message.
+2024-05-18 19:26:44,382 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:26:54,224 - root - INFO - This is an info message.
+2024-05-18 19:26:54,225 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:27:05,085 - root - INFO - This is an info message.
+2024-05-18 19:27:05,085 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:27:15,955 - root - INFO - This is an info message.
+2024-05-18 19:27:15,958 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:27:26,778 - root - INFO - This is an info message.
+2024-05-18 19:27:26,778 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:27:37,867 - root - INFO - This is an info message.
+2024-05-18 19:27:37,868 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:27:48,553 - root - INFO - This is an info message.
+2024-05-18 19:27:48,554 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:27:59,017 - root - INFO - This is an info message.
+2024-05-18 19:27:59,017 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:28:09,174 - root - INFO - This is an info message.
+2024-05-18 19:28:09,175 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:28:19,022 - root - INFO - This is an info message.
+2024-05-18 19:28:19,022 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:28:29,967 - root - INFO - This is an info message.
+2024-05-18 19:28:29,967 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:28:40,804 - root - INFO - This is an info message.
+2024-05-18 19:28:40,804 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:28:51,660 - root - INFO - This is an info message.
+2024-05-18 19:28:51,660 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:29:02,559 - root - INFO - This is an info message.
+2024-05-18 19:29:02,559 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:29:13,372 - root - INFO - This is an info message.
+2024-05-18 19:29:13,372 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:29:24,260 - root - INFO - This is an info message.
+2024-05-18 19:29:24,260 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:29:35,077 - root - INFO - This is an info message.
+2024-05-18 19:29:35,078 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:29:45,902 - root - INFO - This is an info message.
+2024-05-18 19:29:45,903 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:29:56,773 - root - INFO - This is an info message.
+2024-05-18 19:29:56,773 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:30:07,597 - root - INFO - This is an info message.
+2024-05-18 19:30:07,598 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:30:18,551 - root - INFO - This is an info message.
+2024-05-18 19:30:18,551 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:30:29,400 - root - INFO - This is an info message.
+2024-05-18 19:30:29,400 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:30:40,257 - root - INFO - This is an info message.
+2024-05-18 19:30:40,257 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:30:51,165 - root - INFO - This is an info message.
+2024-05-18 19:30:51,165 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:31:02,013 - root - INFO - This is an info message.
+2024-05-18 19:31:02,014 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:31:13,034 - root - INFO - This is an info message.
+2024-05-18 19:31:13,034 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:31:23,027 - root - INFO - This is an info message.
+2024-05-18 19:31:23,027 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:31:33,881 - root - INFO - This is an info message.
+2024-05-18 19:31:33,882 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:31:44,769 - root - INFO - This is an info message.
+2024-05-18 19:31:44,771 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:31:55,675 - root - INFO - This is an info message.
+2024-05-18 19:31:55,675 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:32:06,878 - root - INFO - This is an info message.
+2024-05-18 19:32:06,878 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:32:16,704 - root - INFO - This is an info message.
+2024-05-18 19:32:16,704 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:32:27,517 - root - INFO - This is an info message.
+2024-05-18 19:32:27,520 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:32:38,423 - root - INFO - This is an info message.
+2024-05-18 19:32:38,423 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:32:49,284 - root - INFO - This is an info message.
+2024-05-18 19:32:49,284 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:33:00,101 - root - INFO - This is an info message.
+2024-05-18 19:33:00,102 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:33:10,900 - root - INFO - This is an info message.
+2024-05-18 19:33:10,900 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:33:21,759 - root - INFO - This is an info message.
+2024-05-18 19:33:21,760 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:33:33,527 - root - INFO - This is an info message.
+2024-05-18 19:33:33,528 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:33:43,323 - root - INFO - This is an info message.
+2024-05-18 19:33:43,323 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:33:54,280 - root - INFO - This is an info message.
+2024-05-18 19:33:54,280 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:34:05,134 - root - INFO - This is an info message.
+2024-05-18 19:34:05,134 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:34:16,218 - root - INFO - This is an info message.
+2024-05-18 19:34:16,218 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:34:26,216 - root - INFO - This is an info message.
+2024-05-18 19:34:26,217 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:34:37,014 - root - INFO - This is an info message.
+2024-05-18 19:34:37,014 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:34:47,883 - root - INFO - This is an info message.
+2024-05-18 19:34:47,884 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:34:58,641 - root - INFO - This is an info message.
+2024-05-18 19:34:58,642 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:35:09,486 - root - INFO - This is an info message.
+2024-05-18 19:35:09,486 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:35:20,265 - root - INFO - This is an info message.
+2024-05-18 19:35:20,265 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:35:31,187 - root - INFO - This is an info message.
+2024-05-18 19:35:31,187 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:35:42,106 - root - INFO - This is an info message.
+2024-05-18 19:35:42,107 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:35:52,957 - root - INFO - This is an info message.
+2024-05-18 19:35:52,958 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:36:03,803 - root - INFO - This is an info message.
+2024-05-18 19:36:03,804 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:36:14,606 - root - INFO - This is an info message.
+2024-05-18 19:36:14,606 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:36:25,374 - root - INFO - This is an info message.
+2024-05-18 19:36:25,374 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:36:36,142 - root - INFO - This is an info message.
+2024-05-18 19:36:36,143 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:36:47,030 - root - INFO - This is an info message.
+2024-05-18 19:36:47,030 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:36:57,946 - root - INFO - This is an info message.
+2024-05-18 19:36:57,946 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:37:08,748 - root - INFO - This is an info message.
+2024-05-18 19:37:08,748 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:37:19,604 - root - INFO - This is an info message.
+2024-05-18 19:37:19,605 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:37:30,404 - root - INFO - This is an info message.
+2024-05-18 19:37:30,405 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:37:41,279 - root - INFO - This is an info message.
+2024-05-18 19:37:41,279 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:37:52,140 - root - INFO - This is an info message.
+2024-05-18 19:37:52,140 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:38:02,933 - root - INFO - This is an info message.
+2024-05-18 19:38:02,934 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:38:13,687 - root - INFO - This is an info message.
+2024-05-18 19:38:13,687 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:38:24,312 - root - INFO - This is an info message.
+2024-05-18 19:38:24,313 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:38:35,015 - root - INFO - This is an info message.
+2024-05-18 19:38:35,016 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:38:45,754 - root - INFO - This is an info message.
+2024-05-18 19:38:45,754 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:38:56,626 - root - INFO - This is an info message.
+2024-05-18 19:38:56,626 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:39:07,291 - root - INFO - This is an info message.
+2024-05-18 19:39:07,292 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:39:17,996 - root - INFO - This is an info message.
+2024-05-18 19:39:17,996 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:39:28,650 - root - INFO - This is an info message.
+2024-05-18 19:39:28,650 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:39:39,477 - root - INFO - This is an info message.
+2024-05-18 19:39:39,479 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:39:50,507 - root - INFO - This is an info message.
+2024-05-18 19:39:50,546 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:40:00,705 - root - INFO - This is an info message.
+2024-05-18 19:40:00,705 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:40:10,644 - root - INFO - This is an info message.
+2024-05-18 19:40:10,645 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:40:22,280 - root - INFO - This is an info message.
+2024-05-18 19:40:22,280 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:40:32,739 - root - INFO - This is an info message.
+2024-05-18 19:40:32,740 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:40:42,855 - root - INFO - This is an info message.
+2024-05-18 19:40:42,857 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:40:52,981 - root - INFO - This is an info message.
+2024-05-18 19:40:52,982 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:41:03,101 - root - INFO - This is an info message.
+2024-05-18 19:41:03,103 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:41:12,998 - root - INFO - This is an info message.
+2024-05-18 19:41:12,999 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:41:23,875 - root - INFO - This is an info message.
+2024-05-18 19:41:23,875 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:41:34,865 - root - INFO - This is an info message.
+2024-05-18 19:41:34,866 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:41:45,767 - root - INFO - This is an info message.
+2024-05-18 19:41:45,767 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:41:56,590 - root - INFO - This is an info message.
+2024-05-18 19:41:56,590 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:42:07,453 - root - INFO - This is an info message.
+2024-05-18 19:42:07,453 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:42:18,342 - root - INFO - This is an info message.
+2024-05-18 19:42:18,343 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:42:29,200 - root - INFO - This is an info message.
+2024-05-18 19:42:29,200 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:42:40,086 - root - INFO - This is an info message.
+2024-05-18 19:42:40,086 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:42:50,957 - root - INFO - This is an info message.
+2024-05-18 19:42:50,957 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:43:01,892 - root - INFO - This is an info message.
+2024-05-18 19:43:01,892 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:43:12,849 - root - INFO - This is an info message.
+2024-05-18 19:43:12,849 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:43:23,791 - root - INFO - This is an info message.
+2024-05-18 19:43:23,791 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:43:34,687 - root - INFO - This is an info message.
+2024-05-18 19:43:34,687 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:43:45,586 - root - INFO - This is an info message.
+2024-05-18 19:43:45,586 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:43:56,591 - root - INFO - This is an info message.
+2024-05-18 19:43:56,592 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:44:07,469 - root - INFO - This is an info message.
+2024-05-18 19:44:07,469 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:44:18,352 - root - INFO - This is an info message.
+2024-05-18 19:44:18,353 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:44:29,204 - root - INFO - This is an info message.
+2024-05-18 19:44:29,205 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:44:40,191 - root - INFO - This is an info message.
+2024-05-18 19:44:40,191 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:44:51,064 - root - INFO - This is an info message.
+2024-05-18 19:44:51,064 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:45:01,995 - root - INFO - This is an info message.
+2024-05-18 19:45:01,995 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:45:11,960 - root - INFO - This is an info message.
+2024-05-18 19:45:11,960 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:45:22,806 - root - INFO - This is an info message.
+2024-05-18 19:45:22,806 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:45:33,741 - root - INFO - This is an info message.
+2024-05-18 19:45:33,741 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:45:44,555 - root - INFO - This is an info message.
+2024-05-18 19:45:44,555 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:45:55,568 - root - INFO - This is an info message.
+2024-05-18 19:45:55,568 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:46:06,493 - root - INFO - This is an info message.
+2024-05-18 19:46:06,494 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:46:16,504 - root - INFO - This is an info message.
+2024-05-18 19:46:16,504 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:46:27,290 - root - INFO - This is an info message.
+2024-05-18 19:46:27,290 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:46:38,299 - root - INFO - This is an info message.
+2024-05-18 19:46:38,300 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:46:49,191 - root - INFO - This is an info message.
+2024-05-18 19:46:49,192 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:46:59,972 - root - INFO - This is an info message.
+2024-05-18 19:46:59,972 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:47:10,888 - root - INFO - This is an info message.
+2024-05-18 19:47:10,888 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:47:21,934 - root - INFO - This is an info message.
+2024-05-18 19:47:21,934 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:47:32,797 - root - INFO - This is an info message.
+2024-05-18 19:47:32,797 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:47:43,614 - root - INFO - This is an info message.
+2024-05-18 19:47:43,614 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:47:54,564 - root - INFO - This is an info message.
+2024-05-18 19:47:54,564 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:48:05,462 - root - INFO - This is an info message.
+2024-05-18 19:48:05,462 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:48:16,404 - root - INFO - This is an info message.
+2024-05-18 19:48:16,405 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:48:27,320 - root - INFO - This is an info message.
+2024-05-18 19:48:27,321 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:48:38,272 - root - INFO - This is an info message.
+2024-05-18 19:48:38,274 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:48:49,279 - root - INFO - This is an info message.
+2024-05-18 19:48:49,279 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:49:00,160 - root - INFO - This is an info message.
+2024-05-18 19:49:00,160 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:49:11,057 - root - INFO - This is an info message.
+2024-05-18 19:49:11,057 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:49:21,928 - root - INFO - This is an info message.
+2024-05-18 19:49:21,929 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:49:32,796 - root - INFO - This is an info message.
+2024-05-18 19:49:32,796 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:49:43,620 - root - INFO - This is an info message.
+2024-05-18 19:49:43,620 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:49:54,536 - root - INFO - This is an info message.
+2024-05-18 19:49:54,536 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:50:05,446 - root - INFO - This is an info message.
+2024-05-18 19:50:05,447 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:50:16,320 - root - INFO - This is an info message.
+2024-05-18 19:50:16,320 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:50:27,120 - root - INFO - This is an info message.
+2024-05-18 19:50:27,120 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:50:38,017 - root - INFO - This is an info message.
+2024-05-18 19:50:38,017 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:50:48,799 - root - INFO - This is an info message.
+2024-05-18 19:50:48,800 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:50:59,715 - root - INFO - This is an info message.
+2024-05-18 19:50:59,716 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:51:10,601 - root - INFO - This is an info message.
+2024-05-18 19:51:10,601 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:51:21,448 - root - INFO - This is an info message.
+2024-05-18 19:51:21,448 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:51:32,253 - root - INFO - This is an info message.
+2024-05-18 19:51:32,253 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:51:43,164 - root - INFO - This is an info message.
+2024-05-18 19:51:43,165 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:51:53,997 - root - INFO - This is an info message.
+2024-05-18 19:51:53,997 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:52:04,991 - root - INFO - This is an info message.
+2024-05-18 19:52:04,991 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:52:15,952 - root - INFO - This is an info message.
+2024-05-18 19:52:15,953 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:52:26,897 - root - INFO - This is an info message.
+2024-05-18 19:52:26,898 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:52:37,776 - root - INFO - This is an info message.
+2024-05-18 19:52:37,777 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:52:48,664 - root - INFO - This is an info message.
+2024-05-18 19:52:48,664 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:52:59,613 - root - INFO - This is an info message.
+2024-05-18 19:52:59,614 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:53:10,504 - root - INFO - This is an info message.
+2024-05-18 19:53:10,504 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:53:21,400 - root - INFO - This is an info message.
+2024-05-18 19:53:21,401 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:53:32,244 - root - INFO - This is an info message.
+2024-05-18 19:53:32,244 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:53:43,201 - root - INFO - This is an info message.
+2024-05-18 19:53:43,202 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:53:54,057 - root - INFO - This is an info message.
+2024-05-18 19:53:54,057 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:54:04,859 - root - INFO - This is an info message.
+2024-05-18 19:54:04,859 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:54:15,748 - root - INFO - This is an info message.
+2024-05-18 19:54:15,749 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:54:26,601 - root - INFO - This is an info message.
+2024-05-18 19:54:26,601 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:54:37,506 - root - INFO - This is an info message.
+2024-05-18 19:54:37,507 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:54:48,407 - root - INFO - This is an info message.
+2024-05-18 19:54:48,407 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:54:59,300 - root - INFO - This is an info message.
+2024-05-18 19:54:59,300 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:55:10,097 - root - INFO - This is an info message.
+2024-05-18 19:55:10,097 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:55:20,945 - root - INFO - This is an info message.
+2024-05-18 19:55:20,946 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:55:31,786 - root - INFO - This is an info message.
+2024-05-18 19:55:31,786 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:55:42,784 - root - INFO - This is an info message.
+2024-05-18 19:55:42,784 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:55:53,748 - root - INFO - This is an info message.
+2024-05-18 19:55:53,748 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:56:04,676 - root - INFO - This is an info message.
+2024-05-18 19:56:04,676 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:56:15,671 - root - INFO - This is an info message.
+2024-05-18 19:56:15,671 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:56:26,642 - root - INFO - This is an info message.
+2024-05-18 19:56:26,642 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:56:37,517 - root - INFO - This is an info message.
+2024-05-18 19:56:37,517 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:56:48,411 - root - INFO - This is an info message.
+2024-05-18 19:56:48,411 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:56:59,245 - root - INFO - This is an info message.
+2024-05-18 19:56:59,245 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:57:10,208 - root - INFO - This is an info message.
+2024-05-18 19:57:10,208 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:57:21,129 - root - INFO - This is an info message.
+2024-05-18 19:57:21,129 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:57:32,003 - root - INFO - This is an info message.
+2024-05-18 19:57:32,003 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:57:42,878 - root - INFO - This is an info message.
+2024-05-18 19:57:42,878 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:57:53,643 - root - INFO - This is an info message.
+2024-05-18 19:57:53,643 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:58:04,488 - root - INFO - This is an info message.
+2024-05-18 19:58:04,488 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:58:15,338 - root - INFO - This is an info message.
+2024-05-18 19:58:15,339 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:58:26,332 - root - INFO - This is an info message.
+2024-05-18 19:58:26,333 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:58:37,212 - root - INFO - This is an info message.
+2024-05-18 19:58:37,213 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:58:48,222 - root - INFO - This is an info message.
+2024-05-18 19:58:48,222 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:58:59,088 - root - INFO - This is an info message.
+2024-05-18 19:58:59,088 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:59:10,010 - root - INFO - This is an info message.
+2024-05-18 19:59:10,010 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:59:20,898 - root - INFO - This is an info message.
+2024-05-18 19:59:20,898 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:59:31,728 - root - INFO - This is an info message.
+2024-05-18 19:59:31,729 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:59:42,497 - root - INFO - This is an info message.
+2024-05-18 19:59:42,498 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 19:59:53,311 - root - INFO - This is an info message.
+2024-05-18 19:59:53,312 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:00:04,101 - root - INFO - This is an info message.
+2024-05-18 20:00:04,102 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:00:15,063 - root - INFO - This is an info message.
+2024-05-18 20:00:15,063 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:00:25,886 - root - INFO - This is an info message.
+2024-05-18 20:00:25,886 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:00:36,782 - root - INFO - This is an info message.
+2024-05-18 20:00:36,782 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:00:47,635 - root - INFO - This is an info message.
+2024-05-18 20:00:47,635 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:00:58,466 - root - INFO - This is an info message.
+2024-05-18 20:00:58,467 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:01:09,353 - root - INFO - This is an info message.
+2024-05-18 20:01:09,353 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:01:20,243 - root - INFO - This is an info message.
+2024-05-18 20:01:20,243 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:01:31,231 - root - INFO - This is an info message.
+2024-05-18 20:01:31,232 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:01:42,108 - root - INFO - This is an info message.
+2024-05-18 20:01:42,108 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:01:52,998 - root - INFO - This is an info message.
+2024-05-18 20:01:52,998 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:02:03,832 - root - INFO - This is an info message.
+2024-05-18 20:02:03,832 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:02:14,718 - root - INFO - This is an info message.
+2024-05-18 20:02:14,719 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:02:25,624 - root - INFO - This is an info message.
+2024-05-18 20:02:25,625 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:02:36,388 - root - INFO - This is an info message.
+2024-05-18 20:02:36,388 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:02:47,168 - root - INFO - This is an info message.
+2024-05-18 20:02:47,169 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:02:57,983 - root - INFO - This is an info message.
+2024-05-18 20:02:57,983 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:03:08,767 - root - INFO - This is an info message.
+2024-05-18 20:03:08,768 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:03:19,656 - root - INFO - This is an info message.
+2024-05-18 20:03:19,657 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:03:30,573 - root - INFO - This is an info message.
+2024-05-18 20:03:30,574 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:03:41,363 - root - INFO - This is an info message.
+2024-05-18 20:03:41,363 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:03:52,257 - root - INFO - This is an info message.
+2024-05-18 20:03:52,257 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:04:03,218 - root - INFO - This is an info message.
+2024-05-18 20:04:03,218 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:04:14,165 - root - INFO - This is an info message.
+2024-05-18 20:04:14,165 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:04:24,962 - root - INFO - This is an info message.
+2024-05-18 20:04:24,964 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:04:35,814 - root - INFO - This is an info message.
+2024-05-18 20:04:35,816 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:04:46,692 - root - INFO - This is an info message.
+2024-05-18 20:04:46,693 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:04:57,591 - root - INFO - This is an info message.
+2024-05-18 20:04:57,591 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:05:08,450 - root - INFO - This is an info message.
+2024-05-18 20:05:08,450 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:05:19,320 - root - INFO - This is an info message.
+2024-05-18 20:05:19,321 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:05:30,307 - root - INFO - This is an info message.
+2024-05-18 20:05:30,307 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:05:41,248 - root - INFO - This is an info message.
+2024-05-18 20:05:41,249 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:05:52,111 - root - INFO - This is an info message.
+2024-05-18 20:05:52,111 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:06:02,940 - root - INFO - This is an info message.
+2024-05-18 20:06:02,941 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:06:13,894 - root - INFO - This is an info message.
+2024-05-18 20:06:13,894 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:06:24,823 - root - INFO - This is an info message.
+2024-05-18 20:06:24,823 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:06:35,710 - root - INFO - This is an info message.
+2024-05-18 20:06:35,710 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:06:46,590 - root - INFO - This is an info message.
+2024-05-18 20:06:46,590 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:06:57,460 - root - INFO - This is an info message.
+2024-05-18 20:06:57,460 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:07:08,356 - root - INFO - This is an info message.
+2024-05-18 20:07:08,356 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:07:19,287 - root - INFO - This is an info message.
+2024-05-18 20:07:19,288 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:07:30,087 - root - INFO - This is an info message.
+2024-05-18 20:07:30,087 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:07:40,895 - root - INFO - This is an info message.
+2024-05-18 20:07:40,896 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:07:51,771 - root - INFO - This is an info message.
+2024-05-18 20:07:51,772 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:08:02,561 - root - INFO - This is an info message.
+2024-05-18 20:08:02,561 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:08:13,342 - root - INFO - This is an info message.
+2024-05-18 20:08:13,343 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:08:24,238 - root - INFO - This is an info message.
+2024-05-18 20:08:24,239 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:08:35,057 - root - INFO - This is an info message.
+2024-05-18 20:08:35,057 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:08:45,876 - root - INFO - This is an info message.
+2024-05-18 20:08:45,876 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:08:56,604 - root - INFO - This is an info message.
+2024-05-18 20:08:56,604 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:09:07,227 - root - INFO - This is an info message.
+2024-05-18 20:09:07,227 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:09:17,941 - root - INFO - This is an info message.
+2024-05-18 20:09:17,941 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:09:28,588 - root - INFO - This is an info message.
+2024-05-18 20:09:28,589 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:09:38,623 - root - INFO - This is an info message.
+2024-05-18 20:09:38,623 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:09:49,425 - root - INFO - This is an info message.
+2024-05-18 20:09:49,426 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:10:00,030 - root - INFO - This is an info message.
+2024-05-18 20:10:00,030 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:10:10,650 - root - INFO - This is an info message.
+2024-05-18 20:10:10,650 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:10:21,348 - root - INFO - This is an info message.
+2024-05-18 20:10:21,348 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:10:32,154 - root - INFO - This is an info message.
+2024-05-18 20:10:32,154 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:10:42,907 - root - INFO - This is an info message.
+2024-05-18 20:10:42,907 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:10:53,580 - root - INFO - This is an info message.
+2024-05-18 20:10:53,580 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:11:04,300 - root - INFO - This is an info message.
+2024-05-18 20:11:04,300 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:11:14,958 - root - INFO - This is an info message.
+2024-05-18 20:11:14,958 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:11:25,600 - root - INFO - This is an info message.
+2024-05-18 20:11:25,600 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:11:36,213 - root - INFO - This is an info message.
+2024-05-18 20:11:36,213 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:11:46,888 - root - INFO - This is an info message.
+2024-05-18 20:11:46,888 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:11:57,720 - root - INFO - This is an info message.
+2024-05-18 20:11:57,720 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:12:08,506 - root - INFO - This is an info message.
+2024-05-18 20:12:08,506 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:12:19,183 - root - INFO - This is an info message.
+2024-05-18 20:12:19,183 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:12:29,802 - root - INFO - This is an info message.
+2024-05-18 20:12:29,802 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:12:40,482 - root - INFO - This is an info message.
+2024-05-18 20:12:40,483 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:12:51,225 - root - INFO - This is an info message.
+2024-05-18 20:12:51,225 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:13:01,860 - root - INFO - This is an info message.
+2024-05-18 20:13:01,861 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:13:12,514 - root - INFO - This is an info message.
+2024-05-18 20:13:12,514 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:13:23,280 - root - INFO - This is an info message.
+2024-05-18 20:13:23,280 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:13:33,925 - root - INFO - This is an info message.
+2024-05-18 20:13:33,925 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:13:44,591 - root - INFO - This is an info message.
+2024-05-18 20:13:44,591 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:13:55,321 - root - INFO - This is an info message.
+2024-05-18 20:13:55,321 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:14:05,946 - root - INFO - This is an info message.
+2024-05-18 20:14:05,946 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:14:16,583 - root - INFO - This is an info message.
+2024-05-18 20:14:16,583 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:14:27,185 - root - INFO - This is an info message.
+2024-05-18 20:14:27,185 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:14:37,926 - root - INFO - This is an info message.
+2024-05-18 20:14:37,926 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:14:48,535 - root - INFO - This is an info message.
+2024-05-18 20:14:48,535 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:14:59,210 - root - INFO - This is an info message.
+2024-05-18 20:14:59,211 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:15:09,884 - root - INFO - This is an info message.
+2024-05-18 20:15:09,884 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:15:20,550 - root - INFO - This is an info message.
+2024-05-18 20:15:20,550 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:15:31,173 - root - INFO - This is an info message.
+2024-05-18 20:15:31,173 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:15:41,841 - root - INFO - This is an info message.
+2024-05-18 20:15:41,841 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:15:52,566 - root - INFO - This is an info message.
+2024-05-18 20:15:52,566 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:16:03,231 - root - INFO - This is an info message.
+2024-05-18 20:16:03,231 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:16:13,897 - root - INFO - This is an info message.
+2024-05-18 20:16:13,897 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:16:24,621 - root - INFO - This is an info message.
+2024-05-18 20:16:24,622 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:16:35,450 - root - INFO - This is an info message.
+2024-05-18 20:16:35,450 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:16:46,069 - root - INFO - This is an info message.
+2024-05-18 20:16:46,069 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:16:56,985 - root - INFO - This is an info message.
+2024-05-18 20:16:56,985 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:17:07,624 - root - INFO - This is an info message.
+2024-05-18 20:17:07,624 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:17:18,250 - root - INFO - This is an info message.
+2024-05-18 20:17:18,251 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:17:28,927 - root - INFO - This is an info message.
+2024-05-18 20:17:28,927 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:17:39,559 - root - INFO - This is an info message.
+2024-05-18 20:17:39,560 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:17:50,247 - root - INFO - This is an info message.
+2024-05-18 20:17:50,247 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:18:01,004 - root - INFO - This is an info message.
+2024-05-18 20:18:01,005 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:18:11,736 - root - INFO - This is an info message.
+2024-05-18 20:18:11,736 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:18:22,498 - root - INFO - This is an info message.
+2024-05-18 20:18:22,499 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:18:33,125 - root - INFO - This is an info message.
+2024-05-18 20:18:33,125 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:18:43,732 - root - INFO - This is an info message.
+2024-05-18 20:18:43,732 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:18:54,437 - root - INFO - This is an info message.
+2024-05-18 20:18:54,437 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:19:05,073 - root - INFO - This is an info message.
+2024-05-18 20:19:05,073 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:19:15,738 - root - INFO - This is an info message.
+2024-05-18 20:19:15,739 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:19:26,385 - root - INFO - This is an info message.
+2024-05-18 20:19:26,385 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:19:37,129 - root - INFO - This is an info message.
+2024-05-18 20:19:37,130 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:19:47,769 - root - INFO - This is an info message.
+2024-05-18 20:19:47,770 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:19:58,413 - root - INFO - This is an info message.
+2024-05-18 20:19:58,413 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:20:09,016 - root - INFO - This is an info message.
+2024-05-18 20:20:09,016 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:20:19,688 - root - INFO - This is an info message.
+2024-05-18 20:20:19,689 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:20:30,328 - root - INFO - This is an info message.
+2024-05-18 20:20:30,328 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:20:41,028 - root - INFO - This is an info message.
+2024-05-18 20:20:41,028 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:20:51,685 - root - INFO - This is an info message.
+2024-05-18 20:20:51,693 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:21:02,330 - root - INFO - This is an info message.
+2024-05-18 20:21:02,330 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:21:12,993 - root - INFO - This is an info message.
+2024-05-18 20:21:12,993 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:21:23,628 - root - INFO - This is an info message.
+2024-05-18 20:21:23,628 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:21:34,275 - root - INFO - This is an info message.
+2024-05-18 20:21:34,275 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:21:44,888 - root - INFO - This is an info message.
+2024-05-18 20:21:44,889 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:21:55,536 - root - INFO - This is an info message.
+2024-05-18 20:21:55,536 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:22:06,201 - root - INFO - This is an info message.
+2024-05-18 20:22:06,202 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:22:16,825 - root - INFO - This is an info message.
+2024-05-18 20:22:16,825 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:22:27,456 - root - INFO - This is an info message.
+2024-05-18 20:22:27,457 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:22:38,181 - root - INFO - This is an info message.
+2024-05-18 20:22:38,181 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:22:48,845 - root - INFO - This is an info message.
+2024-05-18 20:22:48,845 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:22:59,458 - root - INFO - This is an info message.
+2024-05-18 20:22:59,458 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:23:10,126 - root - INFO - This is an info message.
+2024-05-18 20:23:10,126 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:23:20,751 - root - INFO - This is an info message.
+2024-05-18 20:23:20,752 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:23:31,374 - root - INFO - This is an info message.
+2024-05-18 20:23:31,375 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:23:42,015 - root - INFO - This is an info message.
+2024-05-18 20:23:42,015 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:23:52,733 - root - INFO - This is an info message.
+2024-05-18 20:23:52,733 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:24:03,372 - root - INFO - This is an info message.
+2024-05-18 20:24:03,373 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:24:14,023 - root - INFO - This is an info message.
+2024-05-18 20:24:14,023 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:24:24,626 - root - INFO - This is an info message.
+2024-05-18 20:24:24,626 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:24:35,358 - root - INFO - This is an info message.
+2024-05-18 20:24:35,358 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:24:46,076 - root - INFO - This is an info message.
+2024-05-18 20:24:46,076 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:24:56,857 - root - INFO - This is an info message.
+2024-05-18 20:24:56,858 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:25:07,586 - root - INFO - This is an info message.
+2024-05-18 20:25:07,586 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:25:18,234 - root - INFO - This is an info message.
+2024-05-18 20:25:18,235 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:25:28,870 - root - INFO - This is an info message.
+2024-05-18 20:25:28,870 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:25:39,525 - root - INFO - This is an info message.
+2024-05-18 20:25:39,525 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:25:50,179 - root - INFO - This is an info message.
+2024-05-18 20:25:50,180 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:26:00,824 - root - INFO - This is an info message.
+2024-05-18 20:26:00,824 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:26:11,492 - root - INFO - This is an info message.
+2024-05-18 20:26:11,492 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:26:22,129 - root - INFO - This is an info message.
+2024-05-18 20:26:22,130 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:26:32,755 - root - INFO - This is an info message.
+2024-05-18 20:26:32,755 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:26:43,427 - root - INFO - This is an info message.
+2024-05-18 20:26:43,428 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:26:54,176 - root - INFO - This is an info message.
+2024-05-18 20:26:54,176 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:27:04,801 - root - INFO - This is an info message.
+2024-05-18 20:27:04,801 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:27:15,476 - root - INFO - This is an info message.
+2024-05-18 20:27:15,477 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:27:26,185 - root - INFO - This is an info message.
+2024-05-18 20:27:26,186 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:27:36,878 - root - INFO - This is an info message.
+2024-05-18 20:27:36,878 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:27:47,505 - root - INFO - This is an info message.
+2024-05-18 20:27:47,506 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:27:58,211 - root - INFO - This is an info message.
+2024-05-18 20:27:58,211 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:28:08,893 - root - INFO - This is an info message.
+2024-05-18 20:28:08,893 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:28:19,543 - root - INFO - This is an info message.
+2024-05-18 20:28:19,543 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:28:30,226 - root - INFO - This is an info message.
+2024-05-18 20:28:30,226 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:28:40,874 - root - INFO - This is an info message.
+2024-05-18 20:28:40,874 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:28:51,509 - root - INFO - This is an info message.
+2024-05-18 20:28:51,509 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:29:02,127 - root - INFO - This is an info message.
+2024-05-18 20:29:02,128 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:29:12,835 - root - INFO - This is an info message.
+2024-05-18 20:29:12,836 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:29:23,491 - root - INFO - This is an info message.
+2024-05-18 20:29:23,492 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:29:34,137 - root - INFO - This is an info message.
+2024-05-18 20:29:34,137 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:29:44,772 - root - INFO - This is an info message.
+2024-05-18 20:29:44,773 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:29:55,458 - root - INFO - This is an info message.
+2024-05-18 20:29:55,458 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:30:06,188 - root - INFO - This is an info message.
+2024-05-18 20:30:06,188 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:30:16,823 - root - INFO - This is an info message.
+2024-05-18 20:30:16,823 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:30:27,526 - root - INFO - This is an info message.
+2024-05-18 20:30:27,527 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:30:38,177 - root - INFO - This is an info message.
+2024-05-18 20:30:38,177 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:30:48,795 - root - INFO - This is an info message.
+2024-05-18 20:30:48,795 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:30:59,426 - root - INFO - This is an info message.
+2024-05-18 20:30:59,426 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:31:10,046 - root - INFO - This is an info message.
+2024-05-18 20:31:10,046 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:31:20,640 - root - INFO - This is an info message.
+2024-05-18 20:31:20,640 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:31:31,384 - root - INFO - This is an info message.
+2024-05-18 20:31:31,384 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:31:42,035 - root - INFO - This is an info message.
+2024-05-18 20:31:42,035 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:31:52,707 - root - INFO - This is an info message.
+2024-05-18 20:31:52,707 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:32:03,384 - root - INFO - This is an info message.
+2024-05-18 20:32:03,384 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:32:14,006 - root - INFO - This is an info message.
+2024-05-18 20:32:14,006 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:32:24,624 - root - INFO - This is an info message.
+2024-05-18 20:32:24,624 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:32:35,308 - root - INFO - This is an info message.
+2024-05-18 20:32:35,308 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:32:45,985 - root - INFO - This is an info message.
+2024-05-18 20:32:45,986 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:32:56,827 - root - INFO - This is an info message.
+2024-05-18 20:32:56,828 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:33:07,524 - root - INFO - This is an info message.
+2024-05-18 20:33:07,524 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:33:18,166 - root - INFO - This is an info message.
+2024-05-18 20:33:18,166 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:33:28,792 - root - INFO - This is an info message.
+2024-05-18 20:33:28,792 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:33:39,425 - root - INFO - This is an info message.
+2024-05-18 20:33:39,425 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:33:50,035 - root - INFO - This is an info message.
+2024-05-18 20:33:50,035 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:34:00,635 - root - INFO - This is an info message.
+2024-05-18 20:34:00,636 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:34:11,246 - root - INFO - This is an info message.
+2024-05-18 20:34:11,247 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:34:21,866 - root - INFO - This is an info message.
+2024-05-18 20:34:21,866 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:34:32,543 - root - INFO - This is an info message.
+2024-05-18 20:34:32,543 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:34:43,270 - root - INFO - This is an info message.
+2024-05-18 20:34:43,270 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:34:54,054 - root - INFO - This is an info message.
+2024-05-18 20:34:54,054 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:35:04,821 - root - INFO - This is an info message.
+2024-05-18 20:35:04,821 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:35:15,701 - root - INFO - This is an info message.
+2024-05-18 20:35:15,701 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:35:26,520 - root - INFO - This is an info message.
+2024-05-18 20:35:26,520 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:35:37,458 - root - INFO - This is an info message.
+2024-05-18 20:35:37,458 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:35:48,264 - root - INFO - This is an info message.
+2024-05-18 20:35:48,264 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:35:58,993 - root - INFO - This is an info message.
+2024-05-18 20:35:58,993 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:36:10,001 - root - INFO - This is an info message.
+2024-05-18 20:36:10,001 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:36:21,135 - root - INFO - This is an info message.
+2024-05-18 20:36:21,136 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:36:31,054 - root - INFO - This is an info message.
+2024-05-18 20:36:31,054 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:36:41,937 - root - INFO - This is an info message.
+2024-05-18 20:36:41,937 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:36:52,833 - root - INFO - This is an info message.
+2024-05-18 20:36:52,834 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:37:03,775 - root - INFO - This is an info message.
+2024-05-18 20:37:03,778 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:37:14,766 - root - INFO - This is an info message.
+2024-05-18 20:37:14,767 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:37:24,986 - root - INFO - This is an info message.
+2024-05-18 20:37:24,986 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:37:35,012 - root - INFO - This is an info message.
+2024-05-18 20:37:35,013 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:37:45,966 - root - INFO - This is an info message.
+2024-05-18 20:37:45,967 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:37:56,282 - root - INFO - This is an info message.
+2024-05-18 20:37:56,282 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:38:06,586 - root - INFO - This is an info message.
+2024-05-18 20:38:06,586 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:38:16,508 - root - INFO - This is an info message.
+2024-05-18 20:38:16,508 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:38:27,454 - root - INFO - This is an info message.
+2024-05-18 20:38:27,455 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:38:38,395 - root - INFO - This is an info message.
+2024-05-18 20:38:38,395 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:38:49,455 - root - INFO - This is an info message.
+2024-05-18 20:38:49,455 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:38:59,603 - root - INFO - This is an info message.
+2024-05-18 20:38:59,604 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:39:09,751 - root - INFO - This is an info message.
+2024-05-18 20:39:09,751 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:39:19,877 - root - INFO - This is an info message.
+2024-05-18 20:39:19,878 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:39:29,953 - root - INFO - This is an info message.
+2024-05-18 20:39:29,953 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:39:40,127 - root - INFO - This is an info message.
+2024-05-18 20:39:40,128 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:39:50,311 - root - INFO - This is an info message.
+2024-05-18 20:39:50,312 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:40:01,134 - root - INFO - This is an info message.
+2024-05-18 20:40:01,134 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:40:11,493 - root - INFO - This is an info message.
+2024-05-18 20:40:11,493 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:40:21,676 - root - INFO - This is an info message.
+2024-05-18 20:40:21,677 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:40:32,009 - root - INFO - This is an info message.
+2024-05-18 20:40:32,009 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:40:42,193 - root - INFO - This is an info message.
+2024-05-18 20:40:42,193 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:40:52,209 - root - INFO - This is an info message.
+2024-05-18 20:40:52,209 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:41:03,480 - root - INFO - This is an info message.
+2024-05-18 20:41:03,481 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:41:13,171 - root - INFO - This is an info message.
+2024-05-18 20:41:13,171 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:41:23,442 - root - INFO - This is an info message.
+2024-05-18 20:41:23,442 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:41:33,704 - root - INFO - This is an info message.
+2024-05-18 20:41:33,704 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:41:43,853 - root - INFO - This is an info message.
+2024-05-18 20:41:43,854 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:41:53,937 - root - INFO - This is an info message.
+2024-05-18 20:41:53,938 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:42:04,410 - root - INFO - This is an info message.
+2024-05-18 20:42:04,411 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:42:14,635 - root - INFO - This is an info message.
+2024-05-18 20:42:14,636 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:42:24,886 - root - INFO - This is an info message.
+2024-05-18 20:42:24,886 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:42:35,152 - root - INFO - This is an info message.
+2024-05-18 20:42:35,153 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:42:45,357 - root - INFO - This is an info message.
+2024-05-18 20:42:45,357 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:42:55,689 - root - INFO - This is an info message.
+2024-05-18 20:42:55,690 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:43:06,567 - root - INFO - This is an info message.
+2024-05-18 20:43:06,568 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:43:16,803 - root - INFO - This is an info message.
+2024-05-18 20:43:16,803 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:43:26,937 - root - INFO - This is an info message.
+2024-05-18 20:43:26,938 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:43:37,358 - root - INFO - This is an info message.
+2024-05-18 20:43:37,358 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:43:47,430 - root - INFO - This is an info message.
+2024-05-18 20:43:47,430 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:43:57,537 - root - INFO - This is an info message.
+2024-05-18 20:43:57,538 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:44:07,775 - root - INFO - This is an info message.
+2024-05-18 20:44:07,775 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:44:17,952 - root - INFO - This is an info message.
+2024-05-18 20:44:17,952 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:44:28,104 - root - INFO - This is an info message.
+2024-05-18 20:44:28,104 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:44:38,128 - root - INFO - This is an info message.
+2024-05-18 20:44:38,128 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:44:48,414 - root - INFO - This is an info message.
+2024-05-18 20:44:48,414 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:44:58,641 - root - INFO - This is an info message.
+2024-05-18 20:44:58,641 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:45:08,877 - root - INFO - This is an info message.
+2024-05-18 20:45:08,878 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:45:19,057 - root - INFO - This is an info message.
+2024-05-18 20:45:19,058 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:45:29,437 - root - INFO - This is an info message.
+2024-05-18 20:45:29,437 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:45:39,636 - root - INFO - This is an info message.
+2024-05-18 20:45:39,636 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:45:49,733 - root - INFO - This is an info message.
+2024-05-18 20:45:49,734 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:45:59,812 - root - INFO - This is an info message.
+2024-05-18 20:45:59,812 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:46:09,956 - root - INFO - This is an info message.
+2024-05-18 20:46:09,956 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:46:20,075 - root - INFO - This is an info message.
+2024-05-18 20:46:20,076 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:46:30,211 - root - INFO - This is an info message.
+2024-05-18 20:46:30,212 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:46:40,434 - root - INFO - This is an info message.
+2024-05-18 20:46:40,435 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:46:50,655 - root - INFO - This is an info message.
+2024-05-18 20:46:50,655 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:47:02,006 - root - INFO - This is an info message.
+2024-05-18 20:47:02,007 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:47:11,926 - root - INFO - This is an info message.
+2024-05-18 20:47:11,928 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:47:22,317 - root - INFO - This is an info message.
+2024-05-18 20:47:22,318 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:47:32,832 - root - INFO - This is an info message.
+2024-05-18 20:47:32,832 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:47:43,207 - root - INFO - This is an info message.
+2024-05-18 20:47:43,207 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:47:53,443 - root - INFO - This is an info message.
+2024-05-18 20:47:53,443 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:48:07,688 - root - INFO - This is an info message.
+2024-05-18 20:48:07,689 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:48:14,808 - root - INFO - This is an info message.
+2024-05-18 20:48:14,808 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:48:25,062 - root - INFO - This is an info message.
+2024-05-18 20:48:25,062 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:48:35,043 - root - INFO - This is an info message.
+2024-05-18 20:48:35,043 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:48:45,634 - root - INFO - This is an info message.
+2024-05-18 20:48:45,634 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:48:55,641 - root - INFO - This is an info message.
+2024-05-18 20:48:55,642 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:49:06,505 - root - INFO - This is an info message.
+2024-05-18 20:49:06,505 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:49:17,454 - root - INFO - This is an info message.
+2024-05-18 20:49:17,454 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:49:28,361 - root - INFO - This is an info message.
+2024-05-18 20:49:28,361 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:49:39,229 - root - INFO - This is an info message.
+2024-05-18 20:49:39,229 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:49:50,028 - root - INFO - This is an info message.
+2024-05-18 20:49:50,029 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:50:00,803 - root - INFO - This is an info message.
+2024-05-18 20:50:00,803 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:50:11,498 - root - INFO - This is an info message.
+2024-05-18 20:50:11,498 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:50:22,360 - root - INFO - This is an info message.
+2024-05-18 20:50:22,361 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:50:33,182 - root - INFO - This is an info message.
+2024-05-18 20:50:33,182 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:50:43,967 - root - INFO - This is an info message.
+2024-05-18 20:50:43,968 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:50:54,817 - root - INFO - This is an info message.
+2024-05-18 20:50:54,817 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:51:05,610 - root - INFO - This is an info message.
+2024-05-18 20:51:05,611 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:51:16,387 - root - INFO - This is an info message.
+2024-05-18 20:51:16,388 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:51:27,167 - root - INFO - This is an info message.
+2024-05-18 20:51:27,167 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:51:38,021 - root - INFO - This is an info message.
+2024-05-18 20:51:38,021 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:51:48,797 - root - INFO - This is an info message.
+2024-05-18 20:51:48,798 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:51:59,637 - root - INFO - This is an info message.
+2024-05-18 20:51:59,637 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:52:10,403 - root - INFO - This is an info message.
+2024-05-18 20:52:10,404 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:52:21,278 - root - INFO - This is an info message.
+2024-05-18 20:52:21,279 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:52:32,067 - root - INFO - This is an info message.
+2024-05-18 20:52:32,067 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:52:42,751 - root - INFO - This is an info message.
+2024-05-18 20:52:42,752 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:52:53,450 - root - INFO - This is an info message.
+2024-05-18 20:52:53,451 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:53:04,082 - root - INFO - This is an info message.
+2024-05-18 20:53:04,082 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:53:14,747 - root - INFO - This is an info message.
+2024-05-18 20:53:14,747 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:53:25,366 - root - INFO - This is an info message.
+2024-05-18 20:53:25,366 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:53:36,063 - root - INFO - This is an info message.
+2024-05-18 20:53:36,063 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:53:46,671 - root - INFO - This is an info message.
+2024-05-18 20:53:46,671 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:53:57,350 - root - INFO - This is an info message.
+2024-05-18 20:53:57,355 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:54:07,985 - root - INFO - This is an info message.
+2024-05-18 20:54:07,985 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:54:18,593 - root - INFO - This is an info message.
+2024-05-18 20:54:18,593 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:54:29,317 - root - INFO - This is an info message.
+2024-05-18 20:54:29,317 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:54:39,922 - root - INFO - This is an info message.
+2024-05-18 20:54:39,923 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:54:50,551 - root - INFO - This is an info message.
+2024-05-18 20:54:50,551 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:55:01,171 - root - INFO - This is an info message.
+2024-05-18 20:55:01,171 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:55:11,830 - root - INFO - This is an info message.
+2024-05-18 20:55:11,831 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:55:22,554 - root - INFO - This is an info message.
+2024-05-18 20:55:22,554 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:55:33,297 - root - INFO - This is an info message.
+2024-05-18 20:55:33,297 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:55:43,926 - root - INFO - This is an info message.
+2024-05-18 20:55:43,926 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:55:54,544 - root - INFO - This is an info message.
+2024-05-18 20:55:54,544 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:56:05,163 - root - INFO - This is an info message.
+2024-05-18 20:56:05,163 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:56:15,794 - root - INFO - This is an info message.
+2024-05-18 20:56:15,795 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:56:26,466 - root - INFO - This is an info message.
+2024-05-18 20:56:26,466 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:56:37,186 - root - INFO - This is an info message.
+2024-05-18 20:56:37,186 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:56:48,070 - root - INFO - This is an info message.
+2024-05-18 20:56:48,070 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:56:58,809 - root - INFO - This is an info message.
+2024-05-18 20:56:58,809 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:57:09,455 - root - INFO - This is an info message.
+2024-05-18 20:57:09,456 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:57:20,074 - root - INFO - This is an info message.
+2024-05-18 20:57:20,074 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:57:30,677 - root - INFO - This is an info message.
+2024-05-18 20:57:30,677 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:57:41,300 - root - INFO - This is an info message.
+2024-05-18 20:57:41,300 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:57:51,917 - root - INFO - This is an info message.
+2024-05-18 20:57:51,918 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:58:02,526 - root - INFO - This is an info message.
+2024-05-18 20:58:02,527 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:58:13,216 - root - INFO - This is an info message.
+2024-05-18 20:58:13,216 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:58:23,853 - root - INFO - This is an info message.
+2024-05-18 20:58:23,853 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:58:34,539 - root - INFO - This is an info message.
+2024-05-18 20:58:34,539 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:58:45,214 - root - INFO - This is an info message.
+2024-05-18 20:58:45,215 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:58:55,855 - root - INFO - This is an info message.
+2024-05-18 20:58:55,858 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:59:06,682 - root - INFO - This is an info message.
+2024-05-18 20:59:06,682 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:59:16,933 - root - INFO - This is an info message.
+2024-05-18 20:59:16,933 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:59:27,589 - root - INFO - This is an info message.
+2024-05-18 20:59:27,590 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:59:38,432 - root - INFO - This is an info message.
+2024-05-18 20:59:38,433 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 20:59:49,271 - root - INFO - This is an info message.
+2024-05-18 20:59:49,271 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:00:00,152 - root - INFO - This is an info message.
+2024-05-18 21:00:00,152 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:00:11,130 - root - INFO - This is an info message.
+2024-05-18 21:00:11,133 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:00:21,895 - root - INFO - This is an info message.
+2024-05-18 21:00:21,896 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:00:33,037 - root - INFO - This is an info message.
+2024-05-18 21:00:33,038 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:00:43,818 - root - INFO - This is an info message.
+2024-05-18 21:00:43,819 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:00:54,769 - root - INFO - This is an info message.
+2024-05-18 21:00:54,769 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:01:05,700 - root - INFO - This is an info message.
+2024-05-18 21:01:05,702 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:01:16,553 - root - INFO - This is an info message.
+2024-05-18 21:01:16,553 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:01:27,360 - root - INFO - This is an info message.
+2024-05-18 21:01:27,363 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:01:38,144 - root - INFO - This is an info message.
+2024-05-18 21:01:38,145 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:01:48,944 - root - INFO - This is an info message.
+2024-05-18 21:01:48,944 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:01:59,732 - root - INFO - This is an info message.
+2024-05-18 21:01:59,732 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:02:10,555 - root - INFO - This is an info message.
+2024-05-18 21:02:10,599 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:02:21,712 - root - INFO - This is an info message.
+2024-05-18 21:02:21,713 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:02:31,613 - root - INFO - This is an info message.
+2024-05-18 21:02:31,613 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:02:42,407 - root - INFO - This is an info message.
+2024-05-18 21:02:42,407 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:02:53,181 - root - INFO - This is an info message.
+2024-05-18 21:02:53,182 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:03:03,971 - root - INFO - This is an info message.
+2024-05-18 21:03:03,971 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:03:14,851 - root - INFO - This is an info message.
+2024-05-18 21:03:14,851 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:03:25,729 - root - INFO - This is an info message.
+2024-05-18 21:03:25,730 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:03:36,498 - root - INFO - This is an info message.
+2024-05-18 21:03:36,498 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:03:47,351 - root - INFO - This is an info message.
+2024-05-18 21:03:47,351 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:03:58,159 - root - INFO - This is an info message.
+2024-05-18 21:03:58,159 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:04:09,048 - root - INFO - This is an info message.
+2024-05-18 21:04:09,048 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:04:19,934 - root - INFO - This is an info message.
+2024-05-18 21:04:19,934 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:04:30,656 - root - INFO - This is an info message.
+2024-05-18 21:04:30,656 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:04:41,334 - root - INFO - This is an info message.
+2024-05-18 21:04:41,334 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:04:51,996 - root - INFO - This is an info message.
+2024-05-18 21:04:51,996 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:05:02,635 - root - INFO - This is an info message.
+2024-05-18 21:05:02,635 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:05:13,266 - root - INFO - This is an info message.
+2024-05-18 21:05:13,266 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:05:23,915 - root - INFO - This is an info message.
+2024-05-18 21:05:23,915 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:05:34,524 - root - INFO - This is an info message.
+2024-05-18 21:05:34,525 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:05:45,141 - root - INFO - This is an info message.
+2024-05-18 21:05:45,141 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:05:55,787 - root - INFO - This is an info message.
+2024-05-18 21:05:55,787 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:06:06,443 - root - INFO - This is an info message.
+2024-05-18 21:06:06,443 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:06:17,141 - root - INFO - This is an info message.
+2024-05-18 21:06:17,141 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:06:27,784 - root - INFO - This is an info message.
+2024-05-18 21:06:27,784 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:06:38,406 - root - INFO - This is an info message.
+2024-05-18 21:06:38,406 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:06:49,179 - root - INFO - This is an info message.
+2024-05-18 21:06:49,179 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:06:59,795 - root - INFO - This is an info message.
+2024-05-18 21:06:59,795 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:07:10,435 - root - INFO - This is an info message.
+2024-05-18 21:07:10,435 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:07:21,094 - root - INFO - This is an info message.
+2024-05-18 21:07:21,094 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:07:31,800 - root - INFO - This is an info message.
+2024-05-18 21:07:31,801 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:07:42,451 - root - INFO - This is an info message.
+2024-05-18 21:07:42,451 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:07:53,327 - root - INFO - This is an info message.
+2024-05-18 21:07:53,327 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:08:04,483 - root - INFO - This is an info message.
+2024-05-18 21:08:04,484 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:08:14,124 - root - INFO - This is an info message.
+2024-05-18 21:08:14,124 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:08:24,788 - root - INFO - This is an info message.
+2024-05-18 21:08:24,788 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:08:35,438 - root - INFO - This is an info message.
+2024-05-18 21:08:35,438 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:08:46,069 - root - INFO - This is an info message.
+2024-05-18 21:08:46,069 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:08:56,715 - root - INFO - This is an info message.
+2024-05-18 21:08:56,715 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:09:07,372 - root - INFO - This is an info message.
+2024-05-18 21:09:07,372 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:09:18,025 - root - INFO - This is an info message.
+2024-05-18 21:09:18,025 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:09:28,665 - root - INFO - This is an info message.
+2024-05-18 21:09:28,665 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:09:39,351 - root - INFO - This is an info message.
+2024-05-18 21:09:39,352 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:09:50,003 - root - INFO - This is an info message.
+2024-05-18 21:09:50,003 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:10:00,714 - root - INFO - This is an info message.
+2024-05-18 21:10:00,714 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:10:11,384 - root - INFO - This is an info message.
+2024-05-18 21:10:11,384 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:10:22,014 - root - INFO - This is an info message.
+2024-05-18 21:10:22,014 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:10:32,687 - root - INFO - This is an info message.
+2024-05-18 21:10:32,688 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:10:43,350 - root - INFO - This is an info message.
+2024-05-18 21:10:43,350 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:10:54,137 - root - INFO - This is an info message.
+2024-05-18 21:10:54,137 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:11:04,780 - root - INFO - This is an info message.
+2024-05-18 21:11:04,780 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:11:16,347 - root - INFO - This is an info message.
+2024-05-18 21:11:16,347 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:11:25,965 - root - INFO - This is an info message.
+2024-05-18 21:11:25,966 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:11:37,381 - root - INFO - This is an info message.
+2024-05-18 21:11:37,382 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:11:47,989 - root - INFO - This is an info message.
+2024-05-18 21:11:47,989 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:11:57,714 - root - INFO - This is an info message.
+2024-05-18 21:11:57,715 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:12:08,392 - root - INFO - This is an info message.
+2024-05-18 21:12:08,392 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:12:19,078 - root - INFO - This is an info message.
+2024-05-18 21:12:19,080 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:12:29,843 - root - INFO - This is an info message.
+2024-05-18 21:12:29,844 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:12:40,486 - root - INFO - This is an info message.
+2024-05-18 21:12:40,486 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:12:51,143 - root - INFO - This is an info message.
+2024-05-18 21:12:51,143 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:13:02,005 - root - INFO - This is an info message.
+2024-05-18 21:13:02,005 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:13:12,731 - root - INFO - This is an info message.
+2024-05-18 21:13:12,731 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:13:23,489 - root - INFO - This is an info message.
+2024-05-18 21:13:23,490 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:13:34,157 - root - INFO - This is an info message.
+2024-05-18 21:13:34,159 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:13:44,767 - root - INFO - This is an info message.
+2024-05-18 21:13:44,767 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:13:55,454 - root - INFO - This is an info message.
+2024-05-18 21:13:55,454 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:14:06,081 - root - INFO - This is an info message.
+2024-05-18 21:14:06,083 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:14:16,744 - root - INFO - This is an info message.
+2024-05-18 21:14:16,745 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:14:27,472 - root - INFO - This is an info message.
+2024-05-18 21:14:27,472 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:14:38,140 - root - INFO - This is an info message.
+2024-05-18 21:14:38,140 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:14:48,764 - root - INFO - This is an info message.
+2024-05-18 21:14:48,764 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:14:59,370 - root - INFO - This is an info message.
+2024-05-18 21:14:59,371 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:15:10,069 - root - INFO - This is an info message.
+2024-05-18 21:15:10,072 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:15:20,743 - root - INFO - This is an info message.
+2024-05-18 21:15:20,743 - root - ERROR - This is an error message.
+2024-05-18 21:15:21,177 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-05-18 21:15:21,177 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-05-18 21:15:35,709 - werkzeug - INFO - 127.0.0.1 - - [18/May/2024 21:15:35] "[33mGET / HTTP/1.1[0m" 404 -
+2024-05-18 21:15:38,795 - werkzeug - INFO - 127.0.0.1 - - [18/May/2024 21:15:38] "[33mGET / HTTP/1.1[0m" 404 -
+2024-05-18 21:15:40,739 - werkzeug - INFO - 127.0.0.1 - - [18/May/2024 21:15:40] "[33mGET / HTTP/1.1[0m" 404 -
+2024-05-18 21:23:28,656 - root - INFO - This is an info message.
+2024-05-18 21:23:28,657 - root - ERROR - This is an error message.
+2024-05-18 21:23:29,157 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-05-18 21:23:29,157 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-05-18 21:23:34,729 - werkzeug - INFO - 127.0.0.1 - - [18/May/2024 21:23:34] "[33mGET / HTTP/1.1[0m" 404 -
+2024-05-18 21:23:41,057 - werkzeug - INFO - 127.0.0.1 - - [18/May/2024 21:23:41] "[33mGET / HTTP/1.1[0m" 404 -
+2024-05-18 21:26:48,667 - root - INFO - This is an info message.
+2024-05-18 21:26:48,668 - root - ERROR - This is an error message.
+2024-05-18 21:26:49,124 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-05-18 21:26:49,124 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-05-18 21:38:14,120 - root - INFO - This is an info message.
+2024-05-18 21:38:14,121 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:38:23,973 - root - INFO - This is an info message.
+2024-05-18 21:38:23,973 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:38:34,433 - root - INFO - This is an info message.
+2024-05-18 21:38:34,434 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:38:45,234 - root - INFO - This is an info message.
+2024-05-18 21:38:45,234 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:38:56,098 - root - INFO - This is an info message.
+2024-05-18 21:38:56,099 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:39:06,962 - root - INFO - This is an info message.
+2024-05-18 21:39:06,962 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:39:17,797 - root - INFO - This is an info message.
+2024-05-18 21:39:17,797 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:39:28,665 - root - INFO - This is an info message.
+2024-05-18 21:39:28,666 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:39:39,471 - root - INFO - This is an info message.
+2024-05-18 21:39:39,471 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:39:50,443 - root - INFO - This is an info message.
+2024-05-18 21:39:50,443 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:40:01,198 - root - INFO - This is an info message.
+2024-05-18 21:40:01,199 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:40:11,872 - root - INFO - This is an info message.
+2024-05-18 21:40:11,873 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:40:22,613 - root - INFO - This is an info message.
+2024-05-18 21:40:22,613 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:40:33,283 - root - INFO - This is an info message.
+2024-05-18 21:40:33,284 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:40:43,947 - root - INFO - This is an info message.
+2024-05-18 21:40:43,948 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:40:54,594 - root - INFO - This is an info message.
+2024-05-18 21:40:54,594 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:41:05,232 - root - INFO - This is an info message.
+2024-05-18 21:41:05,232 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:41:15,977 - root - INFO - This is an info message.
+2024-05-18 21:41:15,978 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:41:26,836 - root - INFO - This is an info message.
+2024-05-18 21:41:26,836 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:41:37,691 - root - INFO - This is an info message.
+2024-05-18 21:41:37,691 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:41:48,509 - root - INFO - This is an info message.
+2024-05-18 21:41:48,509 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:41:59,523 - root - INFO - This is an info message.
+2024-05-18 21:41:59,523 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:42:10,717 - root - INFO - This is an info message.
+2024-05-18 21:42:10,717 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:42:21,054 - root - INFO - This is an info message.
+2024-05-18 21:42:21,055 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:42:30,871 - root - INFO - This is an info message.
+2024-05-18 21:42:30,871 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:42:41,881 - root - INFO - This is an info message.
+2024-05-18 21:42:41,881 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:42:53,059 - root - INFO - This is an info message.
+2024-05-18 21:42:53,060 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:43:03,391 - root - INFO - This is an info message.
+2024-05-18 21:43:03,392 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:43:13,147 - root - INFO - This is an info message.
+2024-05-18 21:43:13,147 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:43:24,265 - root - INFO - This is an info message.
+2024-05-18 21:43:24,265 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:43:34,075 - root - INFO - This is an info message.
+2024-05-18 21:43:34,075 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:43:44,940 - root - INFO - This is an info message.
+2024-05-18 21:43:44,941 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:43:55,747 - root - INFO - This is an info message.
+2024-05-18 21:43:55,747 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:44:06,640 - root - INFO - This is an info message.
+2024-05-18 21:44:06,641 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:44:17,442 - root - INFO - This is an info message.
+2024-05-18 21:44:17,442 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:44:28,487 - root - INFO - This is an info message.
+2024-05-18 21:44:28,487 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:44:39,397 - root - INFO - This is an info message.
+2024-05-18 21:44:39,397 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:44:50,394 - root - INFO - This is an info message.
+2024-05-18 21:44:50,395 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:45:01,600 - root - INFO - This is an info message.
+2024-05-18 21:45:01,819 - root - ERROR - This is an error message.
+Address already in use
+Port 8080 is in use by another program. Either identify and stop that program, or start the server with a different port.
+2024-05-18 21:45:12,163 - root - INFO - This is an info message.
+2024-05-18 21:45:12,166 - root - ERROR - This is an error message.
+2024-05-18 21:45:12,649 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-05-18 21:45:12,649 - werkzeug - INFO - [33mPress CTRL+C to quit[0m

@@ -1,0 +1,22 @@
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                sh 'echo "Building..."'
+            }
+        }
+    }
+    post {
+        always {
+            script {
+                // 设置webhook URL和自定义的payload
+                def webhookUrl = 'http://your-jenkins-instance/generic-webhook-trigger/invoke?token=your-token'
+                def payload = '{"message": "Custom message"}'
+
+                // 使用curl发送POST请求
+                sh "curl -X POST -H 'Content-Type: application/json' -d '${payload}' ${webhookUrl}"
+            }
+        }
+    }
+}
