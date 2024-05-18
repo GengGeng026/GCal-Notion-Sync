@@ -3435,3 +3435,27 @@
 2024-05-19 03:06:28,945 - werkzeug - INFO - 127.0.0.1 - - [19/May/2024 03:06:28] "POST /slack/events HTTP/1.0" 200 -
 2024-05-19 03:08:45,324 - werkzeug - INFO - 127.0.0.1 - - [19/May/2024 03:08:45] "POST /slack/events HTTP/1.0" 200 -
 2024-05-19 03:08:46,488 - werkzeug - INFO - 127.0.0.1 - - [19/May/2024 03:08:46] "POST /slack/events HTTP/1.0" 200 -
+2024-05-19 05:00:52,949 - root - INFO - This is an info message.
+2024-05-19 05:00:52,952 - root - ERROR - This is an error message.
+2024-05-19 05:08:01,729 - root - INFO - This is an info message.
+2024-05-19 05:08:01,731 - root - ERROR - This is an error message.
+2024-05-19 05:10:57,618 - root - INFO - This is an info message.
+2024-05-19 05:10:57,620 - root - ERROR - This is an error message.
+2024-05-19 05:13:17,015 - root - INFO - This is an info message.
+2024-05-19 05:13:17,018 - root - ERROR - This is an error message.
+2024-05-19 05:23:50,378 - root - INFO - This is an info message.
+2024-05-19 05:23:50,381 - root - ERROR - This is an error message.
+2024-05-19 05:23:50,890 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-05-19 05:23:50,890 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-05-19 05:24:02,343 - werkzeug - INFO - 127.0.0.1 - - [19/May/2024 05:24:02] "POST /slack/events HTTP/1.0" 200 -
+2024-05-19 05:24:03,301 - werkzeug - INFO - 127.0.0.1 - - [19/May/2024 05:24:03] "POST /slack/events HTTP/1.0" 200 -
+2024-05-19 05:31:26,464 - werkzeug - INFO - 127.0.0.1 - - [19/May/2024 05:31:26] "POST /slack/events HTTP/1.0" 200 -
+2024-05-19 05:31:27,915 - werkzeug - INFO - 127.0.0.1 - - [19/May/2024 05:31:27] "POST /slack/events HTTP/1.0" 200 -
+2024-05-19 05:31:36,036 - werkzeug - INFO - 127.0.0.1 - - [19/May/2024 05:31:36] "POST /slack/events HTTP/1.0" 200 -
+2024-05-19 05:31:37,225 - werkzeug - INFO - 127.0.0.1 - - [19/May/2024 05:31:37] "POST /slack/events HTTP/1.0" 200 -
+2024-05-19 05:33:42,771 - werkzeug - INFO - 127.0.0.1 - - [19/May/2024 05:33:42] "POST /slack/events HTTP/1.0" 200 -
+2024-05-19 05:33:43,363 - werkzeug - INFO - 127.0.0.1 - - [19/May/2024 05:33:43] "POST /slack/events HTTP/1.0" 200 -
+2024-05-19 05:39:42,997 - werkzeug - INFO - 127.0.0.1 - - [19/May/2024 05:39:42] "POST /slack/events HTTP/1.0" 200 -
+2024-05-19 05:39:44,106 - werkzeug - INFO - 127.0.0.1 - - [19/May/2024 05:39:44] "POST /slack/events HTTP/1.0" 200 -
+2024-05-19 06:09:18,715 - werkzeug - INFO - 127.0.0.1 - - [19/May/2024 06:09:18] "POST /slack/events HTTP/1.0" 200 -

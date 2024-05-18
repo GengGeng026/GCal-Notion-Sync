@@ -44,9 +44,14 @@ logger.addHandler(handler)
 logger.info('This is an info message.')
 logger.error('This is an error message.')
 
+# 獲取當前工作目錄
+current_path = os.getcwd()
 
-env_path = Path('.') / '.env'
-load_dotenv(dotenv_path=env_path)
+# .env 文件的絕對路徑
+env_path = '/Users/mac/Documents/pythonProjects/Notion-and-Google-Calendar-2-Way-Sync-main/.env'
+
+# 加載 .env 文件
+load_dotenv(env_path)
 
 app = Flask(__name__)
 slack_event_adapter = SlackEventAdapter(
