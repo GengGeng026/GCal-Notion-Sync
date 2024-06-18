@@ -2802,3 +2802,13 @@ Port 8080 is in use by another program. Either identify and stop that program, o
 2024-05-18 21:45:12,649 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on http://127.0.0.1:8080
 2024-05-18 21:45:12,649 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+Exception in thread Thread-1 (dynamic_counter_indicator):
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1010, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 201, in dynamic_counter_indicator
+    terminal_width = os.get_terminal_size().columns  # Get the width of the terminal
+                     ^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 25] Inappropriate ioctl for device
