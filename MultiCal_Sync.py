@@ -183,42 +183,29 @@ def format_gradient(text, bold_indices=(0, 0), less_visible_indices=(0, 0)):
             formatted_text += char
     return formatted_text
 
-# 保留您原有的函数定义不变
-def animate_text_wave(text, repeat=1, sleep_time=0.01):  # 调整睡眠时间以减慢动画速度
+def animate_text_wave(text, repeat=1, sleep_time=0.01):
     length = len(text)
-    animation_chars = ['/', '-', '\\', '|']  # 定义动画字符
+    animation_chars = ['/', '-', '\\', '|']
     for _ in range(repeat):
-        i = 0
-        animation_index = 0  # 初始化动画字符索引
-        while i < (length + 2):  # 使用浮点数进行迭代控制
+        for i in range(length + 2):  # 去除不必要的浮點數迭代
             wave_text = ""
             for j in range(length):
-                # 根据浮点数索引计算当前应该大写的字母
                 if j >= i - 1 and j < i + 2:
                     wave_text += text[j].upper()
                 else:
                     wave_text += text[j].lower()
 
-            # 在 wave_text 的末尾添加动画字符
-            current_animation_char = animation_chars[animation_index % len(animation_chars)]
-            wave_text += " " + current_animation_char
+            current_animation_char = animation_chars[i % len(animation_chars)]
+            animated_text = format_gradient(wave_text, bold_indices=(max(0, i - 1), min(length, i + 2)), less_visible_indices=(max(0, i - 3), max(0, i - 1)))
 
-            # Apply gradient formatting to the wave text
-            bold_start = max(0, int(i) - 1)
-            bold_end = min(length, int(i) + 2)
-            less_visible_start = max(0, int(i) - 3)
-            less_visible_end = max(0, int(i) - 1)
-            animated_text = format_gradient(wave_text, bold_indices=(bold_start, bold_end), less_visible_indices=(less_visible_start, less_visible_end))
-            
-            sys.stdout.write(f"\r{animated_text}")
+            sys.stdout.write(f"\r{animated_text} {current_animation_char}")
             sys.stdout.flush()
             time.sleep(sleep_time)
-            i += 0.5  # 细腻控制迭代步进
-            animation_index += 1  # 更新动画字符索引
 
-        sys.stdout.write(f"\r{text}  ")  # 清除动画
+        sys.stdout.write(f"\r{text}  ")  # 清除動畫
         sys.stdout.flush()
         time.sleep(sleep_time)
+
 
 # 添加的全局变量和新函数定义
 global_progress = 0
@@ -231,7 +218,6 @@ def animate_text_wave_with_progress(text, new_text, target_percentage, current_p
     animation_chars = ['/', '-', '\\', '|']
     total_iterations = 50
     iteration_step = (target_percentage - current_progress) / total_iterations
-    animation_index = 0
 
     start_time = time.time()
     while current_progress < target_percentage:
@@ -241,22 +227,20 @@ def animate_text_wave_with_progress(text, new_text, target_percentage, current_p
 
         wave_text = ""
         for i in range(length):
-            wave_text += text[i].upper() if i % 2 == animation_index % 2 else text[i].lower()
+            wave_text += text[i].upper() if i % 2 == int(current_progress) % 2 else text[i].lower()
 
-        current_animation_char = animation_chars[animation_index % len(animation_chars)]
-        progress_percentage = int(current_progress)
+        current_animation_char = animation_chars[int(current_progress) % len(animation_chars)]
         if percentage_first:
-            display_text = f"{progress_percentage}%  {new_text}  {current_animation_char}"
+            display_text = f"{int(current_progress)}%  {new_text}  {current_animation_char}"
         else:
-            display_text = f"{new_text}  {current_animation_char}  {progress_percentage}%"
+            display_text = f"{new_text}  {current_animation_char}  {int(current_progress)}%"
 
-        animated_text = format_gradient(display_text, bold_indices=(max(0, int(animation_index / 2) - 1), min(length, int(animation_index / 2) + 2)), less_visible_indices=(max(0, int(animation_index / 2) - 3), max(0, int(animation_index / 2) - 1)))
+        animated_text = format_gradient(display_text, bold_indices=(max(0, int(current_progress / 2) - 1), min(length, int(current_progress / 2) + 2)), less_visible_indices=(max(0, int(current_progress / 2) - 3), max(0, int(current_progress / 2) - 1)))
 
         sys.stdout.write(f"\r{animated_text}")
         sys.stdout.flush()
 
         current_progress += iteration_step
-        animation_index += 1
         time.sleep(sleep_time)
 
     global_progress = target_percentage
