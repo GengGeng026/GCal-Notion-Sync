@@ -163,6 +163,10 @@ def dynamic_counter_indicator(stop_event, message, timeout=15):
     print("\r\033[K", end="")
 
 def stop_clear_and_print():
+    # 檢查是否在 JENKINS_HOME 環境中運行
+    if 'JENKINS_HOME' in os.environ:
+        return  # 如果是，則不進行任何操作
+    
     global stop_event, thread
     if thread is not None:
         stop_event.set()
@@ -171,6 +175,10 @@ def stop_clear_and_print():
     sys.stdout.flush()  # 确保清除命令被立即执行
 
 def start_dynamic_counter_indicator():
+    # 檢查是否在 JENKINS_HOME 環境中運行
+    if 'JENKINS_HOME' in os.environ:
+        return  # 如果是，則不進行任何操作
+    
     global stop_event, thread
     stop_event = threading.Event()
     thread = threading.Thread(target=dynamic_counter_indicator, args=(stop_event, "."))
