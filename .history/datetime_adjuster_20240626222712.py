@@ -26,7 +26,7 @@ from collections import defaultdict
 import copy
 import traceback
 import re
-import functools
+
 
 ###########################################################################
 ##### The Set-Up Section. Please follow the comments to understand the code. 

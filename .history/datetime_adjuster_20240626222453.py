@@ -26,7 +26,7 @@ from collections import defaultdict
 import copy
 import traceback
 import re
-import functools
+
 
 ###########################################################################
 ##### The Set-Up Section. Please follow the comments to understand the code. 
@@ -135,15 +135,7 @@ COLORS = {
     "C3": RED,
     # Add more colors as needed
 }
-def skip_in_jenkins(func):
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        if 'JENKINS_HOME' in os.environ:
-            return
-        return func(*args, **kwargs)
-    return wrapper
 
-@skip_in_jenkins
 def format_string(text, color=None, bold=False, italic=False, less_visible=False):
     return f"{BOLD if bold else ''}{ITALIC if italic else ''}{LESS_VISIBLE if less_visible else ''}{COLORS[color] if color else ''}{text}{RESET}"
 

@@ -26,7 +26,7 @@ from collections import defaultdict
 import copy
 import traceback
 import re
-import functools
+
 
 ###########################################################################
 ##### The Set-Up Section. Please follow the comments to understand the code. 
@@ -135,15 +135,7 @@ COLORS = {
     "C3": RED,
     # Add more colors as needed
 }
-def skip_in_jenkins(func):
-    @functools.wraps(func)
-    def wrapper(*args, **kwargs):
-        if 'JENKINS_HOME' in os.environ:
-            return
-        return func(*args, **kwargs)
-    return wrapper
 
-@skip_in_jenkins
 def format_string(text, color=None, bold=False, italic=False, less_visible=False):
     return f"{BOLD if bold else ''}{ITALIC if italic else ''}{LESS_VISIBLE if less_visible else ''}{COLORS[color] if color else ''}{text}{RESET}"
 
@@ -646,6 +638,7 @@ def dynamic_counter_indicator(stop_event):
 
         # If the counter reaches 4, reset it and erase the dots
         if dot_counter == 4:
+            terminal_width = os.get_terminal_size().columns  # Get the width of the terminal
             print("\r" + " " * min(len(f"{formatted_Printing}") + total_dots + 10, terminal_width) + "\r", end="", flush=True)  # Clear the line and print spaces
             dot_counter = 0
             if stop_event.is_set():  # Check if stop_event is set immediately after resetting the dot_counter
@@ -1218,9 +1211,6 @@ def check_list(lst):
 
 
 def update_all_data(start, end, start_end, prev_start, prev_end, result, local_data, page_title, original_start, original_end, prev_start_value, prev_end_value, new_start_value, new_end_value, counts, start_end_value, details, keep_start_midnight=False, keep_end_midnight=False, keep_midnight=False):
-    # Check and swap start and end dates if start date is after end date
-    if start is not None and end is not None and start > end:
-        start, end = end, start  # Swapping the dates
     
     if prev_start is not None and prev_end is not None:
         prev_start = prev_start.strftime('%Y-%m-%d %H:%M:%S%z')
