@@ -32,6 +32,7 @@ from wcwidth import wcswidth
 import traceback
 import pprint
 import shutil
+import functools
 
 ###########################################################################
 ##### Print Tool Section. Will be used throughoout entire script. 
@@ -68,6 +69,15 @@ COLORS = {
     # Add more colors as needed
 }
 
+def skip_in_jenkins(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        if 'JENKINS_HOME' in os.environ:
+            return
+        return func(*args, **kwargs)
+    return wrapper
+
+@skip_in_jenkins
 def format_string(text, color=None, bold=False, italic=False, less_visible=False, underline=False, light_color=False):
     return f"{BOLD if bold else ''}{ITALIC if italic else ''}{LESS_VISIBLE if less_visible else ''}{UNDERLINE if underline else ''}{LIGHT_GRAY if light_color else ''}{COLORS[color] if color else ''}{text}{RESET}"
 
@@ -129,16 +139,13 @@ def get_console_width():
     return 150
     # return shutil.get_terminal_size().columns
 
+@skip_in_jenkins
 def dynamic_counter_indicator(stop_event, message, timeout=15):
-    # 檢查是否在 JENKINS_HOME 環境中運行
-    if 'JENKINS_HOME' in os.environ:
-        return  # 如果是，則不進行任何操作
-
     start_time = time.time()
     dot_counter = 0
     total_dots = 0
     console_width = get_console_width()
-    while not stop_event.is_set() and not immediate_stop_event.is_set():  # 增加對 immediate_stop_event 的檢查
+    while not stop_event.is_set() and not immediate_stop_event.is_set():  # 增加对 immediate_stop_event 的检查
         current_time = time.time()
         elapsed_time = current_time - start_time
         if elapsed_time > timeout:
@@ -162,11 +169,8 @@ def dynamic_counter_indicator(stop_event, message, timeout=15):
         sys.stdout.flush()
     print("\r\033[K", end="")
 
+@skip_in_jenkins
 def stop_clear_and_print():
-    # 檢查是否在 JENKINS_HOME 環境中運行
-    if 'JENKINS_HOME' in os.environ:
-        return  # 如果是，則不進行任何操作
-    
     global stop_event, thread
     if thread is not None:
         stop_event.set()
@@ -174,11 +178,8 @@ def stop_clear_and_print():
     sys.stdout.write("\033[2K")  # 清除整行
     sys.stdout.flush()  # 确保清除命令被立即执行
 
+@skip_in_jenkins
 def start_dynamic_counter_indicator():
-    # 檢查是否在 JENKINS_HOME 環境中運行
-    if 'JENKINS_HOME' in os.environ:
-        return  # 如果是，則不進行任何操作
-    
     global stop_event, thread
     stop_event = threading.Event()
     thread = threading.Thread(target=dynamic_counter_indicator, args=(stop_event, "."))
@@ -195,11 +196,8 @@ def format_gradient(text, bold_indices=(0, 0), less_visible_indices=(0, 0)):
             formatted_text += char
     return formatted_text
 
+@skip_in_jenkins
 def animate_text_wave(text, repeat=1, sleep_time=0.01):
-    # 檢查是否在 JENKINS_HOME 環境中運行
-    if 'JENKINS_HOME' in os.environ:
-        return  # 如果是，則不進行任何操作
-    
     length = len(text)
     animation_chars = ['/', '-', '\\', '|']
     for _ in range(repeat):
@@ -226,11 +224,8 @@ def animate_text_wave(text, repeat=1, sleep_time=0.01):
 # 添加的全局变量和新函数定义
 global_progress = 0
 
+@skip_in_jenkins
 def animate_text_wave_with_progress(text, new_text, target_percentage, current_progress=0, sleep_time=0.02, percentage_first=True):
-    # 檢查是否在 JENKINS_HOME 環境中運行
-    if 'JENKINS_HOME' in os.environ:
-        return  # 如果是，則不進行任何操作
-
     global global_progress
     if current_progress < global_progress:
         current_progress = global_progress
