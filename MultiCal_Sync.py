@@ -40,7 +40,11 @@ import shutil
 # 在脚本开始处或合适的位置定义
 immediate_stop_event = threading.Event()
 
-terminal_width = os.get_terminal_size().columns
+# 模擬終端寬度，如果在非交互式環境（如 Jenkins）中運行
+if 'JENKINS_HOME' in os.environ:
+    terminal_width = 80  # 或者使用任何你認為合適的預設值
+else:
+    terminal_width = os.get_terminal_size().columns
 print('\n' + '-' * terminal_width + '\n')
 
 # Define ANSI escape codes as constants

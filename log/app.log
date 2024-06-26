@@ -5073,3 +5073,12 @@
 2024-06-26 16:07:27,932 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on http://127.0.0.1:8080
 2024-06-26 16:07:27,932 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-26 16:21:40,053 - werkzeug - INFO - 127.0.0.1 - - [26/Jun/2024 16:21:40] "POST /slack/events HTTP/1.0" 200 -
+2024-06-26 16:24:11,694 - werkzeug - INFO - 127.0.0.1 - - [26/Jun/2024 16:24:11] "POST /slack/events HTTP/1.0" 200 -
+2024-06-26 16:27:19,737 - werkzeug - INFO - 127.0.0.1 - - [26/Jun/2024 16:27:19] "POST /slack/events HTTP/1.0" 200 -
+2024-06-26 16:29:09,473 - werkzeug - INFO - 127.0.0.1 - - [26/Jun/2024 16:29:09] "POST /slack/events HTTP/1.0" 200 -
+2024-06-26 16:39:32,285 - werkzeug - INFO - 127.0.0.1 - - [26/Jun/2024 16:39:32] "POST /slack/events HTTP/1.0" 200 -
+2024-06-26 16:41:15,795 - werkzeug - INFO - 127.0.0.1 - - [26/Jun/2024 16:41:15] "POST /slack/events HTTP/1.0" 200 -
+2024-06-26 16:56:05,897 - werkzeug - INFO - 127.0.0.1 - - [26/Jun/2024 16:56:05] "POST /slack/events HTTP/1.0" 200 -
+2024-06-26 16:58:03,661 - werkzeug - INFO - 127.0.0.1 - - [26/Jun/2024 16:58:03] "POST /slack/events HTTP/1.0" 200 -
+2024-06-26 17:00:19,163 - werkzeug - INFO - 127.0.0.1 - - [26/Jun/2024 17:00:19] "POST /slack/events HTTP/1.0" 200 -
