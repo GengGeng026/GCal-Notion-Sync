@@ -2573,27 +2573,20 @@ print("\r\033[K", end="")
 printed_no_new_added = False
 printed_no_new_updated = False
 
-# Modify the calls to format_string to ensure None is handled
-formatted_page_added = format_string("Page Added") or ''
-formatted_page_updated = format_string("Page Updated") or ''
-formatted_fr = format_string("fr.", italic=True, less_visible=True) or ''
-formatted_notion = format_string(" Notion", less_visible=True) or ''
-
-# Apply the modified variables in the print statements
 if no_new_added:
     stop_clear_and_print()
-    print(f"\n{formatted_no}" + ' ' + formatted_page_added + '  ' + formatted_fr + formatted_notion)
+    print(f"\n{formatted_no}" + ' ' + format_string("Page Added") + '  ' + format_string("fr.", italic=True, less_visible=True) + format_string(" Notion", less_visible=True))
     start_dynamic_counter_indicator()
     printed_no_new_added = True
 
 if no_new_updated:
     if printed_no_new_added != True:
         stop_clear_and_print()
-        print(f"\n\n{formatted_no}" + ' ' + formatted_page_updated + '  ' + formatted_fr + formatted_notion)
+        print(f"\n\n{formatted_no}" + ' ' + format_string("Page Updated") + '  ' + format_string("fr.", italic=True, less_visible=True) + format_string(" Notion", less_visible=True))
         start_dynamic_counter_indicator()
     else:
         stop_clear_and_print()
-        print(f"{formatted_no}" + ' ' + formatted_page_updated + '  ' + formatted_fr + formatted_notion)
+        print(f"{formatted_no}" + ' ' + format_string("Page Updated") + '  ' + format_string("fr.", italic=True, less_visible=True) + format_string(" Notion", less_visible=True))
         start_dynamic_counter_indicator()
     printed_no_new_updated = True
 
