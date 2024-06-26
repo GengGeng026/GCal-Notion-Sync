@@ -130,11 +130,15 @@ def get_console_width():
     # return shutil.get_terminal_size().columns
 
 def dynamic_counter_indicator(stop_event, message, timeout=15):
+    # 檢查是否在 JENKINS_HOME 環境中運行
+    if 'JENKINS_HOME' in os.environ:
+        return  # 如果是，則不進行任何操作
+
     start_time = time.time()
     dot_counter = 0
     total_dots = 0
     console_width = get_console_width()
-    while not stop_event.is_set() and not immediate_stop_event.is_set():  # 增加对 immediate_stop_event 的检查
+    while not stop_event.is_set() and not immediate_stop_event.is_set():  # 增加對 immediate_stop_event 的檢查
         current_time = time.time()
         elapsed_time = current_time - start_time
         if elapsed_time > timeout:
@@ -184,6 +188,10 @@ def format_gradient(text, bold_indices=(0, 0), less_visible_indices=(0, 0)):
     return formatted_text
 
 def animate_text_wave(text, repeat=1, sleep_time=0.01):
+    # 檢查是否在 JENKINS_HOME 環境中運行
+    if 'JENKINS_HOME' in os.environ:
+        return  # 如果是，則不進行任何操作
+    
     length = len(text)
     animation_chars = ['/', '-', '\\', '|']
     for _ in range(repeat):
@@ -211,6 +219,10 @@ def animate_text_wave(text, repeat=1, sleep_time=0.01):
 global_progress = 0
 
 def animate_text_wave_with_progress(text, new_text, target_percentage, current_progress=0, sleep_time=0.02, percentage_first=True):
+    # 檢查是否在 JENKINS_HOME 環境中運行
+    if 'JENKINS_HOME' in os.environ:
+        return  # 如果是，則不進行任何操作
+
     global global_progress
     if current_progress < global_progress:
         current_progress = global_progress
