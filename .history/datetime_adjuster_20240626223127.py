@@ -124,7 +124,6 @@ ITALIC = "\033[3m"
 UNDERLINE = "\033[4m"
 TEAL = "\033[34m"
 HIGHLIGHT_GREEN = "\033[36m"
-LIGHT_GRAY = "\033[37m"  # Light gray color as an example of a lighter color to simulate transparency
 RED = "\033[38;5;196m"
 BLUE_BG = "\033[48;5;4m"
 RESET = "\033[0m"
@@ -134,10 +133,8 @@ COLORS = {
     "C1": TEAL,
     "C2": HIGHLIGHT_GREEN,
     "C3": RED,
-    "C4": BLUE_BG,
     # Add more colors as needed
 }
-
 def skip_in_jenkins(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
