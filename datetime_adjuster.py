@@ -3217,6 +3217,10 @@ if not processed_pages:
     pass
 else:
     for page in processed_pages:
+        # 確保 page 是一個字典
+        if not isinstance(page, dict):
+            continue  # 如果不是字典，則跳過這次迭代
+
         # 現在你可以安全地檢查 page['id']
         if page['id'] not in processed_pages:
             executor = ThreadPoolExecutor(max_workers=1)
