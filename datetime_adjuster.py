@@ -2529,7 +2529,11 @@ printed_groups = set()
 
 filtered_pages.sort(key=lambda page: (page.get('group', ''), page['id']))
 
-original_start1_before_loop = page.get('start')
+if filtered_pages:  # Check if filtered_pages is not empty
+    last_page = filtered_pages[-1]  # Get the last page
+    original_start1_before_loop = last_page.get('start')  # Use the last page
+else:
+    original_start1_before_loop = None 
 
 with ThreadPoolExecutor(max_workers=3) as executor:
     # Create a list to store the futures in the order they were created
