@@ -80,22 +80,29 @@ def message(payload):
             if text:  # 检查 text 变量是否不是空的
                 client.chat_postMessage(channel=channel_id, text=text)
 
+# 构建Jenkins Job的触发URL
+jenkins_pipeline_url = "https://balanced-poorly-shiner.ngrok-free.app/generic-webhook-trigger/invoke?token=generic-webhook-trigger"
+last_triggered_time = 0
+cooldown_period = 60  # 设置触发冷却时间为60秒
 
-@app.route('/triggerjob', methods=['GET', 'POST'])
+@app.route('/triggerjob', methods=['POST'])
 def triggerjob():
-    if request.method == 'POST':
-        data = request.form
-    else:
-        data = request.args
-
-    user_id = data.get('user_id')
-    channel_id = data.get('channel_id')
-    client.chat_postMessage(channel=channel_id, text="I got the command")
-    text = data.get('text')
+    global last_triggered_time
     
-    # Trigger the Jenkins job
-    trigger_status(user_id, channel_id, text) 
-    return Response(), 200
+    current_time = tm.time()
+    if current_time - last_triggered_time < cooldown_period:
+        return "Trigger cooldown in effect", 429  # 返回429状态码，表示请求太频繁
+
+    # 触发 Jenkins Pipeline
+    try:
+        response = requests.post(jenkins_pipeline_url)
+        if response.status_code == 200:
+            last_triggered_time = current_time  # 更新最后触发时间
+            return "Jenkins Pipeline triggered successfully", 200
+        else:
+            return f"Failed to trigger Jenkins Pipeline. Status code: {response.status_code}", 500
+    except requests.exceptions.RequestException as e:
+        return f"Failed to trigger Jenkins Pipeline: {str(e)}", 500
 
 # 在函数外部定义一个字典来存储每个页面的最后状态
 timer = None
@@ -111,13 +118,10 @@ def trigger_status(user_id, channel_id, text):
     global timer, job_names, message_sent, message_queue, message_list, match_multiple_found
     
     message = ""
-    
-    # 构建Jenkins Job的触发URL
-    jenkins_dynamic_pipeline_url = "https://balanced-poorly-shiner.ngrok-free.app/generic-webhook-trigger/invoke?token=generic-webhook-trigger"
 
     # 发送请求触发Jenkins Job
     try:
-        response = requests.get(jenkins_dynamic_pipeline_url)
+        response = requests.get(jenkins_pipeline_url)
     except requests.exceptions.RequestException as e:
         print(f"\n\nError: Failed to trigger Jenkins job: {e}")
         return
