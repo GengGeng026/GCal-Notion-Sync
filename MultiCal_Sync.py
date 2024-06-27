@@ -1017,6 +1017,7 @@ for i, eventId in enumerate(calEventIdList, start=1):
         print(f"{format_string(f'{i}', bold=True, italic=True)}" + formatted_dot + "  " + f"{format_string(eventName, bold=True)}")
         stop_clear_and_print()
 
+
 if totalEventsProcessed > 0:
     stop_clear_and_print()
     print(f"\nTotal {formatted_added} New N.Event : {format_string(totalEventsProcessed, "C2", bold=True)}\n\n\n")
@@ -1468,6 +1469,7 @@ animate_text_wave_with_progress(text="Loading", new_text="Checked 2.5", target_p
 
 print("\r\033[K", end="")
 
+@skip_in_jenkins
 def format_time(time):
     if time is None:
         # 可以选择不进行任何操作，或者设置一个默认值
@@ -1475,6 +1477,7 @@ def format_time(time):
     # Use the provided remove_leading_zero function to format time without leading zeros
     return remove_leading_zero(time.strftime('%H:%M'))
 
+@skip_in_jenkins
 def remove_leading_zero(time_str):
     parts = time_str.split(':')
     if len(parts) == 2:
@@ -1483,6 +1486,7 @@ def remove_leading_zero(time_str):
         return f"{hour}:{minute}"
     return time_str
 
+@skip_in_jenkins
 def print_date_change(label, old_date, new_date, max_label_length):
     old_date_str = old_date.strftime('%d %b, %Y')
     new_date_str = new_date.strftime('%d %b, %Y')
@@ -1498,6 +1502,7 @@ def print_date_change(label, old_date, new_date, max_label_length):
 labels = ['Title', 'Start', 'End', 'StartEnd']
 max_label_length = max(len(label) for label in labels) + 2  # 考虑到空格的数量
 
+@skip_in_jenkins
 def format_date(date):
     if date is None:
         return " " * 12  # 返回固定长度的空字符串，以保持对齐
@@ -1507,6 +1512,7 @@ def format_date(date):
     year = date.strftime('%Y')
     return f"{day} {month}, {year}"
 
+@skip_in_jenkins
 def print_modification(notion_ID, before_title, after_title, old_start_date, new_start_date, old_end_date, new_end_date, max_label_length, notion_IDs_List):
     
     title_changed = before_title != after_title
