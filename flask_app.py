@@ -113,11 +113,11 @@ def trigger_status(user_id, channel_id, text):
     message = ""
     
     # 构建Jenkins Job的触发URL
-    jenkins_auto_timer_url = "https://balanced-poorly-shiner.ngrok-free.app/generic-webhook-trigger/invoke?token=generic-webhook-trigger"
+    jenkins_dynamic_pipeline_url = "https://balanced-poorly-shiner.ngrok-free.app/generic-webhook-trigger/invoke?token=generic-webhook-trigger"
 
     # 发送请求触发Jenkins Job
     try:
-        response = requests.get(jenkins_auto_timer_url)
+        response = requests.get(jenkins_dynamic_pipeline_url)
     except requests.exceptions.RequestException as e:
         print(f"\n\nError: Failed to trigger Jenkins job: {e}")
         return
