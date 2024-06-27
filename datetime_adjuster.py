@@ -28,94 +28,17 @@ import traceback
 import re
 import functools
 
+
 ###########################################################################
-##### The Set-Up Section. Please follow the comments to understand the code. 
+##### Print Tool Section. Will be used throughoout entire script. 
 ###########################################################################
 
-load_dotenv()
-NOTION_TOKEN = os.getenv("NOTION_API_KEY") #the secret_something from Notion Integration
-
-# Create an instance of the Notion client
-notion = Client(auth=NOTION_TOKEN)
-
-database_id = os.getenv("NOTION_DATABASE_ID") #get the mess of numbers before the "?" on your dashboard URL (no need to split into dashes)
-
-urlRoot = os.getenv("NOTION_DATABASE_URL") #open up a task and then copy the URL root up to the "p="
-
-#GCal Set Up Part
-DEFAULT_EVENT_LENGTH = 60 #This is how many minutes the default event length is. Feel free to change it as you please
-timezone = 'Asia/Kuala_Lumpur' #Choose your respective time zone: http://www.timezoneconverter.com/cgi-bin/zonehelp.tzc
-
-def notion_time():
-    return datetime.now().strftime("%Y-%m-%dT%H:%M:%S+08:00") #Change the last 5 characters to be representative of your timezone
-     #^^ has to be adjusted for when daylight savings is different if your area observes it
-    
-def DateTimeIntoNotionFormat(dateTimeValue):
-    return dateTimeValue.strftime("%Y-%m-%dT%H:%M:%S+08:00")  #Change the last 5 characters to be representative of your timezone
-     #^^ has to be adjusted for when daylight savings is different if your area observes it
-
-
-def googleQuery():
-    return datetime.now().strftime("%Y-%m-%dT%H:%M:%S")+"-04:00" #Change the last 5 characters to be representative of your timezone
-     #^^ has to be adjusted for when daylight savings is different if your area observes it
-
-
-DEFAULT_EVENT_START = 8 #8 would be 8 am. 16 would be 4 pm. Only whole numbers 
-
-AllDayEventOption = 1 #0 if you want dates on your Notion dashboard to be treated as an all-day event
-#^^ 1 if you want dates on your Notion dashboard to be created at whatever hour you defined in the DEFAULT_EVENT_START variable
-
-
-
-### MULTIPLE CALENDAR PART:
-#  - VERY IMPORTANT: For each 'key' of the dictionary, make sure that you make that EXACT thing in the Notion database first before running the code. You WILL have an error and your dashboard/calendar will be messed up
-
-
-DEFAULT_CALENDAR_ID = os.getenv("GOOGLE_PRIVATE_CALENDAR_ID") #The GCal calendar id. The format is something like "sldkjfliksedjgodsfhgshglsj@group.calendar.google.com"
-
-DEFAULT_CALENDAR_NAME = 'Life'
-
-
-#leave the first entry as is
-#the structure should be as follows:              WHAT_THE_OPTION_IN_NOTION_IS_CALLED : GCAL_CALENDAR_ID 
-calendarDictionary = {
-    DEFAULT_CALENDAR_NAME : DEFAULT_CALENDAR_ID, 
-    'Life' : os.getenv("GOOGLE_PRIVATE_CALENDAR_ID"),  #just typed some random ids but put the one for your calendars here
-    'Soka': os.getenv("GOOGLE_SOKA_CALENDAR_ID"),
-    'Work': os.getenv("GOOGLE_WORK_CALENDAR_ID"),
-}
-
-
-## doesn't delete the Notion task (yet), I'm waiting for the Python API to be updated to allow deleting tasks
-DELETE_OPTION = 0 
-#set at 0 if you want the delete column being checked off to mean that the gCal event and the Notion Event will be checked off. 
-#set at 1 if you want nothing deleted
-
-
-##### DATABASE SPECIFIC EDITS
-
-# There needs to be a few properties on the Notion Database for this to work. Replace the values of each variable with the string of what the variable is called on your Notion dashboard
-# The Last Edited Time column is a property of the notion pages themselves, you just have to make it a column
-# The NeedGCalUpdate column is a formula column that works as such "if(prop("Last Edited Time") > prop("Last Updated Time"), true, false)"
-#Please refer to the Template if you are confused: https://www.notion.so/akarri/2583098dfd32472ab6ca1ff2a8b2866d?v=3a1adf60f15748f08ed925a2eca88421
-
-# Constants
-Task_Notion_Name = 'Task Name' 
-Date_Notion_Name = 'StartEnd'
-Start_Notion_Name = 'Start'
-End_Notion_Name = 'End'
-Initiative_Notion_Name = 'Initiative'
-ExtraInfo_Notion_Name = 'Notes'
-On_GCal_Notion_Name = 'On GCal?'
-to_Auto_Sync_Notion_Name = 'to Auto-Sync'
-NeedGCalUpdate_Notion_Name = 'NeedGCalUpdate'
-StartEnd_to_Overwrite_All_Notion_Name = 'StartEnd_to_Overwrite_All'
-GCalEventId_Notion_Name = 'GCal Event Id'
-LastUpdatedTime_Notion_Name  = 'Last Updated Time'
-Calendar_Notion_Name = 'Calendar'
-Current_Calendar_Id_Notion_Name = 'Current Calendar Id'
-Delete_Notion_Name = 'Delete from GCal?'
-
+# 模擬終端寬度，如果在非交互式環境（如 Jenkins）中運行
+if 'JENKINS_HOME' in os.environ:
+    terminal_width = 80  # 或者使用任何你認為合適的預設值
+else:
+    terminal_width = os.get_terminal_size().columns
+print('\n' + '-' * terminal_width + '\n')
 
 # Define ANSI escape codes as constants
 BOLD = "\033[1m"
@@ -211,12 +134,97 @@ formatted_none = format_string('None', 'C1', bold=True, italic=True)
 formatted_all_none = format_string('All None', 'C1', bold=True, italic=True)
 formatted_modified = format_string('Modified', 'C2', bold=True)
 
+###########################################################################
+##### The Set-Up Section. Please follow the comments to understand the code. 
+###########################################################################
+
+load_dotenv()
+NOTION_TOKEN = os.getenv("NOTION_API_KEY") #the secret_something from Notion Integration
+
+# Create an instance of the Notion client
+notion = Client(auth=NOTION_TOKEN)
+
+database_id = os.getenv("NOTION_DATABASE_ID") #get the mess of numbers before the "?" on your dashboard URL (no need to split into dashes)
+
+urlRoot = os.getenv("NOTION_DATABASE_URL") #open up a task and then copy the URL root up to the "p="
+
+#GCal Set Up Part
+DEFAULT_EVENT_LENGTH = 60 #This is how many minutes the default event length is. Feel free to change it as you please
+timezone = 'Asia/Kuala_Lumpur' #Choose your respective time zone: http://www.timezoneconverter.com/cgi-bin/zonehelp.tzc
+
+def notion_time():
+    return datetime.now().strftime("%Y-%m-%dT%H:%M:%S+08:00") #Change the last 5 characters to be representative of your timezone
+     #^^ has to be adjusted for when daylight savings is different if your area observes it
+    
+def DateTimeIntoNotionFormat(dateTimeValue):
+    return dateTimeValue.strftime("%Y-%m-%dT%H:%M:%S+08:00")  #Change the last 5 characters to be representative of your timezone
+     #^^ has to be adjusted for when daylight savings is different if your area observes it
+
+
+def googleQuery():
+    return datetime.now().strftime("%Y-%m-%dT%H:%M:%S")+"-04:00" #Change the last 5 characters to be representative of your timezone
+     #^^ has to be adjusted for when daylight savings is different if your area observes it
+
+
+DEFAULT_EVENT_START = 8 #8 would be 8 am. 16 would be 4 pm. Only whole numbers 
+
+AllDayEventOption = 1 #0 if you want dates on your Notion dashboard to be treated as an all-day event
+#^^ 1 if you want dates on your Notion dashboard to be created at whatever hour you defined in the DEFAULT_EVENT_START variable
+
+
+
+### MULTIPLE CALENDAR PART:
+#  - VERY IMPORTANT: For each 'key' of the dictionary, make sure that you make that EXACT thing in the Notion database first before running the code. You WILL have an error and your dashboard/calendar will be messed up
+
+
+DEFAULT_CALENDAR_ID = os.getenv("GOOGLE_PRIVATE_CALENDAR_ID") #The GCal calendar id. The format is something like "sldkjfliksedjgodsfhgshglsj@group.calendar.google.com"
+
+DEFAULT_CALENDAR_NAME = 'Life'
+
+
+#leave the first entry as is
+#the structure should be as follows:              WHAT_THE_OPTION_IN_NOTION_IS_CALLED : GCAL_CALENDAR_ID 
+calendarDictionary = {
+    DEFAULT_CALENDAR_NAME : DEFAULT_CALENDAR_ID, 
+    'Life' : os.getenv("GOOGLE_PRIVATE_CALENDAR_ID"),  #just typed some random ids but put the one for your calendars here
+    'Soka': os.getenv("GOOGLE_SOKA_CALENDAR_ID"),
+    'Work': os.getenv("GOOGLE_WORK_CALENDAR_ID"),
+}
+
+
+## doesn't delete the Notion task (yet), I'm waiting for the Python API to be updated to allow deleting tasks
+DELETE_OPTION = 0 
+#set at 0 if you want the delete column being checked off to mean that the gCal event and the Notion Event will be checked off. 
+#set at 1 if you want nothing deleted
+
+
+##### DATABASE SPECIFIC EDITS
+
+# There needs to be a few properties on the Notion Database for this to work. Replace the values of each variable with the string of what the variable is called on your Notion dashboard
+# The Last Edited Time column is a property of the notion pages themselves, you just have to make it a column
+# The NeedGCalUpdate column is a formula column that works as such "if(prop("Last Edited Time") > prop("Last Updated Time"), true, false)"
+#Please refer to the Template if you are confused: https://www.notion.so/akarri/2583098dfd32472ab6ca1ff2a8b2866d?v=3a1adf60f15748f08ed925a2eca88421
+
+# Constants
+Task_Notion_Name = 'Task Name' 
+Date_Notion_Name = 'StartEnd'
+Start_Notion_Name = 'Start'
+End_Notion_Name = 'End'
+Initiative_Notion_Name = 'Initiative'
+ExtraInfo_Notion_Name = 'Notes'
+On_GCal_Notion_Name = 'On GCal?'
+to_Auto_Sync_Notion_Name = 'to Auto-Sync'
+NeedGCalUpdate_Notion_Name = 'NeedGCalUpdate'
+StartEnd_to_Overwrite_All_Notion_Name = 'StartEnd_to_Overwrite_All'
+GCalEventId_Notion_Name = 'GCal Event Id'
+LastUpdatedTime_Notion_Name  = 'Last Updated Time'
+Calendar_Notion_Name = 'Calendar'
+Current_Calendar_Id_Notion_Name = 'Current Calendar Id'
+Delete_Notion_Name = 'Delete from GCal?'
+
 #######################################################################################
 ###               No additional user editing beyond this point is needed            ###
 #######################################################################################
-
-
-
 
 # Declare total_dots as a global variable at the top of your script
 total_dots = 0
@@ -622,8 +630,6 @@ for page in filtered_pages:
 
 if len(filtered_pages) > 0:
     print(f"\nTotal Pages set to {formatted_to_auto_sync} {formatted_within_current_month} {formatted_colon} {formatted_count.format(len(filtered_pages))}\n")
-
-print('\n' + '-' * 70 + '\n\n')
 
 # You can now use the 'filtered_pages' variable in the next section of your code
 
@@ -2527,695 +2533,706 @@ last_page_ids = {group: pages[-1]['id'] for group, pages in group_to_pages.items
 
 printed_groups = set()
 
-filtered_pages.sort(key=lambda page: (page.get('group', ''), page['id']))
-
-if filtered_pages:  # Check if filtered_pages is not empty
-    last_page = filtered_pages[-1]  # Get the last page
-    original_start1_before_loop = last_page.get('start')  # Use the last page
+# 檢查 filtered_pages 是否為空
+if not filtered_pages:
+    pass
 else:
-    original_start1_before_loop = None 
+    # 原有的代碼進行處理
+    filtered_pages.sort(key=lambda page: (page.get('group', ''), page['id']))
 
-with ThreadPoolExecutor(max_workers=3) as executor:
-    # Create a list to store the futures in the order they were created
-    ordered_futures = []
-    futures = {}
-    for page in filtered_pages:
-        if page['id'] not in processed_pages:
-            future = executor.submit(process_pages_condition_A, page, result['counts'], result['details'], lock, processed_pages, return_values)
-            futures[future] = page
-            ordered_futures.append(future)
+    # 由於 filtered_pages 不為空，我們可以安全地訪問第一個元素
+    # 但這裡需要確保在循環外部有合適的地方定義和使用 page 變量
+    # 例如，如果你是在循環中使用 page，確保這行代碼放在循環內
 
-    # Extract the 'group' value from each page in filtered_pages
-    group_values = [page['group'] for page in filtered_pages if 'group' in page]
+    original_start1_before_loop = page.get('start')
 
-    # Remove duplicates by converting the list to a set, then convert it back to a list
-    groups = list(set(page['group'] for page in filtered_pages))
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        # Create a list to store the futures in the order they were created
+        ordered_futures = []
+        futures = {}
+        for page in filtered_pages:
+            if page['id'] not in processed_pages:
+                future = executor.submit(process_pages_condition_A, page, result['counts'], result['details'], lock, processed_pages, return_values)
+                futures[future] = page
+                ordered_futures.append(future)
 
-    last_page_ids = {group: pages[-1]['id'] for group, pages in group_to_pages.items()}
-    
-    current_group_condition = None
-    # Iterate over the ordered list of futures
-    for future in ordered_futures:
-        page = futures[future]
-        try:
-            result = future.result(timeout=15.0)
-            if len(result) == 6:
-                future_result, future_counts, details, processed_pages, page_id, original_start = result
-                original_start1_before_loop = original_start 
-                result = {'future_result': future_result, 'future_counts': future_counts, 'details': details, 'processed_pages': processed_pages, 'page_id': page_id, 'original_start': original_start}
-            elif len(result) == 5:
-                future_result, future_counts, details, processed_pages, page_id = result
-                original_start = None  # or some other default value
-                result = {'future_result': future_result, 'future_counts': future_counts, 'details': details, 'processed_pages': processed_pages, 'page_id': page_id, 'original_start': original_start}
-            else:
-                raise ValueError("Unexpected number of values in result")
+        # Extract the 'group' value from each page in filtered_pages
+        group_values = [page['group'] for page in filtered_pages if 'group' in page]
 
-            if 'prev_start' in details and 'prev_end' in details:
-                page['previous_start'] = details['prev_start']
-                page['previous_end'] = details['prev_end']
-            
-            result['total_pages_modified'] = len(modified_pages)
-            original_start1 = original_start
-            processed_pages.add(page['id'])
-            
-            # Check if 'original_start' is in result before assigning its value to original_start1
-            if 'original_start' in result:
-                original_start1 = result['original_start']
-            else:
-                original_start1 = None
-            
-            result.update(future_result)
-            future_dict = {}
-            future_dict.update(future_result)
-            future_dict['counts'].update(future_counts)
-            page_title = future_result.get('page_title')
-            page['start'] = page.get('start', None)
-            page['end'] = page.get('end', None)
-            original_end1 = page.get('end')
-            original_start_end1 = page.get('start_end')
-            page = set_default_time_range(page,timezone)
-            future_dict['start'] = page.get('start')
-            future_dict['end'] = page.get('end')
-            future_dict['start_end'] = page.get('start_end')
-            result['counts'].update(future_counts)
+        # Remove duplicates by converting the list to a set, then convert it back to a list
+        groups = list(set(page['group'] for page in filtered_pages))
 
-            if 'page_id' in future_result:
+        last_page_ids = {group: pages[-1]['id'] for group, pages in group_to_pages.items()}
+        
+        current_group_condition = None
+        # Iterate over the ordered list of futures
+        for future in ordered_futures:
+            page = futures[future]
+            try:
+                result = future.result(timeout=15.0)
+                if len(result) == 6:
+                    future_result, future_counts, details, processed_pages, page_id, original_start = result
+                    original_start1_before_loop = original_start 
+                    result = {'future_result': future_result, 'future_counts': future_counts, 'details': details, 'processed_pages': processed_pages, 'page_id': page_id, 'original_start': original_start}
+                elif len(result) == 5:
+                    future_result, future_counts, details, processed_pages, page_id = result
+                    original_start = None  # or some other default value
+                    result = {'future_result': future_result, 'future_counts': future_counts, 'details': details, 'processed_pages': processed_pages, 'page_id': page_id, 'original_start': original_start}
+                else:
+                    raise ValueError("Unexpected number of values in result")
+
+                if 'prev_start' in details and 'prev_end' in details:
+                    page['previous_start'] = details['prev_start']
+                    page['previous_end'] = details['prev_end']
+                
+                result['total_pages_modified'] = len(modified_pages)
+                original_start1 = original_start
+                processed_pages.add(page['id'])
+                
+                # Check if 'original_start' is in result before assigning its value to original_start1
+                if 'original_start' in result:
+                    original_start1 = result['original_start']
+                else:
+                    original_start1 = None
+                
+                result.update(future_result)
+                future_dict = {}
+                future_dict.update(future_result)
+                future_dict['counts'].update(future_counts)
+                page_title = future_result.get('page_title')
+                page['start'] = page.get('start', None)
+                page['end'] = page.get('end', None)
+                original_end1 = page.get('end')
+                original_start_end1 = page.get('start_end')
+                page = set_default_time_range(page,timezone)
+                future_dict['start'] = page.get('start')
+                future_dict['end'] = page.get('end')
+                future_dict['start_end'] = page.get('start_end')
+                result['counts'].update(future_counts)
+
+                if 'page_id' in future_result:
+                    page_id = future_result['page_id']
+                else:
+                    print(f"Future result doesn't have a 'page_id' key: {future_result}")
+                    continue
+
                 page_id = future_result['page_id']
-            else:
-                print(f"Future result doesn't have a 'page_id' key: {future_result}")
-                continue
 
-            page_id = future_result['page_id']
+                if 'set_Default_details' in result['details']:
+                    result['details']['set_Default_details'] = dict(result['details']['set_Default_details'])
 
-            if 'set_Default_details' in result['details']:
-                result['details']['set_Default_details'] = dict(result['details']['set_Default_details'])
+                for page_id, details in result['details']['set_Default_details'].items():
+                    if page_id not in unique_set_Default_details:
+                        unique_set_Default_details[page_id] = details
 
-            for page_id, details in result['details']['set_Default_details'].items():
-                if page_id not in unique_set_Default_details:
-                    unique_set_Default_details[page_id] = details
-
-            # Initialize current_page_id before the for loop
-            current_page_id = None
-            page_printed = False
-            previous_page_id = None
-            
-            current_page_condition = (page.get('start'), page.get('end'), page.get('start_end'))
-
-            printed_default_time_range = False
-
-            for page_id, details in unique_set_Default_details.items():
+                # Initialize current_page_id before the for loop
+                current_page_id = None
+                page_printed = False
+                previous_page_id = None
                 
-                current_page_id = page_id
-                # If this is a new group, reset printed_default_time_range
-                if current_page_id != previous_page_id:
-                    printed_default_time_range = False
-                
-                if current_page_id == page_id:
-                    start_time, end_time, unknown_value, start_end = details[1:]
-                    printed_default_time_range = True
-                    if printed_default_time_range:
-                        default_time_range_details.append((formatted_task, formatted_start, formatted_end, formatted_startend, page_title))
+                current_page_condition = (page.get('start'), page.get('end'), page.get('start_end'))
 
-            if printed_default_time_range:
-                total_count_default_time_range += 1
+                printed_default_time_range = False
+
+                for page_id, details in unique_set_Default_details.items():
+                    
+                    current_page_id = page_id
+                    # If this is a new group, reset printed_default_time_range
+                    if current_page_id != previous_page_id:
+                        printed_default_time_range = False
+                    
+                    if current_page_id == page_id:
+                        start_time, end_time, unknown_value, start_end = details[1:]
+                        printed_default_time_range = True
+                        if printed_default_time_range:
+                            default_time_range_details.append((formatted_task, formatted_start, formatted_end, formatted_startend, page_title))
+
+                if printed_default_time_range:
+                    total_count_default_time_range += 1
+                    with lock:
+                        modified_pages.add(page_id)
                 with lock:
-                    modified_pages.add(page_id)
-            with lock:
-                unique_set_Default_details.clear()
+                    unique_set_Default_details.clear()
 
 
-            printed_default_setting = False
+                printed_default_setting = False
 
-            prev_start = page.get('previous_start')
-            prev_end = page.get('previous_end')
+                prev_start = page.get('previous_start')
+                prev_end = page.get('previous_end')
 
-            for page_id, details in result['details'].get('auto_default_setting_details', {}).items():
-                task, start, end, start_end, original_start, original_end, *extra = list(details)
+                for page_id, details in result['details'].get('auto_default_setting_details', {}).items():
+                    task, start, end, start_end, original_start, original_end, *extra = list(details)
 
-                # Convert prev_start and prev_end to datetime objects
-                prev_start = datetime.strptime(prev_start, '%Y-%m-%d %H:%M:%S%z') if prev_start is not None else None
-                prev_end = datetime.strptime(prev_end, '%Y-%m-%d %H:%M:%S%z') if prev_end is not None else None
-
-                with lock:
-                    unique_auto_default_setting_details[page_id] = (task, start, end, start_end, original_start, original_end)
-
-            for page_id, details in unique_auto_default_setting_details.items():
-                task, start, end, start_end, original_start, original_end = details
-
-                if prev_start is not None:
-                    formatted_prev_start = prev_start.strftime('%b %-d, %Y')
-                else:
-                    formatted_prev_start = formatted_plain_none
-                if prev_end is not None:
-                    formatted_prev_end = prev_end.strftime('%b %-d, %Y')
-                else:
-                    formatted_prev_end = formatted_plain_none
-
-                printed_default_setting = True
-
-                auto_default_setting_details.append((formatted_task, formatted_start, formatted_end, formatted_startend, page_title, start, end, start_end, original_start, original_end))
-
-            if printed_default_setting:
-                total_count_auto_default_setting += 1
-                with lock:
-                    modified_pages.add(page_id)
-            with lock:
-                unique_auto_default_setting_details.clear()
-
-
-            printed_alldayevent_start = False
-
-            for page_id, details in result['details'].get('set_Alternate_alldayevent_start_details', {}).items():
-                details = list(details)
-                task, start_alt, end_alt, original_end, start_end = details
-                details.append(original_start1_before_loop)
-                details.append(start_alt)
-                details.append(end_alt)
-                task, start_alt, end_alt, original_end, start_end, original_start1_before_loop, start_new, end_new = details
-
-                with lock:
-                    unique_set_Alternate_alldayevent_start_details[page_id] = (task, start_alt, end_alt, original_start1_before_loop, original_end, start_end, start_new, end_new)
-            
-            for page_id, details in unique_set_Alternate_alldayevent_start_details.items():
-                task, start, end, original_end, start_end, original_start1_before_loop, start_new, end_new = details
-
-                printed_alldayevent_start = True
-                
-                if printed_alldayevent_start:
-                    alternate_alldayevent_start_details.append((formatted_task, formatted_start, formatted_end, formatted_startend, page_title, original_start1_before_loop, start_alt, end_alt))
-
-            if printed_alldayevent_start:
-                total_count_alternate_alldayevent_start += 1
-                with lock:
-                    modified_pages.add(page_id)
-            with lock:
-                unique_set_Alternate_alldayevent_start_details.clear()
-
-
-
-            printed_alldayevent = False
-            
-            prev_start = page.get('previous_start')
-            prev_end = page.get('previous_end')
-            
-            for page_id, details in result['details'].get('set_alldayevent_details', {}).items():
-                details = list(details)
-                task, start_alt, end_alt, original_end, start_end, *extra = details
-                details.append(original_start1_before_loop)
-                details.append(start_alt)
-                details.append(end_alt)
-                task, start_alt, end_alt, original_end, start_end, start_new, end_new, *extra = details
-
-                # Convert prev_start and prev_end to datetime objects
-                try:
+                    # Convert prev_start and prev_end to datetime objects
                     prev_start = datetime.strptime(prev_start, '%Y-%m-%d %H:%M:%S%z') if prev_start is not None else None
-                except ValueError:
-                    prev_start = datetime.strptime(prev_start, '%Y-%m-%d %H:%M:%S') if prev_start is not None else None
-
-                try:
                     prev_end = datetime.strptime(prev_end, '%Y-%m-%d %H:%M:%S%z') if prev_end is not None else None
-                except ValueError:
-                    prev_end = datetime.strptime(prev_end, '%Y-%m-%d %H:%M:%S') if prev_end is not None else None
 
+                    with lock:
+                        unique_auto_default_setting_details[page_id] = (task, start, end, start_end, original_start, original_end)
+
+                for page_id, details in unique_auto_default_setting_details.items():
+                    task, start, end, start_end, original_start, original_end = details
+
+                    if prev_start is not None:
+                        formatted_prev_start = prev_start.strftime('%b %-d, %Y')
+                    else:
+                        formatted_prev_start = formatted_plain_none
+                    if prev_end is not None:
+                        formatted_prev_end = prev_end.strftime('%b %-d, %Y')
+                    else:
+                        formatted_prev_end = formatted_plain_none
+
+                    printed_default_setting = True
+
+                    auto_default_setting_details.append((formatted_task, formatted_start, formatted_end, formatted_startend, page_title, start, end, start_end, original_start, original_end))
+
+                if printed_default_setting:
+                    total_count_auto_default_setting += 1
+                    with lock:
+                        modified_pages.add(page_id)
                 with lock:
-                    unique_set_alldayevent_details[page_id] = (task, start_alt, end_alt, original_end, start_end, start_new, end_new)
-            
-            for page_id, details in unique_set_alldayevent_details.items():
-                task, start, end, original_end, start_end, start_new, end_new = details
+                    unique_auto_default_setting_details.clear()
 
-                if prev_start is not None:
-                    formatted_prev_start = prev_start.strftime('%b %-d, %Y')
-                else:
-                    formatted_prev_start = formatted_plain_none
-                if prev_end is not None:
-                    formatted_prev_end = prev_end.strftime('%b %-d, %Y')
-                else:
-                    formatted_prev_end = formatted_plain_none
 
-                printed_alldayevent = True
+                printed_alldayevent_start = False
+
+                for page_id, details in result['details'].get('set_Alternate_alldayevent_start_details', {}).items():
+                    details = list(details)
+                    task, start_alt, end_alt, original_end, start_end = details
+                    details.append(original_start1_before_loop)
+                    details.append(start_alt)
+                    details.append(end_alt)
+                    task, start_alt, end_alt, original_end, start_end, original_start1_before_loop, start_new, end_new = details
+
+                    with lock:
+                        unique_set_Alternate_alldayevent_start_details[page_id] = (task, start_alt, end_alt, original_start1_before_loop, original_end, start_end, start_new, end_new)
                 
+                for page_id, details in unique_set_Alternate_alldayevent_start_details.items():
+                    task, start, end, original_end, start_end, original_start1_before_loop, start_new, end_new = details
+
+                    printed_alldayevent_start = True
+                    
+                    if printed_alldayevent_start:
+                        alternate_alldayevent_start_details.append((formatted_task, formatted_start, formatted_end, formatted_startend, page_title, original_start1_before_loop, start_alt, end_alt))
+
+                if printed_alldayevent_start:
+                    total_count_alternate_alldayevent_start += 1
+                    with lock:
+                        modified_pages.add(page_id)
+                with lock:
+                    unique_set_Alternate_alldayevent_start_details.clear()
+
+
+
+                printed_alldayevent = False
+                
+                prev_start = page.get('previous_start')
+                prev_end = page.get('previous_end')
+                
+                for page_id, details in result['details'].get('set_alldayevent_details', {}).items():
+                    details = list(details)
+                    task, start_alt, end_alt, original_end, start_end, *extra = details
+                    details.append(original_start1_before_loop)
+                    details.append(start_alt)
+                    details.append(end_alt)
+                    task, start_alt, end_alt, original_end, start_end, start_new, end_new, *extra = details
+
+                    # Convert prev_start and prev_end to datetime objects
+                    try:
+                        prev_start = datetime.strptime(prev_start, '%Y-%m-%d %H:%M:%S%z') if prev_start is not None else None
+                    except ValueError:
+                        prev_start = datetime.strptime(prev_start, '%Y-%m-%d %H:%M:%S') if prev_start is not None else None
+
+                    try:
+                        prev_end = datetime.strptime(prev_end, '%Y-%m-%d %H:%M:%S%z') if prev_end is not None else None
+                    except ValueError:
+                        prev_end = datetime.strptime(prev_end, '%Y-%m-%d %H:%M:%S') if prev_end is not None else None
+
+                    with lock:
+                        unique_set_alldayevent_details[page_id] = (task, start_alt, end_alt, original_end, start_end, start_new, end_new)
+                
+                for page_id, details in unique_set_alldayevent_details.items():
+                    task, start, end, original_end, start_end, start_new, end_new = details
+
+                    if prev_start is not None:
+                        formatted_prev_start = prev_start.strftime('%b %-d, %Y')
+                    else:
+                        formatted_prev_start = formatted_plain_none
+                    if prev_end is not None:
+                        formatted_prev_end = prev_end.strftime('%b %-d, %Y')
+                    else:
+                        formatted_prev_end = formatted_plain_none
+
+                    printed_alldayevent = True
+                    
+                    if printed_alldayevent:
+                        alldayevent_details.append((formatted_task, formatted_start, formatted_end, formatted_startend, page_title, start_alt, end_alt, prev_start, prev_end))
+
                 if printed_alldayevent:
-                    alldayevent_details.append((formatted_task, formatted_start, formatted_end, formatted_startend, page_title, start_alt, end_alt, prev_start, prev_end))
-
-            if printed_alldayevent:
-                total_count_alldayevent += 1
+                    total_count_alldayevent += 1
+                    with lock:
+                        modified_pages.add(page_id)
                 with lock:
-                    modified_pages.add(page_id)
-            with lock:
-                unique_set_alldayevent_details.clear()
+                    unique_set_alldayevent_details.clear()
 
 
-            printed_filled_pages = False
+                printed_filled_pages = False
 
-            for page_id, details in result['details'].get('pages_filled_details', {}).items():
-                task, start, end, original_start, original_end, extra, start_end = details
-                
-                # Update start and end
-                start_new = start  # Replace with your updated start value
-                end_new = end  # Replace with your updated end value
-                
-                # Update start_end and updated_start_end
-                start_end = (start_new, end_new)
-                updated_start_end = start_end
+                for page_id, details in result['details'].get('pages_filled_details', {}).items():
+                    task, start, end, original_start, original_end, extra, start_end = details
+                    
+                    # Update start and end
+                    start_new = start  # Replace with your updated start value
+                    end_new = end  # Replace with your updated end value
+                    
+                    # Update start_end and updated_start_end
+                    start_end = (start_new, end_new)
+                    updated_start_end = start_end
 
-                # Then append the original and updated values to a new list
-                updated_details = details + (start_new, end_new)
+                    # Then append the original and updated values to a new list
+                    updated_details = details + (start_new, end_new)
 
+                    with lock:
+                        unique_pages_filled_details[page_id] = updated_details
+
+                for page_id, updated_details in unique_pages_filled_details.items():
+                    if len(updated_details) >= 8:
+                        task, start, end, original_start_end, original_end, extra, start_new, end_new, updated_start_end = updated_details
+
+                        printed_filled_pages = True
+                    
+                        if printed_filled_pages:
+                            pages_filled_details.append((task, start, end, original_start_end, original_end, extra, start_new, end_new, updated_start_end))
+
+                if printed_filled_pages:
+                    total_count_pages_filled += 1
+                    with lock:
+                        modified_pages.add(page_id)
                 with lock:
-                    unique_pages_filled_details[page_id] = updated_details
+                    unique_pages_filled_details.clear()
 
-            for page_id, updated_details in unique_pages_filled_details.items():
-                if len(updated_details) >= 8:
-                    task, start, end, original_start_end, original_end, extra, start_new, end_new, updated_start_end = updated_details
+                printed_single_dates_pages = False
 
-                    printed_filled_pages = True
-                
-                    if printed_filled_pages:
-                        pages_filled_details.append((task, start, end, original_start_end, original_end, extra, start_new, end_new, updated_start_end))
+                prev_start = page.get('previous_start')
+                prev_end = page.get('previous_end')
 
-            if printed_filled_pages:
-                total_count_pages_filled += 1
-                with lock:
-                    modified_pages.add(page_id)
-            with lock:
-                unique_pages_filled_details.clear()
+                for page_id, details in result['details']['pages_single_dates_details'].items():
+                    task, original_start, original_end, new_start_value, new_end_value, *rest = details
 
-            printed_single_dates_pages = False
+                    # Convert prev_start and prev_end to datetime objects
+                    try:
+                        prev_start = datetime.strptime(prev_start, '%Y-%m-%d %H:%M:%S') if prev_start is not None else None
+                    except ValueError:
+                        prev_start = datetime.strptime(prev_start, '%Y-%m-%d %H:%M:%S%z') if prev_start is not None else None
+                    prev_end = datetime.strptime(prev_end, '%Y-%m-%d %H:%M:%S') if prev_end is not None else None
+                    
+                    original_start_date = original_start.split('T')[0]
+                    original_end_date = original_end.split('T')[0]
 
-            prev_start = page.get('previous_start')
-            prev_end = page.get('previous_end')
+                    original_start = datetime.strptime(original_start_date, '%Y-%m-%d')
+                    original_end = datetime.strptime(original_end_date, '%Y-%m-%d')
+                    
+                    new_start_value = datetime.strptime(new_start_value, '%Y-%m-%d')
+                    new_end_value = datetime.strptime(new_end_value, '%Y-%m-%d')
 
-            for page_id, details in result['details']['pages_single_dates_details'].items():
-                task, original_start, original_end, new_start_value, new_end_value, *rest = details
+                    if original_start is not None or original_end is not None:
+                        start_end = [original_start, original_end]
+                    else:
+                        start_end = [None, None]
 
-                # Convert prev_start and prev_end to datetime objects
-                try:
-                    prev_start = datetime.strptime(prev_start, '%Y-%m-%d %H:%M:%S') if prev_start is not None else None
-                except ValueError:
-                    prev_start = datetime.strptime(prev_start, '%Y-%m-%d %H:%M:%S%z') if prev_start is not None else None
-                prev_end = datetime.strptime(prev_end, '%Y-%m-%d %H:%M:%S') if prev_end is not None else None
-                
-                original_start_date = original_start.split('T')[0]
-                original_end_date = original_end.split('T')[0]
+                    start_end_tuple = tuple(start_end)
 
-                original_start = datetime.strptime(original_start_date, '%Y-%m-%d')
-                original_end = datetime.strptime(original_end_date, '%Y-%m-%d')
-                
-                new_start_value = datetime.strptime(new_start_value, '%Y-%m-%d')
-                new_end_value = datetime.strptime(new_end_value, '%Y-%m-%d')
+                    with lock:
+                        unique_pages_single_dates_details[page_id] = (task, original_start, original_end, start_end_tuple, new_start_value, new_end_value)
 
-                if original_start is not None or original_end is not None:
-                    start_end = [original_start, original_end]
-                else:
-                    start_end = [None, None]
+                for page_id, details in unique_pages_single_dates_details.items():
+                    task, original_start, original_end, start_end, new_start_value, new_end_value = details
 
-                start_end_tuple = tuple(start_end)
+                    if prev_start is not None:
+                        formatted_prev_start = prev_start.strftime('%b %-d, %Y')
+                    else:
+                        formatted_prev_start = formatted_plain_none
+                    if prev_end is not None:
+                        formatted_prev_end = prev_end.strftime('%b %-d, %Y')
+                    else:
+                        formatted_prev_end = formatted_plain_none
+                    
+                    formatted_original_start = original_start.strftime('%b %-d, %Y')
+                    formatted_original_end = original_end.strftime('%b %-d, %Y')
 
-                with lock:
-                    unique_pages_single_dates_details[page_id] = (task, original_start, original_end, start_end_tuple, new_start_value, new_end_value)
+                    start_end = check_list([new_start_value, new_end_value])
 
-            for page_id, details in unique_pages_single_dates_details.items():
-                task, original_start, original_end, start_end, new_start_value, new_end_value = details
+                    if not isinstance(start_end, tuple) or len(start_end) != 2:
+                        start_end = (start, start)
 
-                if prev_start is not None:
-                    formatted_prev_start = prev_start.strftime('%b %-d, %Y')
-                else:
-                    formatted_prev_start = formatted_plain_none
-                if prev_end is not None:
-                    formatted_prev_end = prev_end.strftime('%b %-d, %Y')
-                else:
-                    formatted_prev_end = formatted_plain_none
-                
-                formatted_original_start = original_start.strftime('%b %-d, %Y')
-                formatted_original_end = original_end.strftime('%b %-d, %Y')
+                    if start_end[0].date() == start_end[1].date():
+                        start_end_formatted = start_end[0].strftime('%b %-d, %Y')
+                    else:
+                        start_end_formatted = f"{start_end[0].strftime('%b %-d, %Y')} - {start_end[1].strftime('%b %-d, %Y')}"
 
-                start_end = check_list([new_start_value, new_end_value])
+                    result['StartEnd'] = start_end_formatted
 
-                if not isinstance(start_end, tuple) or len(start_end) != 2:
-                    start_end = (start, start)
+                    printed_single_dates_pages = True
 
-                if start_end[0].date() == start_end[1].date():
-                    start_end_formatted = start_end[0].strftime('%b %-d, %Y')
-                else:
-                    start_end_formatted = f"{start_end[0].strftime('%b %-d, %Y')} - {start_end[1].strftime('%b %-d, %Y')}"
-
-                result['StartEnd'] = start_end_formatted
-
-                printed_single_dates_pages = True
+                    if printed_single_dates_pages:
+                        pages_single_dates_details.append((formatted_task, formatted_prev_start, formatted_prev_end, formatted_original_start, formatted_original_end, start_end_formatted, page_title, new_start_value, new_end_value, prev_start, prev_end))
 
                 if printed_single_dates_pages:
-                    pages_single_dates_details.append((formatted_task, formatted_prev_start, formatted_prev_end, formatted_original_start, formatted_original_end, start_end_formatted, page_title, new_start_value, new_end_value, prev_start, prev_end))
-
-            if printed_single_dates_pages:
-                total_count_pages_single_dates += 1
+                    total_count_pages_single_dates += 1
+                    with lock:
+                        modified_pages.add(page_id)
                 with lock:
-                    modified_pages.add(page_id)
-            with lock:
-                unique_pages_single_dates_details.clear()
+                    unique_pages_single_dates_details.clear()
 
-            
-            # Initialize the flag and dictionary
-            printed_pages_overwritten = False
-            unique_pages_overwritten_details = {}
+                
+                # Initialize the flag and dictionary
+                printed_pages_overwritten = False
+                unique_pages_overwritten_details = {}
 
-            # Loop through the pages_overwritten_details
-            for page_id, details in result['details'].get('pages_overwritten_details', {}).items():
-                task,original_start, original_end,  start_value, end_value, prev_start_value, prev_end_value, start_end = details
+                # Loop through the pages_overwritten_details
+                for page_id, details in result['details'].get('pages_overwritten_details', {}).items():
+                    task,original_start, original_end,  start_value, end_value, prev_start_value, prev_end_value, start_end = details
 
-                # Create a tuple for start_end
-                start_end_tuple = tuple(start_end)
+                    # Create a tuple for start_end
+                    start_end_tuple = tuple(start_end)
 
-                # Add the details to the dictionary
-                with lock:
-                    unique_pages_overwritten_details[page_id] = (task,original_start, original_end, start_value, end_value, prev_start_value, prev_end_value, start_end_tuple)
+                    # Add the details to the dictionary
+                    with lock:
+                        unique_pages_overwritten_details[page_id] = (task,original_start, original_end, start_value, end_value, prev_start_value, prev_end_value, start_end_tuple)
 
-            # Loop through the unique_pages_overwritten_details
-            for page_id, details in unique_pages_overwritten_details.items():
-                task,original_start, original_end, start_value, end_value, prev_start_value, prev_end_value, start_end, *extra = details
+                # Loop through the unique_pages_overwritten_details
+                for page_id, details in unique_pages_overwritten_details.items():
+                    task,original_start, original_end, start_value, end_value, prev_start_value, prev_end_value, start_end, *extra = details
 
-                # Set the flag to True
-                printed_pages_overwritten = True
+                    # Set the flag to True
+                    printed_pages_overwritten = True
 
-                # If the flag is True, append the details to the list
+                    # If the flag is True, append the details to the list
+                    if printed_pages_overwritten:
+                        pages_overwritten_details.append((formatted_task, formatted_start, formatted_end, formatted_startend, page_title,original_start, original_end, start_value, end_value, prev_start_value, prev_end_value))
+
+                # If the flag is True, increment the total count and add the page_id to the set
                 if printed_pages_overwritten:
-                    pages_overwritten_details.append((formatted_task, formatted_start, formatted_end, formatted_startend, page_title,original_start, original_end, start_value, end_value, prev_start_value, prev_end_value))
+                    total_count_pages_overwritten += 1
+                    with lock:
+                        modified_pages.add(page_id)
 
-            # If the flag is True, increment the total count and add the page_id to the set
-            if printed_pages_overwritten:
-                total_count_pages_overwritten += 1
+                # Clear the dictionary for the next iteration
                 with lock:
-                    modified_pages.add(page_id)
+                    unique_pages_overwritten_details.clear()
 
-            # Clear the dictionary for the next iteration
-            with lock:
-                unique_pages_overwritten_details.clear()
-
-        except Exception as e:
-            print(f"An error occurred: {type(e).__name__}, {e}")
-            traceback.print_exc()
-        
-    no_pages_operated_B = False
-    
-    # After the loop, print the details and summary message for each condition
-    for details in default_time_range_details:
-        print(f"{details[0]}     {formatted_colon}  {formatted_BOLD_italic.format(details[4])}")
-        
-        start_value = page.get('start', None)
-        end_value = page.get('end', None)
-
-        print(f"{details[1]}    {formatted_colon}  {formatted_plain_none if original_start_end1 is None else DateTimeIntoNotionFormat(original_start1)} {formatted_right_arrow} {DateTimeIntoNotionFormat(future_dict['start'])}")
-        print(f"{details[2]}      {formatted_colon}  {formatted_plain_none if original_end1 is None else DateTimeIntoNotionFormat(original_end1)} {formatted_right_arrow} {DateTimeIntoNotionFormat(future_dict['end'])}")
-        
-        start_end_value = future_dict.get('start_end', [None, None])
-        start_end_value = start_end_value if isinstance(start_end_value, list) else [None, None]
-
-        start_end_value = original_start_end1 if isinstance(original_start_end1, list) else [None, None]
-        
-        print(f"{details[3]} {formatted_colon}  {formatted_plain_none if start_end_value[0] is None and start_end_value[1] is None else f'{DateTimeIntoNotionFormat(start_end_value[0])} — {DateTimeIntoNotionFormat(start_end_value[1])}'} {formatted_right_arrow} {DateTimeIntoNotionFormat(future_dict['start_end'][0])} — {TimeIntoNotionFormat(future_dict['start_end'][1], future_dict['start_end'][0])}\n")
-        
-    if total_count_default_time_range > 0 and not no_pages_operated_B:
-        print(f"\n{formatted_condition_met} {formatted_colon} '{formatted_italic.format('Start')}', '{formatted_italic.format('End')}' and '{formatted_italic.format('StartEnd')}' are {formatted_all_none}")
-        print(f"\nTotal Pages set {formatted_default_time} / {formatted_time_range} : {formatted_count.format(total_count_default_time_range)}\n\n\n")
-        page_printed = True
-
-
-    for details in auto_default_setting_details:
-        formatted_task, formatted_start, formatted_end, formatted_startend, page_title, start, end, start_end, original_start, original_end = details
-        print(f"{formatted_task}     {formatted_colon}  {formatted_BOLD_italic.format(page_title)}")
-        original_start_str = (formatted_plain_none if original_start is None else DateTimeIntoNotionFormat(original_start, date_only=True)).strip()
-        start_str = (formatted_plain_none if start is None else DateTimeIntoNotionFormat(start, plus_time=True, time_format='24')).strip()
-        print(f"{formatted_start}    {formatted_colon}  {original_start_str} {formatted_right_arrow} {start_str}")
-        print(f"{formatted_end}      {formatted_colon}  {formatted_plain_none if original_end is None else DateTimeIntoNotionFormat(original_end, plus_time=True, time_format='24')} {formatted_right_arrow} {DateTimeIntoNotionFormat(end, plus_time=True, time_format='24').lstrip('0')}")  
-        end_date = end.strftime('%Y-%m-%d')
-        start_date = start.strftime('%Y-%m-%d')
-        
-        if end_date == start_date:
-            if end.strftime('%H:%M') == '00:00':
-                end_time_formatted = end.strftime('%H:%M')
-            else:
-                end_time_formatted = end.strftime('%H:%M').lstrip('0')
-        else:
-            if end.strftime('%H:%M') == '00:00':
-                end_time_formatted = end.strftime('%b %d, %Y  %H:%M')
-            else:
-                end_time_formatted = end.strftime('%b %d, %Y  %H:%M').lstrip('0')
-
-        if start_end is not None and future_dict['start_end'] is not None:
-            print(f"{formatted_startend} {formatted_colon}  {formatted_plain_none} {formatted_right_arrow} {DateTimeIntoNotionFormat(start, plus_time=True, time_format='24')} — {end_time_formatted}\n")
-        elif start_end is not None:
-            print(f"{formatted_startend} {formatted_colon}  {formatted_plain_none} {formatted_right_arrow} {DateTimeIntoNotionFormat(start, plus_time=True, time_format='24')} — {end_time_formatted}\n")
-        else:
-            print(f"{formatted_startend} {formatted_colon}  {formatted_plain_none} {formatted_right_arrow} None\n")
-        page_printed = True
-    if total_count_auto_default_setting > 0 and not no_pages_operated_B:
-        print(f"\n{formatted_condition_met} {formatted_colon} '{formatted_italic.format('End')}' and '{formatted_italic.format('StartEnd')}' are {formatted_all_none} {formatted_semicolon}")
-        print(f"                '{formatted_italic.format('Start')}' {formatted_have_single_date} with {formatted_no_time}")
-        print(f"\nTotal Pages {formatted_reset_default_setting} : {formatted_count.format(total_count_auto_default_setting)}\n\n\n")
-
-
-    for details in alternate_alldayevent_start_details:
-        formatted_task, formatted_start, formatted_end, formatted_startend, page_title, original_start1_before_loop, start_alt, end_alt = details
-        print(f"{formatted_task}     {formatted_colon}  {formatted_BOLD_italic.format(page_title)}")
-        original_start1_before_loop = DateTimeIntoNotionFormat(original_start1_before_loop[0], plus_time=True) if original_start1_before_loop[0] is not None else formatted_plain_none
-        print(f"{formatted_start}    {formatted_colon}  {formatted_plain_none if original_start1_before_loop is None else DateTimeIntoNotionFormat(original_start1_before_loop, date_only=False, plus_time=True, show_midnight=True)} {formatted_right_arrow} {DateTimeIntoNotionFormat(start_alt, date_only=True)}")
-
-        original_end = None  # Set original_end to None
-        print(f"{formatted_end}      {formatted_colon}  {formatted_plain_none if original_end is None else DateTimeIntoNotionFormat(original_end, date_only=True)} {formatted_right_arrow} {DateTimeIntoNotionFormat(end_alt, date_only=True)}")
-        print(f"{formatted_startend} {formatted_colon}  {formatted_plain_none} {formatted_right_arrow} {DateTimeIntoNotionFormat(start_alt, date_only=True)}\n")
-    if total_count_alternate_alldayevent_start > 0 and not no_pages_operated_B:
-        print(f"\n{formatted_condition_met} {formatted_colon} '{formatted_italic.format('End')}' and '{formatted_italic.format('StartEnd')}' are {formatted_all_none} {formatted_semicolon}\n                '{formatted_italic.format('Start')}' is {formatted_explicitly_set_0000}")
-        print(f"\nTotal Pages set {formatted_alternate_alldayevent} {formatted_colon} {formatted_count.format(total_count_alternate_alldayevent_start)}\n\n\n")
-        page_printed = True
-
-
-    for details in alldayevent_details:
-        formatted_task, formatted_start, formatted_end, formatted_startend, page_title, start_alt, end_alt, prev_start, prev_end = details
-        print(f"{formatted_task}     {formatted_colon}  {formatted_BOLD_italic.format(page_title)}")        
-        if prev_start.date() != start_alt.date():
-            # Print prev_start, formatted_right_arrow, and start_alt when dates are different
-            print(f"{formatted_start}    {formatted_colon}  {DateTimeIntoNotionFormat(prev_start, date_only=True, time_format='24')} {formatted_right_arrow} {DateTimeIntoNotionFormat(start_alt, date_only=True, time_format='24')}")
-        elif prev_start.time() == start_alt.time():
-            # Strip off 00:00 from prev_start and remove formatted_right_arrow and start_alt
-            print(f"{formatted_start}    {formatted_colon}  {DateTimeIntoNotionFormat(prev_start, date_only=True, time_format='24')}")
-        if prev_end.date() != end_alt.date():
-            # Print prev_end, formatted_right_arrow, and end_alt when dates are different
-            print(f"{formatted_end}      {formatted_colon}  {DateTimeIntoNotionFormat(prev_end, date_only=True, time_format='24')} {formatted_right_arrow} {DateTimeIntoNotionFormat(end_alt, date_only=True, time_format='24')}")
-        elif prev_end.time() == end_alt.time():
-            # Strip off 00:00 from prev_end and remove formatted_right_arrow and end_alt
-            print(f"{formatted_end}      {formatted_colon}  {DateTimeIntoNotionFormat(prev_end, date_only=True, time_format='24')}")
-        end_date_formatted = DateTimeIntoNotionFormat(end_alt, date_only=True)
-        start_date_formatted = str(DateTimeIntoNotionFormat(start_alt, date_only=True)).strip()
-        if start_date_formatted == end_date_formatted:
-            print(f"{formatted_startend} {formatted_colon}  {formatted_plain_previous} {formatted_right_arrow} {start_date_formatted}\n")
-        else:
-            print(f"{formatted_startend} {formatted_colon}  {formatted_plain_previous} {formatted_right_arrow} {start_date_formatted} — {end_date_formatted}\n")
-
-    single_field = ""
-    diff_field = ""            
-
-    if total_count_alldayevent > 0 and not no_pages_operated_B:
-        event_label = formatted_alldayevent if start_date_formatted == end_date_formatted else formatted_alldaysevent
-        # Check conditions to set field_name
-        if prev_start != start_alt:
-            single_field = "'Start'"
-            diff_field = "'End' + 'StartEnd'"
-        elif prev_end != end_alt:
-            single_field = "'End'"
-            diff_field = "'Start' + 'StartEnd'"
-        print(f"\n{formatted_condition_met} {formatted_colon} {formatted_italic.format(single_field)} {formatted_changed} {formatted_as} {formatted_single_date} {formatted_semicolon}\n                {formatted_italic.format(diff_field)} are Same")
-        print(f"\nTotal Pages {formatted_overwritten} {formatted_as} {event_label} {formatted_colon} {formatted_count.format(total_count_alldayevent)}\n\n\n")
-        page_printed = True
-
-    def process_pages_filled_details(pages_filled_details):
-        page_printed = False
-        for updated_details in pages_filled_details:
-            task, start_new, end_new, original_start, original_end, extra, updated_start_end, start, end = updated_details
-            print(f"{formatted_task}     {formatted_colon}  {formatted_BOLD_italic.format(task)}")
-            print(f"{formatted_start}    {formatted_colon}  {formatted_plain_none + '  ' if original_start is None and original_end is not None or original_start is None and original_end is None and extra is not None else DateTimeIntoNotionFormat(start_new, date_only=False, time_format='24') if original_start is not None else ''}{' ' if original_start is None and start_new is None else ''}{formatted_right_arrow + '  ' if original_start is None and original_end is not None or original_start is None and original_end is None and extra is not None else ''}{' ' if start_new is None else ''}{formatted_plain_none if start_new is None else DateTimeIntoNotionFormat(start_new, date_only=False, time_format='24') if start_new != original_start else ''} ")
-            print(f"{formatted_end}      {formatted_colon}  {formatted_plain_none + '  ' if original_end is None and original_start is not None or original_end is None and original_start is None and extra is not None else DateTimeIntoNotionFormat(end_new, date_only=False, time_format='24') if original_end is not None else ''}{' ' if original_end is None and end_new is None else ''}{formatted_right_arrow + '  ' if original_end is None and original_start is not None or original_end is None and original_start is None and extra is not None else ''}{' ' if end_new is None else ''}{formatted_plain_none if end_new is None else DateTimeIntoNotionFormat(end_new, date_only=False, time_format='24') if end_new != original_end and start_new != end_new or original_end == original_start or original_end is None else ''}")
-            if isinstance(start_new, datetime) and isinstance(end_new, datetime):
-                if start_new.date() != end_new.date():
-                    # New logic for different start and end dates
-                    start_date_str = start_new.strftime('%-d')
-                    end_date_str = end_new.strftime('%-d %b, %Y')
-                    start_time_str = start_new.strftime('%H:%M')
-                    end_time_str = end_new.strftime('%H:%M')
-                    date_range_str = f"{start_date_str} - {end_date_str} {start_time_str} ─ {end_time_str}"
-                else:
-                    # Existing logic for same start and end dates
-                    end_date_formatted = end_new.strftime('%-H:%M')
-                    if end_date_formatted.startswith('00:'):
-                        end_date_formatted = end_date_formatted.lstrip('0')
-                    date_range_str = f"{DateTimeIntoNotionFormat(start_new, date_only=False, time_format='24')} ─ {end_date_formatted}"
-            else:
-                end_date_formatted = None
-
-            start_date_formatted = DateTimeIntoNotionFormat(start_new, date_only=False, time_format='24')
+            except Exception as e:
+                print(f"An error occurred: {type(e).__name__}, {e}")
+                traceback.print_exc()
             
-            if extra is not None:
-                original_start_str = extra['start']
-                original_end_str = extra['end']
-            else:
-                original_start_str = original_end_str = None
-            # Parse the original_start_str into a datetime object
-            if original_start_str is not None:
-                original_start = parse(original_start_str)
-                if original_start.time() == dt_time(0, 0) and original_start.tzinfo is not None and original_end_str is None:
-                    start_str = original_start.strftime('%b %-d, %Y') + '  00:00'
-                else:
-                    start_str = DateTimeIntoNotionFormat(original_start_str, time_format='24')
-            else:
-                start_str = start_date_formatted
-
-            if original_end_str is not None:
-                end_str = DateTimeIntoNotionFormat(original_end_str, time_format='24')
-            else:
-                end_str = start_date_formatted
-            print(f"{formatted_startend} {formatted_colon}  {formatted_plain_none + '  ' if extra is None else ''}{date_range_str}\n")
-        none_field = ""
-        present_field = ""
-        if total_count_pages_filled > 0 and not no_pages_operated_B:
-            # Check conditions to set field_name to 'Start' or 'End'
-            if extra is None:
-                none_field = "'StartEnd'"
-                present_field = "'Start' + 'End'"
-            elif original_start is None and original_end is not None:
-                none_field = "'Start'"
-                present_field = "'End' + 'StartEnd'"
-            elif original_end is None and original_start is not None:
-                none_field = "'End'"
-                present_field = "'Start' + 'StartEnd'"
-            elif original_start is None and original_end is None and extra is not None:
-                none_field = "'Start' + 'End'"
-                present_field = "'StartEnd'"
-            # Use field_name in the format function
-            print(f"\n{formatted_condition_met} {formatted_colon} {formatted_italic.format(none_field)} {formatted_BOLD_italic.format('being')} {formatted_none} {formatted_semicolon}")
-            print(f"                {formatted_italic.format(present_field)} {formatted_have_time}")
-            print(f"\nTotal Pages where '{formatted_italic.format('None')}' {formatted_is_filled_accordingly} : {formatted_count.format(total_count_pages_filled)}\n\n\n")
-            page_printed = True
-        return page_printed
-    
-    page_printed = process_pages_filled_details(pages_filled_details)
-
-    for details in pages_single_dates_details:
-        formatted_task, formatted_prev_start, formatted_prev_end, formatted_original_start, formatted_original_end, start_end_formatted, page_title, new_start_value, new_end_value, prev_start, prev_end = details
-        print(f"{formatted_task}     {formatted_colon}  {formatted_BOLD_italic.format(page_title)}")
-        if prev_start == None:
-            print(f"{formatted_start}    {formatted_colon}  {DateTimeIntoNotionFormat(new_start_value, date_only=True, time_format='24')}")
-        else:
-            print(f"{formatted_start}    {formatted_colon}  {formatted_prev_start}  {formatted_right_arrow}  {DateTimeIntoNotionFormat(new_start_value, date_only=True, time_format='24')}")
-        if prev_end == None:
-            print(f"{formatted_end}      {formatted_colon}  {DateTimeIntoNotionFormat(new_end_value, date_only=True, time_format='24')}")
-        else:
-            print(f"{formatted_end}      {formatted_colon}  {formatted_prev_end}  {formatted_right_arrow}  {DateTimeIntoNotionFormat(new_end_value, date_only=True, time_format='24')}")
-        print(f"{formatted_startend} {formatted_colon}  {start_end_formatted}\n")
-    if total_count_pages_single_dates > 0 and not no_pages_operated_B:
-        # Print the count of pages where 'StartEnd' is filled accordingly 'Start' and 'End' Single-Dates
+        no_pages_operated_B = False
         
-        if new_end_value.date() != new_start_value.date():
-            plural_dates = formatted_s
-        else:
-            plural_dates = ''
-        print(f"\n{formatted_condition_met} {formatted_colon}  Only '{formatted_italic.format('StartEnd')}' is {formatted_none} {formatted_semicolon}")
-        print(f"                '{formatted_italic.format('Start')}' and '{formatted_italic.format('End')}' {formatted_have_single_date} {formatted_semicolon} but {formatted_no_time}")
-        print(f"\nTotal Pages where '{formatted_italic.format('StartEnd')}' {formatted_is_filled_single_date}{plural_dates} accordingly '{formatted_italic.format('Start')}' and '{formatted_italic.format('End')}' Default Time {formatted_colon} {formatted_count.format(total_count_pages_single_dates)}\n\n\n")
-        page_printed = True
+        # After the loop, print the details and summary message for each condition
+        for details in default_time_range_details:
+            print(f"{details[0]}     {formatted_colon}  {formatted_BOLD_italic.format(details[4])}")
+            
+            start_value = page.get('start', None)
+            end_value = page.get('end', None)
 
-    def process_pages_overwritten_details(pages_overwritten_details):
-        page_printed = False
-        for details in pages_overwritten_details:
-            formatted_task, formatted_start, formatted_end, formatted_startend, page_title,original_start, original_end, start_value, end_value, prev_start_value, prev_end_value = details
-            start_end = (start_value, end_value)
-            print(f"{formatted_task}     {formatted_colon}  {formatted_BOLD_italic.format(page_title)}")                   
-            if start_value is not None and prev_start_value is not None:
-                if start_value == prev_start_value:
-                    # 如果start_value和prev_start_value相同，只显示一次日期和时间
-                    print(f"{formatted_start}    {formatted_colon}  {DateTimeIntoNotionFormat(start_value, date_only=False, time_format='24')}")
+            print(f"{details[1]}    {formatted_colon}  {formatted_plain_none if original_start_end1 is None else DateTimeIntoNotionFormat(original_start1)} {formatted_right_arrow} {DateTimeIntoNotionFormat(future_dict['start'])}")
+            print(f"{details[2]}      {formatted_colon}  {formatted_plain_none if original_end1 is None else DateTimeIntoNotionFormat(original_end1)} {formatted_right_arrow} {DateTimeIntoNotionFormat(future_dict['end'])}")
+            
+            start_end_value = future_dict.get('start_end', [None, None])
+            start_end_value = start_end_value if isinstance(start_end_value, list) else [None, None]
+
+            start_end_value = original_start_end1 if isinstance(original_start_end1, list) else [None, None]
+            
+            print(f"{details[3]} {formatted_colon}  {formatted_plain_none if start_end_value[0] is None and start_end_value[1] is None else f'{DateTimeIntoNotionFormat(start_end_value[0])} — {DateTimeIntoNotionFormat(start_end_value[1])}'} {formatted_right_arrow} {DateTimeIntoNotionFormat(future_dict['start_end'][0])} — {TimeIntoNotionFormat(future_dict['start_end'][1], future_dict['start_end'][0])}\n")
+            
+        if total_count_default_time_range > 0 and not no_pages_operated_B:
+            print(f"\n{formatted_condition_met} {formatted_colon} '{formatted_italic.format('Start')}', '{formatted_italic.format('End')}' and '{formatted_italic.format('StartEnd')}' are {formatted_all_none}")
+            print(f"\nTotal Pages set {formatted_default_time} / {formatted_time_range} : {formatted_count.format(total_count_default_time_range)}\n\n\n")
+            page_printed = True
+
+
+        for details in auto_default_setting_details:
+            formatted_task, formatted_start, formatted_end, formatted_startend, page_title, start, end, start_end, original_start, original_end = details
+            print(f"{formatted_task}     {formatted_colon}  {formatted_BOLD_italic.format(page_title)}")
+            original_start_str = (formatted_plain_none if original_start is None else DateTimeIntoNotionFormat(original_start, date_only=True)).strip()
+            start_str = (formatted_plain_none if start is None else DateTimeIntoNotionFormat(start, plus_time=True, time_format='24')).strip()
+            print(f"{formatted_start}    {formatted_colon}  {original_start_str} {formatted_right_arrow} {start_str}")
+            print(f"{formatted_end}      {formatted_colon}  {formatted_plain_none if original_end is None else DateTimeIntoNotionFormat(original_end, plus_time=True, time_format='24')} {formatted_right_arrow} {DateTimeIntoNotionFormat(end, plus_time=True, time_format='24').lstrip('0')}")  
+            end_date = end.strftime('%Y-%m-%d')
+            start_date = start.strftime('%Y-%m-%d')
+            
+            if end_date == start_date:
+                if end.strftime('%H:%M') == '00:00':
+                    end_time_formatted = end.strftime('%H:%M')
                 else:
-                    # 如果start_value和prev_start_value不同，显示修改后的变化
-                    print(f"{formatted_start}    {formatted_colon}  {DateTimeIntoNotionFormat(prev_start_value, date_only=prev_start_value.time() == dt.time(0, 0), time_format='24')} {formatted_right_arrow} {DateTimeIntoNotionFormat(start_value, date_only=False, time_format='24')}")
+                    end_time_formatted = end.strftime('%H:%M').lstrip('0')
             else:
-                # 处理start_value或prev_start_value为None的情况
-                print(f"{formatted_start}    {formatted_colon}  {'None' if start_value is None else DateTimeIntoNotionFormat(start_value, date_only=False, time_format='24')}")
-            print(f"{formatted_end}      {formatted_colon}  {formatted_plain_none if end_value is None else DateTimeIntoNotionFormat(prev_end_value, date_only=prev_end_value.time() == dt.time(0, 0), time_format='24')} {formatted_right_arrow if end_value is not None and prev_end_value is not None and end_value != prev_end_value else ''} {'' if end_value is not None and prev_end_value is not None and end_value == prev_end_value else end_value.strftime('%H:%M') if end_value is not None and prev_end_value is not None and end_value.date() == prev_end_value.date() else DateTimeIntoNotionFormat(end_value, date_only=False, time_format='24') if end_value is not None and prev_end_value is not None and end_value != prev_end_value else ''}")
-            # Ensure 'start_end' is a tuple of datetime objects
-            if start_end is not None and isinstance(start_end[0], str):
+                if end.strftime('%H:%M') == '00:00':
+                    end_time_formatted = end.strftime('%b %d, %Y  %H:%M')
+                else:
+                    end_time_formatted = end.strftime('%b %d, %Y  %H:%M').lstrip('0')
+
+            if start_end is not None and future_dict['start_end'] is not None:
+                print(f"{formatted_startend} {formatted_colon}  {formatted_plain_none} {formatted_right_arrow} {DateTimeIntoNotionFormat(start, plus_time=True, time_format='24')} — {end_time_formatted}\n")
+            elif start_end is not None:
+                print(f"{formatted_startend} {formatted_colon}  {formatted_plain_none} {formatted_right_arrow} {DateTimeIntoNotionFormat(start, plus_time=True, time_format='24')} — {end_time_formatted}\n")
+            else:
+                print(f"{formatted_startend} {formatted_colon}  {formatted_plain_none} {formatted_right_arrow} None\n")
+            page_printed = True
+        if total_count_auto_default_setting > 0 and not no_pages_operated_B:
+            print(f"\n{formatted_condition_met} {formatted_colon} '{formatted_italic.format('End')}' and '{formatted_italic.format('StartEnd')}' are {formatted_all_none} {formatted_semicolon}")
+            print(f"                '{formatted_italic.format('Start')}' {formatted_have_single_date} with {formatted_no_time}")
+            print(f"\nTotal Pages {formatted_reset_default_setting} : {formatted_count.format(total_count_auto_default_setting)}\n\n\n")
+
+
+        for details in alternate_alldayevent_start_details:
+            formatted_task, formatted_start, formatted_end, formatted_startend, page_title, original_start1_before_loop, start_alt, end_alt = details
+            print(f"{formatted_task}     {formatted_colon}  {formatted_BOLD_italic.format(page_title)}")
+            original_start1_before_loop = DateTimeIntoNotionFormat(original_start1_before_loop[0], plus_time=True) if original_start1_before_loop[0] is not None else formatted_plain_none
+            print(f"{formatted_start}    {formatted_colon}  {formatted_plain_none if original_start1_before_loop is None else DateTimeIntoNotionFormat(original_start1_before_loop, date_only=False, plus_time=True, show_midnight=True)} {formatted_right_arrow} {DateTimeIntoNotionFormat(start_alt, date_only=True)}")
+
+            original_end = None  # Set original_end to None
+            print(f"{formatted_end}      {formatted_colon}  {formatted_plain_none if original_end is None else DateTimeIntoNotionFormat(original_end, date_only=True)} {formatted_right_arrow} {DateTimeIntoNotionFormat(end_alt, date_only=True)}")
+            print(f"{formatted_startend} {formatted_colon}  {formatted_plain_none} {formatted_right_arrow} {DateTimeIntoNotionFormat(start_alt, date_only=True)}\n")
+        if total_count_alternate_alldayevent_start > 0 and not no_pages_operated_B:
+            print(f"\n{formatted_condition_met} {formatted_colon} '{formatted_italic.format('End')}' and '{formatted_italic.format('StartEnd')}' are {formatted_all_none} {formatted_semicolon}\n                '{formatted_italic.format('Start')}' is {formatted_explicitly_set_0000}")
+            print(f"\nTotal Pages set {formatted_alternate_alldayevent} {formatted_colon} {formatted_count.format(total_count_alternate_alldayevent_start)}\n\n\n")
+            page_printed = True
+
+
+        for details in alldayevent_details:
+            formatted_task, formatted_start, formatted_end, formatted_startend, page_title, start_alt, end_alt, prev_start, prev_end = details
+            print(f"{formatted_task}     {formatted_colon}  {formatted_BOLD_italic.format(page_title)}")        
+            if prev_start.date() != start_alt.date():
+                # Print prev_start, formatted_right_arrow, and start_alt when dates are different
+                print(f"{formatted_start}    {formatted_colon}  {DateTimeIntoNotionFormat(prev_start, date_only=True, time_format='24')} {formatted_right_arrow} {DateTimeIntoNotionFormat(start_alt, date_only=True, time_format='24')}")
+            elif prev_start.time() == start_alt.time():
+                # Strip off 00:00 from prev_start and remove formatted_right_arrow and start_alt
+                print(f"{formatted_start}    {formatted_colon}  {DateTimeIntoNotionFormat(prev_start, date_only=True, time_format='24')}")
+            if prev_end.date() != end_alt.date():
+                # Print prev_end, formatted_right_arrow, and end_alt when dates are different
+                print(f"{formatted_end}      {formatted_colon}  {DateTimeIntoNotionFormat(prev_end, date_only=True, time_format='24')} {formatted_right_arrow} {DateTimeIntoNotionFormat(end_alt, date_only=True, time_format='24')}")
+            elif prev_end.time() == end_alt.time():
+                # Strip off 00:00 from prev_end and remove formatted_right_arrow and end_alt
+                print(f"{formatted_end}      {formatted_colon}  {DateTimeIntoNotionFormat(prev_end, date_only=True, time_format='24')}")
+            end_date_formatted = DateTimeIntoNotionFormat(end_alt, date_only=True)
+            start_date_formatted = str(DateTimeIntoNotionFormat(start_alt, date_only=True)).strip()
+            if start_date_formatted == end_date_formatted:
+                print(f"{formatted_startend} {formatted_colon}  {formatted_plain_previous} {formatted_right_arrow} {start_date_formatted}\n")
+            else:
+                print(f"{formatted_startend} {formatted_colon}  {formatted_plain_previous} {formatted_right_arrow} {start_date_formatted} — {end_date_formatted}\n")
+
+        single_field = ""
+        diff_field = ""            
+
+        if total_count_alldayevent > 0 and not no_pages_operated_B:
+            event_label = formatted_alldayevent if start_date_formatted == end_date_formatted else formatted_alldaysevent
+            # Check conditions to set field_name
+            if prev_start != start_alt:
+                single_field = "'Start'"
+                diff_field = "'End' + 'StartEnd'"
+            elif prev_end != end_alt:
+                single_field = "'End'"
+                diff_field = "'Start' + 'StartEnd'"
+            print(f"\n{formatted_condition_met} {formatted_colon} {formatted_italic.format(single_field)} {formatted_changed} {formatted_as} {formatted_single_date} {formatted_semicolon}\n                {formatted_italic.format(diff_field)} are Same")
+            print(f"\nTotal Pages {formatted_overwritten} {formatted_as} {event_label} {formatted_colon} {formatted_count.format(total_count_alldayevent)}\n\n\n")
+            page_printed = True
+
+        def process_pages_filled_details(pages_filled_details):
+            page_printed = False
+            for updated_details in pages_filled_details:
+                task, start_new, end_new, original_start, original_end, extra, updated_start_end, start, end = updated_details
+                print(f"{formatted_task}     {formatted_colon}  {formatted_BOLD_italic.format(task)}")
+                print(f"{formatted_start}    {formatted_colon}  {formatted_plain_none + '  ' if original_start is None and original_end is not None or original_start is None and original_end is None and extra is not None else DateTimeIntoNotionFormat(start_new, date_only=False, time_format='24') if original_start is not None else ''}{' ' if original_start is None and start_new is None else ''}{formatted_right_arrow + '  ' if original_start is None and original_end is not None or original_start is None and original_end is None and extra is not None else ''}{' ' if start_new is None else ''}{formatted_plain_none if start_new is None else DateTimeIntoNotionFormat(start_new, date_only=False, time_format='24') if start_new != original_start else ''} ")
+                print(f"{formatted_end}      {formatted_colon}  {formatted_plain_none + '  ' if original_end is None and original_start is not None or original_end is None and original_start is None and extra is not None else DateTimeIntoNotionFormat(end_new, date_only=False, time_format='24') if original_end is not None else ''}{' ' if original_end is None and end_new is None else ''}{formatted_right_arrow + '  ' if original_end is None and original_start is not None or original_end is None and original_start is None and extra is not None else ''}{' ' if end_new is None else ''}{formatted_plain_none if end_new is None else DateTimeIntoNotionFormat(end_new, date_only=False, time_format='24') if end_new != original_end and start_new != end_new or original_end == original_start or original_end is None else ''}")
+                if isinstance(start_new, datetime) and isinstance(end_new, datetime):
+                    if start_new.date() != end_new.date():
+                        # New logic for different start and end dates
+                        start_date_str = start_new.strftime('%-d')
+                        end_date_str = end_new.strftime('%-d %b, %Y')
+                        start_time_str = start_new.strftime('%H:%M')
+                        end_time_str = end_new.strftime('%H:%M')
+                        date_range_str = f"{start_date_str} - {end_date_str} {start_time_str} ─ {end_time_str}"
+                    else:
+                        # Existing logic for same start and end dates
+                        end_date_formatted = end_new.strftime('%-H:%M')
+                        if end_date_formatted.startswith('00:'):
+                            end_date_formatted = end_date_formatted.lstrip('0')
+                        date_range_str = f"{DateTimeIntoNotionFormat(start_new, date_only=False, time_format='24')} ─ {end_date_formatted}"
+                else:
+                    end_date_formatted = None
+
+                start_date_formatted = DateTimeIntoNotionFormat(start_new, date_only=False, time_format='24')
+                
+                if extra is not None:
+                    original_start_str = extra['start']
+                    original_end_str = extra['end']
+                else:
+                    original_start_str = original_end_str = None
+                # Parse the original_start_str into a datetime object
+                if original_start_str is not None:
+                    original_start = parse(original_start_str)
+                    if original_start.time() == dt_time(0, 0) and original_start.tzinfo is not None and original_end_str is None:
+                        start_str = original_start.strftime('%b %-d, %Y') + '  00:00'
+                    else:
+                        start_str = DateTimeIntoNotionFormat(original_start_str, time_format='24')
+                else:
+                    start_str = start_date_formatted
+
+                if original_end_str is not None:
+                    end_str = DateTimeIntoNotionFormat(original_end_str, time_format='24')
+                else:
+                    end_str = start_date_formatted
+                print(f"{formatted_startend} {formatted_colon}  {formatted_plain_none + '  ' if extra is None else ''}{date_range_str}\n")
+            none_field = ""
+            present_field = ""
+            if total_count_pages_filled > 0 and not no_pages_operated_B:
+                # Check conditions to set field_name to 'Start' or 'End'
+                if extra is None:
+                    none_field = "'StartEnd'"
+                    present_field = "'Start' + 'End'"
+                elif original_start is None and original_end is not None:
+                    none_field = "'Start'"
+                    present_field = "'End' + 'StartEnd'"
+                elif original_end is None and original_start is not None:
+                    none_field = "'End'"
+                    present_field = "'Start' + 'StartEnd'"
+                elif original_start is None and original_end is None and extra is not None:
+                    none_field = "'Start' + 'End'"
+                    present_field = "'StartEnd'"
+                # Use field_name in the format function
+                print(f"\n{formatted_condition_met} {formatted_colon} {formatted_italic.format(none_field)} {formatted_BOLD_italic.format('being')} {formatted_none} {formatted_semicolon}")
+                print(f"                {formatted_italic.format(present_field)} {formatted_have_time}")
+                print(f"\nTotal Pages where '{formatted_italic.format('None')}' {formatted_is_filled_accordingly} : {formatted_count.format(total_count_pages_filled)}\n\n\n")
+                page_printed = True
+            return page_printed
+        
+        page_printed = process_pages_filled_details(pages_filled_details)
+
+        for details in pages_single_dates_details:
+            formatted_task, formatted_prev_start, formatted_prev_end, formatted_original_start, formatted_original_end, start_end_formatted, page_title, new_start_value, new_end_value, prev_start, prev_end = details
+            print(f"{formatted_task}     {formatted_colon}  {formatted_BOLD_italic.format(page_title)}")
+            if prev_start == None:
+                print(f"{formatted_start}    {formatted_colon}  {DateTimeIntoNotionFormat(new_start_value, date_only=True, time_format='24')}")
+            else:
+                print(f"{formatted_start}    {formatted_colon}  {formatted_prev_start}  {formatted_right_arrow}  {DateTimeIntoNotionFormat(new_start_value, date_only=True, time_format='24')}")
+            if prev_end == None:
+                print(f"{formatted_end}      {formatted_colon}  {DateTimeIntoNotionFormat(new_end_value, date_only=True, time_format='24')}")
+            else:
+                print(f"{formatted_end}      {formatted_colon}  {formatted_prev_end}  {formatted_right_arrow}  {DateTimeIntoNotionFormat(new_end_value, date_only=True, time_format='24')}")
+            print(f"{formatted_startend} {formatted_colon}  {start_end_formatted}\n")
+        if total_count_pages_single_dates > 0 and not no_pages_operated_B:
+            # Print the count of pages where 'StartEnd' is filled accordingly 'Start' and 'End' Single-Dates
+            
+            if new_end_value.date() != new_start_value.date():
+                plural_dates = formatted_s
+            else:
+                plural_dates = ''
+            print(f"\n{formatted_condition_met} {formatted_colon}  Only '{formatted_italic.format('StartEnd')}' is {formatted_none} {formatted_semicolon}")
+            print(f"                '{formatted_italic.format('Start')}' and '{formatted_italic.format('End')}' {formatted_have_single_date} {formatted_semicolon} but {formatted_no_time}")
+            print(f"\nTotal Pages where '{formatted_italic.format('StartEnd')}' {formatted_is_filled_single_date}{plural_dates} accordingly '{formatted_italic.format('Start')}' and '{formatted_italic.format('End')}' Default Time {formatted_colon} {formatted_count.format(total_count_pages_single_dates)}\n\n\n")
+            page_printed = True
+
+        def process_pages_overwritten_details(pages_overwritten_details):
+            page_printed = False
+            for details in pages_overwritten_details:
+                formatted_task, formatted_start, formatted_end, formatted_startend, page_title,original_start, original_end, start_value, end_value, prev_start_value, prev_end_value = details
                 start_end = (start_value, end_value)
-            
-            if start_end[0].date() == start_end[1].date():
-                if start_end[1].hour > 9:
-                    end_date_formatted = start_end[1].strftime('%H:%M')
+                print(f"{formatted_task}     {formatted_colon}  {formatted_BOLD_italic.format(page_title)}")                   
+                if start_value is not None and prev_start_value is not None:
+                    if start_value == prev_start_value:
+                        # 如果start_value和prev_start_value相同，只显示一次日期和时间
+                        print(f"{formatted_start}    {formatted_colon}  {DateTimeIntoNotionFormat(start_value, date_only=False, time_format='24')}")
+                    else:
+                        # 如果start_value和prev_start_value不同，显示修改后的变化
+                        print(f"{formatted_start}    {formatted_colon}  {DateTimeIntoNotionFormat(prev_start_value, date_only=prev_start_value.time() == dt.time(0, 0), time_format='24')} {formatted_right_arrow} {DateTimeIntoNotionFormat(start_value, date_only=False, time_format='24')}")
                 else:
-                    end_date_formatted = start_end[1].strftime('%H:%M')
-            else:
-                end_date_formatted = DateTimeIntoNotionFormat(start_end[1], date_only=False, plus_time=True, time_format='24')
-            startend_changed = start_end[0] != prev_start_value or start_end[1] != prev_end_value
+                    # 处理start_value或prev_start_value为None的情况
+                    print(f"{formatted_start}    {formatted_colon}  {'None' if start_value is None else DateTimeIntoNotionFormat(start_value, date_only=False, time_format='24')}")
+                print(f"{formatted_end}      {formatted_colon}  {formatted_plain_none if end_value is None else DateTimeIntoNotionFormat(prev_end_value, date_only=prev_end_value.time() == dt.time(0, 0), time_format='24')} {formatted_right_arrow if end_value is not None and prev_end_value is not None and end_value != prev_end_value else ''} {'' if end_value is not None and prev_end_value is not None and end_value == prev_end_value else end_value.strftime('%H:%M') if end_value is not None and prev_end_value is not None and end_value.date() == prev_end_value.date() else DateTimeIntoNotionFormat(end_value, date_only=False, time_format='24') if end_value is not None and prev_end_value is not None and end_value != prev_end_value else ''}")
+                # Ensure 'start_end' is a tuple of datetime objects
+                if start_end is not None and isinstance(start_end[0], str):
+                    start_end = (start_value, end_value)
+                
+                if start_end[0].date() == start_end[1].date():
+                    if start_end[1].hour > 9:
+                        end_date_formatted = start_end[1].strftime('%H:%M')
+                    else:
+                        end_date_formatted = start_end[1].strftime('%H:%M')
+                else:
+                    end_date_formatted = DateTimeIntoNotionFormat(start_end[1], date_only=False, plus_time=True, time_format='24')
+                startend_changed = start_end[0] != prev_start_value or start_end[1] != prev_end_value
 
-            startend_string = f"{formatted_startend} {formatted_colon}"
-            if startend_changed:
-                startend_string += f"  {formatted_plain_previous} {formatted_right_arrow}"
-            startend_string += f"  {DateTimeIntoNotionFormat(start_end[0], date_only=False, plus_time=True, show_midnight=True, time_format='24')}  —  {end_date_formatted}\n"
-            print(startend_string)
-                    
-            # Initialize initially_modified as None
-            initially_modified = None
+                startend_string = f"{formatted_startend} {formatted_colon}"
+                if startend_changed:
+                    startend_string += f"  {formatted_plain_previous} {formatted_right_arrow}"
+                startend_string += f"  {DateTimeIntoNotionFormat(start_end[0], date_only=False, plus_time=True, show_midnight=True, time_format='24')}  —  {end_date_formatted}\n"
+                print(startend_string)
+                        
+                # Initialize initially_modified as None
+                initially_modified = None
 
-            # Store the original values of 'Start' and 'StartEnd'
-            original_start_value = original_start
-            original_start_end_value = start_end[0]
+                # Store the original values of 'Start' and 'StartEnd'
+                original_start_value = original_start
+                original_start_end_value = start_end[0]
 
-            # Check if 'Start' is modified
-            start_modified = start_value != original_start_value
+                # Check if 'Start' is modified
+                start_modified = start_value != original_start_value
 
-            # Check if 'End' is modified
-            end_modified = end_value != original_end
+                # Check if 'End' is modified
+                end_modified = end_value != original_end
 
-            # Check if 'StartEnd' is modified
-            start_end_modified = prev_end_value == original_end and prev_start == original_start and start_end[0] != original_start_end_value or start_end[1] != original_end
+                # Check if 'StartEnd' is modified
+                start_end_modified = prev_end_value == original_end and prev_start == original_start and start_end[0] != original_start_end_value or start_end[1] != original_end
 
-            # Determine which value was initially modified
-            if start_modified:
-                initially_modified = "'Start' and 'StartEnd'" + ' ' + formatted_are
-                if start_end_modified:
+                # Determine which value was initially modified
+                if start_modified:
+                    initially_modified = "'Start' and 'StartEnd'" + ' ' + formatted_are
+                    if start_end_modified:
+                        initially_modified = "'StartEnd'" + ' ' + formatted_is
+                elif end_modified:
+                    initially_modified = "'End' and 'StartEnd'" + ' ' + formatted_are
+                elif start_end_modified:
                     initially_modified = "'StartEnd'" + ' ' + formatted_is
-            elif end_modified:
-                initially_modified = "'End' and 'StartEnd'" + ' ' + formatted_are
-            elif start_end_modified:
-                initially_modified = "'StartEnd'" + ' ' + formatted_is
 
-        if total_count_pages_overwritten > 0 and not no_pages_operated_B:
-            print(f"{formatted_condition_met} {formatted_colon}  'All' {formatted_has_time} {formatted_semicolon}")
-            print(f"                 {formatted_italic.format(initially_modified)} {formatted_initially_modified}")
-            print(f"\nTotal Pages {formatted_overwritten} : {formatted_count.format(total_count_pages_overwritten)}\n\n\n")
-            page_printed = True
-        return page_printed
-    
-    page_printed = process_pages_overwritten_details(pages_overwritten_details)
+            if total_count_pages_overwritten > 0 and not no_pages_operated_B:
+                print(f"{formatted_condition_met} {formatted_colon}  'All' {formatted_has_time} {formatted_semicolon}")
+                print(f"                 {formatted_italic.format(initially_modified)} {formatted_initially_modified}")
+                print(f"\nTotal Pages {formatted_overwritten} : {formatted_count.format(total_count_pages_overwritten)}\n\n\n")
+                page_printed = True
+            return page_printed
+        
+        page_printed = process_pages_overwritten_details(pages_overwritten_details)
 
-    page_printed = True
-    if page_printed:            
-        no_pages_operated_B = True
+        page_printed = True
+        if page_printed:            
+            no_pages_operated_B = True
 
-    # After the loop, you can get the total number of modified pages like this:
-    result['total_pages_modified'] = len(modified_pages)
+        # After the loop, you can get the total number of modified pages like this:
+        result['total_pages_modified'] = len(modified_pages)
 
-    # This is the end of the loop #
+        # This is the end of the loop #
 
-if page['id'] not in processed_pages:
-    executor = ThreadPoolExecutor(max_workers=1)
-    future = executor.submit(process_pages_condition_A, page, result['counts'], result['details'].get('set_Default_details', []), result['details'].get('auto_default_setting_details', []), result['details'].get('set_Alternate_alldayevent_start_details', []), result['details'].get('pages_filled_details', []), lock, processed_pages)
-    try:
-        result = future.result(timeout=10.0)  # Wait at most 5 seconds
-        if 'details' not in result:
-            result['details'] = {'set_Default_details': [], 'auto_default_setting_details': [], 'set_Alternate_alldayevent_start_details': [], 'pages_filled_details': [], 'pages_single_dates_details': [], 'pages_overwritten_details': []}
-    except TimeoutError:
-        print("The function is taking longer than expected.")
-        future.cancel()  # Cancel the future if it's taking too long
-    except Exception as e:
-        print(f"An error occurred: {type(e).__name__}, {e}")
-        traceback.print_exc()  # Print the traceback
-    finally:
-        executor.shutdown()  # Always shutdown the executor when you're done
+# 檢查是否有頁面存在
+if not processed_pages:
+    pass
+else:
+    for page in processed_pages:
+        # 現在你可以安全地檢查 page['id']
+        if page['id'] not in processed_pages:
+            executor = ThreadPoolExecutor(max_workers=1)
+            future = executor.submit(process_pages_condition_A, page, result['counts'], result['details'].get('set_Default_details', []), result['details'].get('auto_default_setting_details', []), result['details'].get('set_Alternate_alldayevent_start_details', []), result['details'].get('pages_filled_details', []), lock, processed_pages)
+            try:
+                result = future.result(timeout=10.0)  # Wait at most 5 seconds
+                if 'details' not in result:
+                    result['details'] = {'set_Default_details': [], 'auto_default_setting_details': [], 'set_Alternate_alldayevent_start_details': [], 'pages_filled_details': [], 'pages_single_dates_details': [], 'pages_overwritten_details': []}
+            except TimeoutError:
+                print("The function is taking longer than expected.")
+                future.cancel()  # Cancel the future if it's taking too long
+            except Exception as e:
+                print(f"An error occurred: {type(e).__name__}, {e}")
+                traceback.print_exc()  # Print the traceback
+            finally:
+                executor.shutdown()  # Always shutdown the executor when you're done
 
 # After the threads have finished, you can get the results like this:
 counts = {}  # Define the "counts" variable
@@ -3227,14 +3244,12 @@ while not return_values.empty():
 result['total_pages_modified'] = len(modified_pages)
 
 if not no_pages_operated_B:
+    print("\r\033[K", end="")
     print(f"{formatted_no} Condition is Met.\n{formatted_no} Operation is Performed.\n{formatted_no} Page is Modified\n")
 else:
     print(f"Total Pages {formatted_modified} : {formatted_count.format(result['total_pages_modified'])}")
 
-# Signal the dynamic_counter_indicator function to stop
 stop_event.set()
-
-# Wait for the separate thread to finish
 thread.join()
 
 # Erase the "Printing" message and the dots
@@ -3242,5 +3257,5 @@ print("\r" + " " * (len(f"{formatted_Printing} ") + total_dots + 10) + "\r", end
 
 print(f"{formatted_done} Processing.")
 
-print('\n' + '-' * 70 + "\n" + ' ' * 29 + "End of Script\n" + '-' * 70)
+print('\n' + '-' * terminal_width + "\n" + "End of Script".center(terminal_width) + "\n" + '-' * terminal_width)
         
