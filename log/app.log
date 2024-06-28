@@ -5751,3 +5751,13 @@ INFO:werkzeug:127.0.0.1 - - [27/Jun/2024 20:07:37] "POST /slack/events HTTP/1.0"
 2024-06-28 11:34:57,414 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on http://127.0.0.1:8080
 2024-06-28 11:34:57,415 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-28 11:37:43,269 - root - INFO - This is an info message.
+2024-06-28 11:37:43,270 - root - ERROR - This is an error message.
+2024-06-28 11:37:43,761 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-28 11:37:43,761 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-28 11:37:48,772 - root - INFO - This is an info message.
+2024-06-28 11:37:48,772 - root - ERROR - This is an error message.
+2024-06-28 11:37:49,349 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-28 11:37:49,349 - werkzeug - INFO - [33mPress CTRL+C to quit[0m

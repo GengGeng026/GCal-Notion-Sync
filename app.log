@@ -5,3 +5,13 @@ httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce6
 2024-06-28 11:34:57,414 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on http://127.0.0.1:8080
 2024-06-28 11:34:57,415 - INFO - [33mPress CTRL+C to quit[0m
+2024-06-28 11:37:43,269 - INFO - This is an info message.
+2024-06-28 11:37:43,270 - ERROR - This is an error message.
+2024-06-28 11:37:43,761 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-28 11:37:43,761 - INFO - [33mPress CTRL+C to quit[0m
+2024-06-28 11:37:48,772 - INFO - This is an info message.
+2024-06-28 11:37:48,772 - ERROR - This is an error message.
+2024-06-28 11:37:49,349 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-28 11:37:49,349 - INFO - [33mPress CTRL+C to quit[0m
