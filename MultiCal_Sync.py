@@ -1671,13 +1671,37 @@ animate_text_wave_with_progress(text="Loading", new_text="Checked 2.7", target_p
 
 print("\r\033[K", end="")
 
+def update_notion_page_with_retry(page_id, updates, max_retries=5):
+    retry_count = 0
+    backoff_factor = 1  # Initial backoff duration in seconds
+    while retry_count < max_retries:
+        try:
+            # Increase timeout for the request
+            with httpx.Client() as client:
+                notion.pages.update(page_id=page_id, **updates, http_client=client)
+            return
+        except HTTPResponseError as e:
+            if e.status == 502:
+                # Handle 502 Bad Gateway specifically, if needed
+                print(f"Retry {retry_count + 1}/{max_retries}: Server error {e.status}. Retrying after {backoff_factor} seconds...")
+            else:
+                # Handle other HTTP errors
+                print(f"Retry {retry_count + 1}/{max_retries}: Failed with status {e.status}. Retrying after {backoff_factor} seconds...")
+            time.sleep(backoff_factor)
+            backoff_factor *= 2  # Exponential backoff
+            retry_count += 1
+    print("Failed to update Notion page after maximum retries.")
+
+CalNames = list(calendarDictionary.keys())
+CalIds = list(calendarDictionary.values())
+
 for i in range(len(new_notion_start_datetimes)):
     if new_notion_start_datetimes[i]  != '' and new_notion_end_datetimes[i] != '': #both start and end time need to be updated
         start = new_notion_start_datetimes[i]
         end = new_notion_end_datetimes[i]
  
         if start.hour == 0 and start.minute == 0 and start == end: #you're given 12 am dateTimes so you want to enter them as dates (not datetimes) into Notion
-            my_page = notion.pages.update( #update the notion dashboard with the new datetime and update the last updated time
+            my_page = update_notion_page_with_retry( #update the notion dashboard with the new datetime and update the last updated time
                 **{
                     "page_id": notion_IDs_List[i], 
                     "properties": {
@@ -1696,17 +1720,29 @@ for i in range(len(new_notion_start_datetimes)):
                                 'end': None,
                             }
                         },
+                        Current_Calendar_Id_Notion_Name: {
+                            "rich_text": [{
+                                'text': {
+                                    'content': CalIds[CalNames.index(gCalId)]
+                                }
+                            }]
+                        },
+                        Calendar_Notion_Name: {
+                            'select': {
+                                "name": gCalId 
+                            },
+                        },
                         LastUpdatedTime_Notion_Name: {
                             "date":{
-                                'start': notion_time(), #has to be adjsuted for when daylight savings is different
+                                'start': notion_time(),
                                 'end': None,
                             }
-                        }
+                        },
                     },
                 },
             )
         elif start.hour == 0 and start.minute == 0 and end.hour == 0 and end.minute == 0: #you're given 12 am dateTimes so you want to enter them as dates (not datetimes) into Notion
-            my_page = notion.pages.update( #update the notion dashboard with the new datetime and update the last updated time
+            my_page = update_notion_page_with_retry( #update the notion dashboard with the new datetime and update the last updated time
                 **{
                     "page_id": notion_IDs_List[i],  
                     "properties": {
@@ -1730,12 +1766,24 @@ for i in range(len(new_notion_start_datetimes)):
                                 'start': notion_time(), #has to be adjsuted for when daylight savings is different
                                 'end': None,
                             }
-                        }
+                        },
+                        Current_Calendar_Id_Notion_Name: {
+                            "rich_text": [{
+                                'text': {
+                                    'content': CalIds[CalNames.index(gCalId)]
+                                }
+                            }]
+                        },
+                        Calendar_Notion_Name: {
+                            'select': {
+                                "name": gCalId 
+                            },
+                        },
                     },
                 },
             )
         else: #update Notin using datetime format 
-            my_page = notion.pages.update( #update the notion dashboard with the new datetime and update the last updated time
+            my_page = update_notion_page_with_retry( #update the notion dashboard with the new datetime and update the last updated time
                 **{
                     "page_id": notion_IDs_List[i],
                     "properties": {
@@ -1759,7 +1807,19 @@ for i in range(len(new_notion_start_datetimes)):
                                 'start': notion_time(), #has to be adjsuted for when daylight savings is different
                                 'end': None,
                             }
-                        }
+                        },
+                        Current_Calendar_Id_Notion_Name: {
+                            "rich_text": [{
+                                'text': {
+                                    'content': CalIds[CalNames.index(gCalId)]
+                                }
+                            }]
+                        },
+                        Calendar_Notion_Name: {
+                            'select': {
+                                "name": gCalId 
+                            },
+                        },
                     },
                 },
             )
@@ -1768,7 +1828,7 @@ for i in range(len(new_notion_start_datetimes)):
         end = notion_end_datetimes[i]
  
         if start.hour == 0 and start.minute == 0 and start == end: #you're given 12 am dateTimes so you want to enter them as dates (not datetimes) into Notion
-            my_page = notion.pages.update( #update the notion dashboard with the new datetime and update the last updated time
+            my_page = update_notion_page_with_retry( #update the notion dashboard with the new datetime and update the last updated time
                 **{
                     "page_id": notion_IDs_List[i],
                     "properties": {
@@ -1792,12 +1852,24 @@ for i in range(len(new_notion_start_datetimes)):
                                 'start': notion_time(), #has to be adjsuted for when daylight savings is different
                                 'end': None,
                             }
-                        }
+                        },
+                        Current_Calendar_Id_Notion_Name: {
+                            "rich_text": [{
+                                'text': {
+                                    'content': CalIds[CalNames.index(gCalId)]
+                                }
+                            }]
+                        },
+                        Calendar_Notion_Name: {
+                            'select': {
+                                "name": gCalId 
+                            },
+                        },
                     },
                 },
             )
         elif start.hour == 0 and start.minute == 0 and end.hour == 0 and end.minute == 0: #you're given 12 am dateTimes so you want to enter them as dates (not datetimes) into Notion
-            my_page = notion.pages.update( #update the notion dashboard with the new datetime and update the last updated time
+            my_page = update_notion_page_with_retry( #update the notion dashboard with the new datetime and update the last updated time
                 **{
                     "page_id": notion_IDs_List[i],
                     "properties": {
@@ -1821,12 +1893,24 @@ for i in range(len(new_notion_start_datetimes)):
                                 'start': notion_time(), #has to be adjsuted for when daylight savings is different
                                 'end': None,
                             }
-                        }
+                        },
+                        Current_Calendar_Id_Notion_Name: {
+                            "rich_text": [{
+                                'text': {
+                                    'content': CalIds[CalNames.index(gCalId)]
+                                }
+                            }]
+                        },
+                        Calendar_Notion_Name: {
+                            'select': {
+                                "name": gCalId 
+                            },
+                        },
                     },
                 },
             )
         else: #update Notin using datetime format 
-            my_page = notion.pages.update( #update the notion dashboard with the new datetime and update the last updated time
+            my_page = update_notion_page_with_retry( #update the notion dashboard with the new datetime and update the last updated time
                 **{
                     "page_id": notion_IDs_List[i],
                     "properties": {
@@ -1850,7 +1934,19 @@ for i in range(len(new_notion_start_datetimes)):
                                 'start': notion_time(), #has to be adjsuted for when daylight savings is different
                                 'end': None,
                             }
-                        }
+                        },
+                        Current_Calendar_Id_Notion_Name: {
+                            "rich_text": [{
+                                'text': {
+                                    'content': CalIds[CalNames.index(gCalId)]
+                                }
+                            }]
+                        },
+                        Calendar_Notion_Name: {
+                            'select': {
+                                "name": gCalId 
+                            },
+                        },
                     },
                 },
             )
@@ -1859,7 +1955,7 @@ for i in range(len(new_notion_start_datetimes)):
         end = new_notion_end_datetimes[i]
 
         if start.hour == 0 and start.minute == 0 and start == end: #you're given 12 am dateTimes so you want to enter them as dates (not datetimes) into Notion
-            my_page = notion.pages.update( #update the notion dashboard with the new datetime and update the last updated time
+            my_page = update_notion_page_with_retry( #update the notion dashboard with the new datetime and update the last updated time
                 **{
                     "page_id": notion_IDs_List[i],
                     "properties": {
@@ -1883,12 +1979,24 @@ for i in range(len(new_notion_start_datetimes)):
                                 'start': notion_time(), #has to be adjsuted for when daylight savings is different
                                 'end': None,
                             }
-                        }
+                        },
+                        Current_Calendar_Id_Notion_Name: {
+                            "rich_text": [{
+                                'text': {
+                                    'content': CalIds[CalNames.index(gCalId)]
+                                }
+                            }]
+                        },
+                        Calendar_Notion_Name: {
+                            'select': {
+                                "name": gCalId 
+                            },
+                        },
                     },
                 },
             )
         elif start.hour == 0 and start.minute == 0 and end.hour == 0 and end.minute == 0: #you're given 12 am dateTimes so you want to enter them as dates (not datetimes) into Notion
-            my_page = notion.pages.update( #update the notion dashboard with the new datetime and update the last updated time
+            my_page = update_notion_page_with_retry( #update the notion dashboard with the new datetime and update the last updated time
                 **{
                     "page_id": notion_IDs_List[i],
                     "properties": {
@@ -1912,7 +2020,19 @@ for i in range(len(new_notion_start_datetimes)):
                                 'start': notion_time(), #has to be adjsuted for when daylight savings is different
                                 'end': None,
                             }
-                        }
+                        },
+                        Current_Calendar_Id_Notion_Name: {
+                            "rich_text": [{
+                                'text': {
+                                    'content': CalIds[CalNames.index(gCalId)]
+                                }
+                            }]
+                        },
+                        Calendar_Notion_Name: {
+                            'select': {
+                                "name": gCalId 
+                            },
+                        },
                     },
                 },
             )
@@ -1941,71 +2061,24 @@ for i in range(len(new_notion_start_datetimes)):
                                 'start': notion_time(), #has to be adjsuted for when daylight savings is different
                                 'end': None,
                             }
+                        },
+                        Current_Calendar_Id_Notion_Name: {
+                            "rich_text": [{
+                                'text': {
+                                    'content': CalIds[CalNames.index(gCalId)]
+                                }
+                            }]
+                        },
+                        Calendar_Notion_Name: {
+                            'select': {
+                                "name": gCalId 
+                            },
                         }
                     },
                 },
             )
     else: #nothing needs to be updated here
         continue 
-
-
-animate_text_wave_with_progress(text="Loading", new_text="Checked 2.9", target_percentage=65, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
-
-print("\r\033[K", end="")
-
-
-CalNames = list(calendarDictionary.keys())
-CalIds = list(calendarDictionary.values())
-
-def update_notion_page_with_retry(page_id, updates, max_retries=5):
-    retry_count = 0
-    backoff_factor = 1  # Initial backoff duration in seconds
-    while retry_count < max_retries:
-        try:
-            # Increase timeout for the request
-            with httpx.Client() as client:
-                notion.pages.update(page_id=page_id, **updates, http_client=client)
-            return
-        except HTTPResponseError as e:
-            if e.status == 502:
-                # Handle 502 Bad Gateway specifically, if needed
-                print(f"Retry {retry_count + 1}/{max_retries}: Server error {e.status}. Retrying after {backoff_factor} seconds...")
-            else:
-                # Handle other HTTP errors
-                print(f"Retry {retry_count + 1}/{max_retries}: Failed with status {e.status}. Retrying after {backoff_factor} seconds...")
-            time.sleep(backoff_factor)
-            backoff_factor *= 2  # Exponential backoff
-            retry_count += 1
-    print("Failed to update Notion page after maximum retries.")
-
-
-for i, gCalId in enumerate(gCal_CalIds): #instead of checking, just update the notion datebase with whatever calendar the event is on
-    start_dynamic_counter_indicator()
-    my_page = update_notion_page_with_retry(
-        notion_IDs_List[i], 
-        {
-            "properties": {
-                Current_Calendar_Id_Notion_Name: { #this is the text
-                    "rich_text": [{
-                        'text': {
-                            'content': CalIds[CalNames.index(gCalId)]
-                        }
-                    }]
-                },
-                Calendar_Notion_Name:  { #this is the select
-                    'select': {
-                        "name": gCalId 
-                    },
-                },
-                LastUpdatedTime_Notion_Name: {
-                    "date":{
-                        'start': notion_time(), #has to be adjusted for when daylight savings is different
-                        'end': None,
-                    }
-                },
-            }
-        }
-    )
     
 animate_text_wave_with_progress(text="Loading", new_text="Checked 3", target_percentage=70, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
 

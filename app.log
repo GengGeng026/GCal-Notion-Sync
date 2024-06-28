@@ -1,35 +1,7 @@
 googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
 httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
-2024-06-28 11:34:56,918 - INFO - This is an info message.
-2024-06-28 11:34:56,919 - ERROR - This is an error message.
-2024-06-28 11:34:57,414 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on http://127.0.0.1:8080
-2024-06-28 11:34:57,415 - INFO - [33mPress CTRL+C to quit[0m
-2024-06-28 11:37:43,269 - INFO - This is an info message.
-2024-06-28 11:37:43,270 - ERROR - This is an error message.
-2024-06-28 11:37:43,761 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on http://127.0.0.1:8080
-2024-06-28 11:37:43,761 - INFO - [33mPress CTRL+C to quit[0m
-2024-06-28 11:37:48,772 - INFO - This is an info message.
-2024-06-28 11:37:48,772 - ERROR - This is an error message.
-2024-06-28 11:37:49,349 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on http://127.0.0.1:8080
-2024-06-28 11:37:49,349 - INFO - [33mPress CTRL+C to quit[0m
-2024-06-28 11:43:05,898 - INFO - 127.0.0.1 - - [28/Jun/2024 11:43:05] "POST /slack/events HTTP/1.0" 200 -
-2024-06-28 11:43:12,642 - INFO - 127.0.0.1 - - [28/Jun/2024 11:43:12] "POST /slack/events HTTP/1.0" 200 -
-2024-06-28 11:43:25,901 - INFO - Processing 2 messages from buffer
-2024-06-28 11:43:26,090 - INFO - Jenkins job triggered successfully
-2024-06-28 11:43:27,701 - INFO - 127.0.0.1 - - [28/Jun/2024 11:43:27] "POST /slack/events HTTP/1.0" 200 -
-2024-06-28 11:45:42,461 - INFO - 127.0.0.1 - - [28/Jun/2024 11:45:42] "POST /slack/events HTTP/1.0" 200 -
-2024-06-28 11:46:02,461 - INFO - Processing 1 messages from buffer
-2024-06-28 11:46:02,567 - INFO - Jenkins job triggered successfully
-2024-06-28 11:46:03,997 - INFO - 127.0.0.1 - - [28/Jun/2024 11:46:03] "POST /slack/events HTTP/1.0" 200 -
-2024-06-28 11:46:24,446 - INFO - 127.0.0.1 - - [28/Jun/2024 11:46:24] "POST /slack/events HTTP/1.0" 200 -
-2024-06-28 11:46:44,450 - INFO - Processing 1 messages from buffer
-2024-06-28 11:46:44,528 - INFO - Jenkins job triggered successfully
-2024-06-28 11:46:45,865 - INFO - 127.0.0.1 - - [28/Jun/2024 11:46:45] "POST /slack/events HTTP/1.0" 200 -
-2024-06-28 11:55:27,823 - INFO - This is an info message.
-2024-06-28 11:55:27,824 - ERROR - This is an error message.
-2024-06-28 11:55:28,404 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
- * Running on http://127.0.0.1:8080
-2024-06-28 11:55:28,404 - INFO - [33mPress CTRL+C to quit[0m
+httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
