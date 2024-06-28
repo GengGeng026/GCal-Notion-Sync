@@ -94,16 +94,14 @@ slack_event_adapter = SlackEventAdapter(os.environ['SIGNING_SECRET'], '/slack/ev
 client = WebClient(token=os.environ['SLACK_TOKEN'])
 BOT_ID = client.api_call("auth.test")['user_id']
 
-# 消息緩衝區
+# 修改消息緩衝區相關變量
 message_buffer = []
 buffer_lock = threading.Lock()
 buffer_timer = None
-message_queue = queue.Queue()
-message_sent = False
-match_multiple_found = False
+BUFFER_TIME = 20  # 緩衝期時間（秒）
 
 def process_buffer():
-    global message_buffer, buffer_timer, message_sent, match_multiple_found
+    global message_buffer, buffer_timer
     with buffer_lock:
         if not message_buffer:
             return
@@ -129,8 +127,6 @@ def process_buffer():
 
         message_buffer.clear()
         buffer_timer = None
-        message_sent = False
-        match_multiple_found = False
 
 
 def trigger_jenkins_job():

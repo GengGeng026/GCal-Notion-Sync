@@ -5761,3 +5761,21 @@ INFO:werkzeug:127.0.0.1 - - [27/Jun/2024 20:07:37] "POST /slack/events HTTP/1.0"
 2024-06-28 11:37:49,349 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on http://127.0.0.1:8080
 2024-06-28 11:37:49,349 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-28 11:43:05,898 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 11:43:05] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 11:43:12,642 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 11:43:12] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 11:43:25,901 - root - INFO - Processing 2 messages from buffer
+2024-06-28 11:43:26,090 - root - INFO - Jenkins job triggered successfully
+2024-06-28 11:43:27,701 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 11:43:27] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 11:45:42,461 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 11:45:42] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 11:46:02,461 - root - INFO - Processing 1 messages from buffer
+2024-06-28 11:46:02,567 - root - INFO - Jenkins job triggered successfully
+2024-06-28 11:46:03,997 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 11:46:03] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 11:46:24,446 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 11:46:24] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 11:46:44,450 - root - INFO - Processing 1 messages from buffer
+2024-06-28 11:46:44,528 - root - INFO - Jenkins job triggered successfully
+2024-06-28 11:46:45,865 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 11:46:45] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 11:55:27,823 - root - INFO - This is an info message.
+2024-06-28 11:55:27,824 - root - ERROR - This is an error message.
+2024-06-28 11:55:28,404 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-28 11:55:28,404 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
