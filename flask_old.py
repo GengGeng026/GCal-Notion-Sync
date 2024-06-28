@@ -2,7 +2,8 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 import requests
-import slack
+from slack_sdk import WebClient
+from slack_sdk.webhook import WebhookClient
 from flask import Flask, request, Response
 from slackeventsapi import SlackEventAdapter
 import re
@@ -61,7 +62,7 @@ slack_event_adapter = SlackEventAdapter(
     os.environ['SIGNING_SECRET'], '/slack/events', app)
 print("\n")
 
-client = slack.WebClient(token=os.environ['SLACK_TOKEN'])
+client = WebClient(token=os.environ['SLACK_TOKEN'])
 BOT_ID = client.api_call("auth.test")['user_id']
 
 @slack_event_adapter.on('message')
@@ -138,7 +139,7 @@ def trigger_status(user_id, channel_id, text):
         match_script = re.search(os.environ['SCRIPT_NAME'], text)
         n = re.search(" and ", text, re.IGNORECASE)
         match_multiple = (match_script and n and match_user) or (match_user and n and match_script)
-        action = re.search(" edited in", text)
+        action = re.search(" edited in| added in", text, re.IGNORECASE)
         
         if match_user and action and message_queue.empty() and not message_sent:
             message = triggered_jobs + "\n更新中。請稍等 · · ·"

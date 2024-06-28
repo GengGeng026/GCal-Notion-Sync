@@ -5156,3 +5156,598 @@
 2024-06-27 16:32:30,278 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
 2024-06-27 16:32:55,134 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 16:32:55] "POST /slack/events HTTP/1.0" 200 -
 2024-06-27 16:32:56,064 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 16:32:56] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 16:39:49,941 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 16:39:49] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 16:39:50,823 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 16:39:50] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 16:40:02,167 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 16:40:02] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 16:40:03,195 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 16:40:03] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 16:40:47,855 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 16:40:47] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 16:40:49,068 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 16:40:49] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 16:40:49,582 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 16:40:49] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 16:40:52,206 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 16:40:52] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 16:40:53,165 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 16:40:53] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 16:46:48,403 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 16:46:48] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 16:57:27,681 - root - ERROR - This is an error message.
+2024-06-27 16:57:28,224 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-27 16:57:28,224 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-27 16:57:35,164 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 16:57:35] "[31m[1mGET /triggerjob HTTP/1.1[0m" 405 -
+2024-06-27 16:57:35,241 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 16:57:35] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2024-06-27 16:57:36,422 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 120, in message
+    trigger_status(user_id, channel_id, text)
+TypeError: trigger_status() takes 2 positional arguments but 3 were given
+2024-06-27 16:57:36,429 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 16:57:36] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-06-27 16:59:26,413 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 16:59:26] "POST /triggerjob HTTP/1.1" 200 -
+2024-06-27 17:00:04,326 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:00:04] "[31m[1mPOST /triggerjob HTTP/1.1[0m" 429 -
+2024-06-27 17:00:19,044 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:00:19] "[31m[1mPOST /triggerjob HTTP/1.1[0m" 429 -
+2024-06-27 17:02:04,324 - root - ERROR - This is an error message.
+2024-06-27 17:02:04,816 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-27 17:02:04,816 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-27 17:02:35,437 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 120, in message
+    trigger_status(user_id, channel_id, text)
+TypeError: trigger_status() takes 2 positional arguments but 3 were given
+2024-06-27 17:02:35,443 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:02:35] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-06-27 17:04:14,142 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 120, in message
+    trigger_status(user_id, channel_id, text)
+TypeError: trigger_status() takes 2 positional arguments but 3 were given
+2024-06-27 17:04:14,145 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:04:14] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-06-27 17:04:14,823 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 120, in message
+    trigger_status(user_id, channel_id, text)
+TypeError: trigger_status() takes 2 positional arguments but 3 were given
+2024-06-27 17:04:14,824 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:04:14] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-06-27 17:04:18,328 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:04:18] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 17:04:19,625 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:04:19] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 17:04:20,081 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:04:20] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 17:04:22,727 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 120, in message
+    trigger_status(user_id, channel_id, text)
+TypeError: trigger_status() takes 2 positional arguments but 3 were given
+2024-06-27 17:04:22,728 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:04:22] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-06-27 17:04:27,908 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:04:27] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 17:04:29,093 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:04:29] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 17:05:15,481 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 120, in message
+    trigger_status(user_id, channel_id, text)
+TypeError: trigger_status() takes 2 positional arguments but 3 were given
+2024-06-27 17:05:15,484 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:05:15] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-06-27 17:05:22,651 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 120, in message
+    trigger_status(user_id, channel_id, text)
+TypeError: trigger_status() takes 2 positional arguments but 3 were given
+2024-06-27 17:05:22,652 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:05:22] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-06-27 17:28:31,206 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 120, in message
+    trigger_status(user_id, channel_id, text)
+TypeError: trigger_status() takes 2 positional arguments but 3 were given
+2024-06-27 17:28:31,208 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:28:31] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-06-27 17:28:32,181 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 120, in message
+    trigger_status(user_id, channel_id, text)
+TypeError: trigger_status() takes 2 positional arguments but 3 were given
+2024-06-27 17:28:32,182 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:28:32] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-06-27 17:28:32,700 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 120, in message
+    trigger_status(user_id, channel_id, text)
+TypeError: trigger_status() takes 2 positional arguments but 3 were given
+2024-06-27 17:28:32,702 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:28:32] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-06-27 17:29:32,419 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 120, in message
+    trigger_status(user_id, channel_id, text)
+TypeError: trigger_status() takes 2 positional arguments but 3 were given
+2024-06-27 17:29:32,420 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:29:32] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-06-27 17:34:31,428 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 120, in message
+    trigger_status(user_id, channel_id, text)
+TypeError: trigger_status() takes 2 positional arguments but 3 were given
+2024-06-27 17:34:31,432 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:34:31] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-06-27 17:34:32,334 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 120, in message
+    trigger_status(user_id, channel_id, text)
+TypeError: trigger_status() takes 2 positional arguments but 3 were given
+2024-06-27 17:34:32,335 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:34:32] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-06-27 17:44:09,496 - root - ERROR - This is an error message.
+2024-06-27 17:44:10,000 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-27 17:44:10,000 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-27 17:46:21,893 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 120, in message
+    trigger_status(user_id, channel_id, text)
+TypeError: trigger_status() takes 2 positional arguments but 3 were given
+2024-06-27 17:46:21,899 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:46:21] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-06-27 17:46:22,908 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 120, in message
+    trigger_status(user_id, channel_id, text)
+TypeError: trigger_status() takes 2 positional arguments but 3 were given
+2024-06-27 17:46:22,909 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:46:22] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-06-27 17:46:23,462 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 120, in message
+    trigger_status(user_id, channel_id, text)
+TypeError: trigger_status() takes 2 positional arguments but 3 were given
+2024-06-27 17:46:23,464 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:46:23] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-06-27 17:47:16,997 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:47:16] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 17:47:18,144 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:47:18] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 17:47:23,323 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 120, in message
+    trigger_status(user_id, channel_id, text)
+TypeError: trigger_status() takes 2 positional arguments but 3 were given
+2024-06-27 17:47:23,325 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:47:23] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-06-27 17:47:42,734 - root - ERROR - This is an error message.
+2024-06-27 17:47:43,186 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-27 17:47:43,186 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-27 17:48:31,468 - root - ERROR - This is an error message.
+2024-06-27 17:48:31,942 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-27 17:48:31,942 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-27 17:52:22,535 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:52:22] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 17:52:23,425 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:52:23] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 17:52:31,037 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:52:31] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 17:59:13,634 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:59:13] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 17:59:14,250 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:59:14] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 17:59:16,010 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:59:16] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 17:59:17,183 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 17:59:17] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 18:05:13,862 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 18:05:13] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 18:05:14,909 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 18:05:14] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 18:05:21,849 - root - ERROR - This is an error message.
+2024-06-27 18:05:22,394 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-27 18:05:22,394 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-27 18:08:30,700 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 18:08:30] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 18:08:31,601 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 18:08:31] "POST /slack/events HTTP/1.0" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:127.0.0.1 - - [27/Jun/2024 19:40:00] "POST /slack/events HTTP/1.0" 200 -
+INFO:werkzeug:127.0.0.1 - - [27/Jun/2024 19:40:44] "POST /slack/events HTTP/1.0" 200 -
+INFO:werkzeug:127.0.0.1 - - [27/Jun/2024 19:40:46] "POST /slack/events HTTP/1.0" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:__main__:Sent Slack message: 你好
+INFO:werkzeug:127.0.0.1 - - [27/Jun/2024 19:49:12] "POST /slack/events HTTP/1.0" 200 -
+INFO:werkzeug:127.0.0.1 - - [27/Jun/2024 19:49:13] "POST /slack/events HTTP/1.0" 200 -
+INFO:__main__:Sent Slack message: hi
+INFO:werkzeug:127.0.0.1 - - [27/Jun/2024 19:49:22] "POST /slack/events HTTP/1.0" 200 -
+INFO:werkzeug:127.0.0.1 - - [27/Jun/2024 19:49:23] "POST /slack/events HTTP/1.0" 200 -
+INFO:__main__:Sent Slack message: Daniel Ng added in Tutorial Database · <!date^1719489027^{date_short_pretty} {time}| >
+INFO:werkzeug:127.0.0.1 - - [27/Jun/2024 19:50:30] "POST /slack/events HTTP/1.0" 200 -
+INFO:werkzeug:127.0.0.1 - - [27/Jun/2024 19:50:31] "POST /slack/events HTTP/1.0" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:__main__:Sent Slack message: 別來無恙
+INFO:werkzeug:127.0.0.1 - - [27/Jun/2024 20:00:12] "POST /slack/events HTTP/1.0" 200 -
+INFO:werkzeug:127.0.0.1 - - [27/Jun/2024 20:00:13] "POST /slack/events HTTP/1.0" 200 -
+INFO:__main__:Sent Slack message: Daniel Ng added in Tutorial Database · <!date^1719489705^{date_short_pretty} {time}| >
+INFO:werkzeug:127.0.0.1 - - [27/Jun/2024 20:01:47] "POST /slack/events HTTP/1.0" 200 -
+INFO:werkzeug:127.0.0.1 - - [27/Jun/2024 20:01:48] "POST /slack/events HTTP/1.0" 200 -
+INFO:werkzeug:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+INFO:werkzeug:[33mPress CTRL+C to quit[0m
+INFO:__main__:Echoing message: 你好
+INFO:__main__:Sent Slack message: 你好
+INFO:werkzeug:127.0.0.1 - - [27/Jun/2024 20:06:50] "POST /slack/events HTTP/1.0" 200 -
+INFO:werkzeug:127.0.0.1 - - [27/Jun/2024 20:06:51] "POST /slack/events HTTP/1.0" 200 -
+INFO:__main__:Echoing message: bonjour
+INFO:__main__:Sent Slack message: bonjour
+INFO:werkzeug:127.0.0.1 - - [27/Jun/2024 20:06:55] "POST /slack/events HTTP/1.0" 200 -
+INFO:werkzeug:127.0.0.1 - - [27/Jun/2024 20:06:56] "POST /slack/events HTTP/1.0" 200 -
+INFO:__main__:Echoing message: Daniel Ng added in Tutorial Database · <!date^1719490054^{date_short_pretty} {time}| >
+INFO:__main__:Sent Slack message: Daniel Ng added in Tutorial Database · <!date^1719490054^{date_short_pretty} {time}| >
+INFO:werkzeug:127.0.0.1 - - [27/Jun/2024 20:07:36] "POST /slack/events HTTP/1.0" 200 -
+INFO:werkzeug:127.0.0.1 - - [27/Jun/2024 20:07:37] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 20:08:36,659 - root - ERROR - This is an error message.
+2024-06-27 20:08:37,112 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-27 20:08:37,112 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-27 20:09:10,828 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 20:09:10] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 20:09:11,828 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 20:09:11] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 20:10:57,986 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 20:10:57] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 20:11:06,340 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 20:11:06] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 20:13:18,687 - root - ERROR - This is an error message.
+2024-06-27 20:13:19,177 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-27 20:13:19,177 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-27 20:13:20,453 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 20:13:20] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 20:15:54,743 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 20:15:54] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 20:15:58,877 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 20:15:58] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 20:15:59,827 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 20:15:59] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 20:16:03,184 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 20:16:03] "POST /slack/events HTTP/1.0" 200 -
+2024-06-27 20:18:11,006 - werkzeug - INFO - 127.0.0.1 - - [27/Jun/2024 20:18:11] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 10:30:01,635 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 10:30:01] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 10:30:10,338 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 10:30:10] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 10:30:57,579 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 10:30:57] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 10:30:58,730 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 10:30:58] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 10:32:19,327 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 10:32:19] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 10:38:29,120 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 10:38:29] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 10:38:37,603 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 10:38:37] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 10:38:40,235 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 10:38:40] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 10:38:48,770 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 10:38:48] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 10:40:43,403 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 10:40:43] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 10:41:43,473 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 10:41:43] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 11:34:56,918 - root - INFO - This is an info message.
+2024-06-28 11:34:56,919 - root - ERROR - This is an error message.
+2024-06-28 11:34:57,414 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-28 11:34:57,415 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
