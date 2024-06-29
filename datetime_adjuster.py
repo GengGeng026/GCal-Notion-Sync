@@ -629,7 +629,7 @@ for page in filtered_pages:
     print(f"{formatted_task} {formatted_colon} {formatted_italic.format(page['properties']['Task Name']['title'][0]['text']['content'])}")
 
 if len(filtered_pages) > 0:
-    print(f"\nTotal Pages set to {formatted_to_auto_sync} {formatted_within_current_month} {formatted_colon} {formatted_count.format(len(filtered_pages))}\n")
+    print(f"\nTotal Pages set {formatted_to_auto_sync} {formatted_within_current_month} {formatted_colon} {formatted_count.format(len(filtered_pages))}\n")
 
 # You can now use the 'filtered_pages' variable in the next section of your code
 
@@ -646,6 +646,7 @@ if 'JENKINS_HOME' in os.environ:
     terminal_width = 80  # 或者使用任何你認為合適的預設值
 else:
     terminal_width = os.get_terminal_size().columns
+print('\n' + '-' * terminal_width + '\n')
 
 # Define a function to print the "Printing" message and dots
 def dynamic_counter_indicator(stop_event):
@@ -2093,6 +2094,7 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
                     # Update the 'Previous Start' and 'Previous End' properties
                     with lock:
                         update_previous_dates(local_data.page, start, end, start_end_prop)
+                        print(f"Sub-Condition 1: Start or End is not set to 00:00")
 
                     # Update the page object
                     with lock:
@@ -2188,6 +2190,7 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
                     # Update the 'Previous Start' and 'Previous End' properties
                     with lock:
                         update_previous_dates(local_data.page, start, end, start_end_prop)
+                        print(f"Sub-Condition 2: If 'Start' or 'End' have a Single-Date WITH a time component")
 
                     # Update the page object
                     with lock:
@@ -2322,88 +2325,58 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
 
                 if start_end['start'] is not None:
                     start_end_start = parse(start_end['start']).replace(tzinfo=start.tzinfo)
-                    start_end_end = start_end['end']
-                    if start_end_end is not None:
-                        start_end_end = parse(start_end_end).replace(tzinfo=end.tzinfo)
-                    else:
-                        start_end_end = None
+                    start_end_end = parse(start_end['end']).replace(tzinfo=end.tzinfo) if start_end['end'] is not None else None
 
                     
-                    # Sub-Condition 1
-                    if StartEnd_to_Overwrite_All == True:
-                        if start_end_start is not None and start is not None and end is not None:
+
+                    # 新增的輔助函數
+                    def process_start_end(start, end, start_end_start, start_end_end, StartEnd_to_Overwrite_All):
+                        if StartEnd_to_Overwrite_All:
+                            return process_overwrite_all(start, end, start_end_start, start_end_end)
+                        else:
+                            return process_no_overwrite(start, end, start_end_start, start_end_end)
+
+                    def process_overwrite_all(start, end, start_end_start, start_end_end):
+                        if start_end_end is None and start_end_start.time() == time(0, 0):
+                            return start_end_start, start_end_start
+                        elif start_end_end and start_end_start.time() == time(0, 0) and start_end_end.time() == time(0, 0):
+                            keep_start_midnight = start.time() == time(0, 0) and end.time() != time(0, 0)
+                            keep_end_midnight = end.time() == time(0, 0) and start.time() != time(0, 0)
+                            return start_end_start, start_end_end
+                        elif not ((start.time() == time(0, 0) and end.time() == time(0, 0) and start.date() != end.date()) and 
+                            ((start.date() == start_end_start.date() or end.date() == start_end_end.date()) and 
+                            (start.date() != start_end_start.date() or end.date() != start_end_end.date())) and
+                            (start_end_start.time() != time(0, 0) or start_end_end.time() != time(0, 0))):
+                            return start_end_start, start_end_end
+                        return start, end
+
+                    def process_no_overwrite(start, end, start_end_start, start_end_end):
+                        if not (start.date() == end.date() == start_end_start.date() and start.time() == end.time() == start_end_start.time() == time(0, 0)):
                             if start_end_end is None and start_end_start.time() == time(0, 0):
-                                start = start_end_start
-                                end = start_end_start
-                                result, details, start, end = update_all_data(start, end, start_end, prev_start, prev_end, result, local_data, page_title, original_start, original_end, prev_start_value, prev_end_value, new_start_value, new_end_value, counts, start_end_value, details, keep_midnight=True)
-                            elif start_end_end is not None and start_end_start.time() == time(0, 0) and start_end_end.time() == time(0, 0) and (start.time() != start_end_start.time() or end.time() != start_end_end.time()):
-                                # Check if only start or end is overwritten by start_end_start or start_end_end respectively
-                                keep_start_midnight = start.time() == time(0, 0) and end.time() != time(0, 0)
-                                keep_end_midnight = end.time() == time(0, 0) and start.time() != time(0, 0)
-                                start = start_end_start
-                                end = start_end_end
-                                result, details , start, end = update_all_data(start, end, start_end, prev_start, prev_end, result, local_data, page_title, original_start, original_end, prev_start_value, prev_end_value, new_start_value, new_end_value, counts, start_end_value, details, keep_start_midnight=keep_start_midnight)
-                            elif not ((start.time() == time(0, 0) and end.time() == time(0, 0) and start.date() != end.date()) and 
-                                ((start.date() == start_end_start.date() or end.date() == start_end_end.date()) and 
-                                (start.date() != start_end_start.date() or end.date() != start_end_end.date())) and
-                                (start_end_start.time() != time(0, 0) or start_end_end.time() != time(0, 0))) and not (start.time() != time(0, 0) and end.time() == time(0, 0) and start.date() == start_end_start.date() and end.date() == start_end_end.date()):
-                                start = start_end_start
-                                end = start_end_end
-                                result, details, start, end = update_all_data(start, end, start_end, prev_start, prev_end, result, local_data, page_title, original_start, original_end, prev_start_value, prev_end_value, new_start_value, new_end_value, counts, start_end_value, details)
-                        # New sub-condition
-                        elif start_end_start is not None and start_end_end is not None and start is not None and end is not None:
-                            if start_end_start.time() == time(0, 0) and start_end_end.time() == time(0, 0) and start.time() != end.time():
-                                start = start_end_start
-                                end = start_end_end
-                                result, details, start, end = update_all_data(start, end, start_end, prev_start, prev_end, result, local_data, page_title, original_start, original_end, prev_start_value, prev_end_value, new_start_value, new_end_value, counts, start_end_value, details)
+                                return start, end
+                            if start != end and start_end_start == start_end_end and start.date() != start_end_start.date() and end.date() != start_end_end.date():
+                                return start, end
+                            if start_end_end and start.time() == time(0, 0) and end.time() == time(0, 0) and \
+                                (start.date() != start_end_start.date() or end.date() != start_end_end.date() or start.time() != start_end_start.time() or end.time() != start_end_end.time()):
+                                return start, end
+                            if (start.time() == time(0, 0) and end.time() == time(0, 0) and (start == end)) and \
+                                (start_end_start.time() == time(0, 0) and start_end_end.time() == time(0, 0)) and \
+                                (start.date() != start_end_start.date() or end.date() != start_end_end.date()):
+                                return start, end
+                            if start_end_end and start.date() == start_end_start.date() and end.date() == start_end_end.date() and \
+                                start_end_start != start_end_end and (start.time() == time(0, 0) and end.time() == time(0, 0)) and \
+                                (start_end_start.time() != time(0, 0) or start_end_end.time() != time(0, 0)):
+                                return start, end
+                        return start_end_start, start_end_end
 
+                    # 使用新的處理函數
+                    new_start, new_end = process_start_end(start, end, start_end_start, start_end_end, StartEnd_to_Overwrite_All)
 
-                    # Sub-Condition 2
-                    if StartEnd_to_Overwrite_All == False:
-                        if start is not None and end is not None and start_end is not None:
-                            if start_end_start is not None and start is not None and end is not None:                        
-                                if not (start.date() == end.date() == start_end_start.date() and start.time() == end.time() == start_end_start.time() == time(0, 0)) or \
-                                (start_end_end is not None and start.date() == end.date() == start_end_start.date() and start_end_end.date() != start.date()):
-                                    if start_end_end is None and start_end_start.time() == time(0, 0):
-                                        keep_start_midnight = False
-                                        keep_end_midnight = False
-                                        start_end['start'] = start.isoformat()
-                                        start_end['end'] = end.isoformat()
-                                        result, details, start, end = update_all_data(start, end, start_end, prev_start, prev_end, result, local_data, page_title, original_start, original_end, prev_start_value, prev_end_value, new_start_value, new_end_value, counts, start_end_value, details, keep_start_midnight, keep_end_midnight)
-                                    # if start and end are not the same, but start_end_start and start_end_end are the same
-                                    if start != end and start_end_start == start_end_end and start.date() != start_end_start.date() and end.date() != start_end_end.date():
-                                        # Overwrite start_end as new time-range accordingly start and end
-                                        start_end['start'] = start.isoformat()
-                                        start_end['end'] = end.isoformat()
-                                        # Update start_end_start and start_end_end
-                                        start_end_start = start
-                                        start_end_end = end
-                                        result, details, start, end = update_all_data(start, end, start_end, prev_start, prev_end, result, local_data, page_title, original_start, original_end, prev_start_value, prev_end_value, new_start_value, new_end_value, counts, start_end_value, details, keep_start_midnight, keep_end_midnight)
-                                    # start and end have a time component 00:00, start_end is having different dates and times from either start and end
-                                    if start_end_end is not None and start.time() == time(0, 0) and end.time() == time(0, 0) and \
-                                        (start.date() != start_end_start.date() or end.date() != start_end_end.date() or start.time() != start_end_start.time() or end.time() != start_end_end.time()) and \
-                                        not (start.date() == start_end_start.date() and end.date() == start_end_end.date() and start_end_end.time() != time(0, 0)):
-                                        # Overwrite start_end with start and end
-                                        start_end['start'] = start.isoformat()
-                                        start_end['end'] = end.isoformat()
-                                        # Update start_end_start and start_end_end
-                                        start_end_start = start
-                                        start_end_end = end
-                                        result, details, start, end = update_all_data(start, end, start_end, prev_start, prev_end, result, local_data, page_title, original_start, original_end, prev_start_value, prev_end_value, new_start_value, new_end_value, counts, start_end_value, details)
-                                    if (start.time() == time(0, 0) and end.time() == time(0, 0) and (start == end)) and (start_end_start.time() == time(0, 0) and start_end_end.time() == time(0, 0)) and (start.date() != start_end_start.date() or end.date() != start_end_end.date()):
-                                        # Update start_end_start and start_end_end
-                                        start_end_start = start
-                                        start_end_end = end
-                                        result, details, start, end = update_all_data(start, end, start_end, prev_start, prev_end, result, local_data, page_title, original_start, original_end, prev_start_value, prev_end_value, new_start_value, new_end_value, counts, start_end_value, details)
-                                    if start_end_end is not None and start.date() == start_end_start.date() and end.date() == start_end_end.date() and start_end_start != start_end_end and \
-                                        (start.time() == time(0, 0) and end.time() == time(0, 0)) and \
-                                        (start_end_start.time() != time(0, 0) or start_end_end.time() != time(0, 0)):
-                                        # Update start_end_start and start_end_end
-                                        start_end_start = start
-                                        start_end_end = end
-                                        result, details, start, end = update_all_data(start, end, start_end, prev_start, prev_end, result, local_data, page_title, original_start, original_end, prev_start_value, prev_end_value, new_start_value, new_end_value, counts, start_end_value, details)
-                                    
-                                
+                    # 如果有變更，更新數據
+                    if new_start != start or new_end != end:
+                        start, end = new_start, new_end
+                        print(f"Sub-Condition 4: Start and End updated")
+                        result, details, start, end = update_all_data(start, end, start_end, prev_start, prev_end, result, local_data, page_title, original_start, original_end, prev_start_value, prev_end_value, new_start_value,  new_end_value, counts, start_end_value, details, keep_midnight=True)
                     pages_modified['sub_condition_4'].add(page['id'])
         
         return result, counts, details, processed_pages, page['id']
@@ -2955,8 +2928,15 @@ else:
             print(f"{formatted_task}     {formatted_colon}  {formatted_BOLD_italic.format(page_title)}")
             original_start_str = (formatted_plain_none if original_start is None else DateTimeIntoNotionFormat(original_start, date_only=True)).strip()
             start_str = (formatted_plain_none if start is None else DateTimeIntoNotionFormat(start, plus_time=True, time_format='24')).strip()
-            print(f"{formatted_start}    {formatted_colon}  {original_start_str} {formatted_right_arrow} {start_str}")
-            print(f"{formatted_end}      {formatted_colon}  {formatted_plain_none if original_end is None else DateTimeIntoNotionFormat(original_end, plus_time=True, time_format='24')} {formatted_right_arrow} {DateTimeIntoNotionFormat(end, plus_time=True, time_format='24').lstrip('0')}")  
+            # 检查 start 部分是否有变化，如果有，则使用 format_string 格式化 original_start_str
+            formatted_original_start_str = format_string(original_start_str, less_visible=True) if prev_start_value != start_value else original_start_str
+
+            # 检查 end 部分是否有变化，如果有，则使用 format_string 格式化 original_end
+            formatted_original_end = format_string(DateTimeIntoNotionFormat(original_end, plus_time=True, time_format='24'), less_visible=True) if prev_end_value != end_value else DateTimeIntoNotionFormat(original_end, plus_time=True, time_format='24')
+
+            # 使用格式化后的值打印
+            print(f"{formatted_start}    {formatted_colon}  {formatted_original_start_str} {formatted_right_arrow} {start_str}")
+            print(f"{formatted_end}      {formatted_colon}  {formatted_plain_none if original_end is None else formatted_original_end} {formatted_right_arrow} {DateTimeIntoNotionFormat(end, plus_time=True, time_format='24').lstrip('0')}")
             end_date = end.strftime('%Y-%m-%d')
             start_date = start.strftime('%Y-%m-%d')
             
@@ -2987,11 +2967,15 @@ else:
         for details in alternate_alldayevent_start_details:
             formatted_task, formatted_start, formatted_end, formatted_startend, page_title, original_start1_before_loop, start_alt, end_alt = details
             print(f"{formatted_task}     {formatted_colon}  {formatted_BOLD_italic.format(page_title)}")
-            original_start1_before_loop = DateTimeIntoNotionFormat(original_start1_before_loop[0], plus_time=True) if original_start1_before_loop[0] is not None else formatted_plain_none
-            print(f"{formatted_start}    {formatted_colon}  {formatted_plain_none if original_start1_before_loop is None else DateTimeIntoNotionFormat(original_start1_before_loop, date_only=False, plus_time=True, show_midnight=True)} {formatted_right_arrow} {DateTimeIntoNotionFormat(start_alt, date_only=True)}")
+            # 对 original_start1_before_loop 进行检查和格式化
+            formatted_original_start1_before_loop = format_string(DateTimeIntoNotionFormat(original_start1_before_loop, date_only=False, plus_time=True, show_midnight=True), less_visible=True) if original_start1_before_loop != start_alt else DateTimeIntoNotionFormat(original_start1_before_loop, date_only=False, plus_time=True, show_midnight=True)
 
-            original_end = None  # Set original_end to None
-            print(f"{formatted_end}      {formatted_colon}  {formatted_plain_none if original_end is None else DateTimeIntoNotionFormat(original_end, date_only=True)} {formatted_right_arrow} {DateTimeIntoNotionFormat(end_alt, date_only=True)}")
+            print(f"{formatted_start}    {formatted_colon}  {formatted_plain_none if original_start1_before_loop is None else formatted_original_start1_before_loop} {formatted_right_arrow} {DateTimeIntoNotionFormat(start_alt, date_only=True)}")
+
+            # 对 original_end 进行检查和格式化
+            formatted_original_end = format_string(DateTimeIntoNotionFormat(original_end, date_only=True), less_visible=True) if original_end != end_alt else DateTimeIntoNotionFormat(original_end, date_only=True)
+
+            print(f"{formatted_end}      {formatted_colon}  {formatted_plain_none if original_end is None else formatted_original_end} {formatted_right_arrow} {DateTimeIntoNotionFormat(end_alt, date_only=True)}")
             print(f"{formatted_startend} {formatted_colon}  {formatted_plain_none} {formatted_right_arrow} {DateTimeIntoNotionFormat(start_alt, date_only=True)}\n")
         if total_count_alternate_alldayevent_start > 0 and not no_pages_operated_B:
             print(f"\n{formatted_condition_met} {formatted_colon} '{formatted_italic.format('End')}' and '{formatted_italic.format('StartEnd')}' are {formatted_all_none} {formatted_semicolon}\n                '{formatted_italic.format('Start')}' is {formatted_explicitly_set_0000}")
@@ -3003,14 +2987,17 @@ else:
             formatted_task, formatted_start, formatted_end, formatted_startend, page_title, start_alt, end_alt, prev_start, prev_end = details
             print(f"{formatted_task}     {formatted_colon}  {formatted_BOLD_italic.format(page_title)}")        
             if prev_start.date() != start_alt.date():
-                # Print prev_start, formatted_right_arrow, and start_alt when dates are different
-                print(f"{formatted_start}    {formatted_colon}  {DateTimeIntoNotionFormat(prev_start, date_only=True, time_format='24')} {formatted_right_arrow} {DateTimeIntoNotionFormat(start_alt, date_only=True, time_format='24')}")
+                # Format prev_start as less visible when dates are different
+                formatted_prev_start = format_string(DateTimeIntoNotionFormat(prev_start, date_only=True, time_format='24'), less_visible=True)
+                print(f"{formatted_start}    {formatted_colon}  {formatted_prev_start} {formatted_right_arrow} {DateTimeIntoNotionFormat(start_alt, date_only=True, time_format='24')}")
             elif prev_start.time() == start_alt.time():
                 # Strip off 00:00 from prev_start and remove formatted_right_arrow and start_alt
                 print(f"{formatted_start}    {formatted_colon}  {DateTimeIntoNotionFormat(prev_start, date_only=True, time_format='24')}")
+
             if prev_end.date() != end_alt.date():
-                # Print prev_end, formatted_right_arrow, and end_alt when dates are different
-                print(f"{formatted_end}      {formatted_colon}  {DateTimeIntoNotionFormat(prev_end, date_only=True, time_format='24')} {formatted_right_arrow} {DateTimeIntoNotionFormat(end_alt, date_only=True, time_format='24')}")
+                # Format prev_end as less visible when dates are different
+                formatted_prev_end = format_string(DateTimeIntoNotionFormat(prev_end, date_only=True, time_format='24'), less_visible=True)
+                print(f"{formatted_end}      {formatted_colon}  {formatted_prev_end} {formatted_right_arrow} {DateTimeIntoNotionFormat(end_alt, date_only=True, time_format='24')}")
             elif prev_end.time() == end_alt.time():
                 # Strip off 00:00 from prev_end and remove formatted_right_arrow and end_alt
                 print(f"{formatted_end}      {formatted_colon}  {DateTimeIntoNotionFormat(prev_end, date_only=True, time_format='24')}")
@@ -3042,8 +3029,21 @@ else:
             for updated_details in pages_filled_details:
                 task, start_new, end_new, original_start, original_end, extra, updated_start_end, start, end = updated_details
                 print(f"{formatted_task}     {formatted_colon}  {formatted_BOLD_italic.format(task)}")
-                print(f"{formatted_start}    {formatted_colon}  {formatted_plain_none + '  ' if original_start is None and original_end is not None or original_start is None and original_end is None and extra is not None else DateTimeIntoNotionFormat(start_new, date_only=False, time_format='24') if original_start is not None else ''}{' ' if original_start is None and start_new is None else ''}{formatted_right_arrow + '  ' if original_start is None and original_end is not None or original_start is None and original_end is None and extra is not None else ''}{' ' if start_new is None else ''}{formatted_plain_none if start_new is None else DateTimeIntoNotionFormat(start_new, date_only=False, time_format='24') if start_new != original_start else ''} ")
-                print(f"{formatted_end}      {formatted_colon}  {formatted_plain_none + '  ' if original_end is None and original_start is not None or original_end is None and original_start is None and extra is not None else DateTimeIntoNotionFormat(end_new, date_only=False, time_format='24') if original_end is not None else ''}{' ' if original_end is None and end_new is None else ''}{formatted_right_arrow + '  ' if original_end is None and original_start is not None or original_end is None and original_start is None and extra is not None else ''}{' ' if end_new is None else ''}{formatted_plain_none if end_new is None else DateTimeIntoNotionFormat(end_new, date_only=False, time_format='24') if end_new != original_end and start_new != end_new or original_end == original_start or original_end is None else ''}")
+                # 对 start 部分的处理
+                if start_new != original_start:
+                    formatted_start_new = format_string(DateTimeIntoNotionFormat(start_new, date_only=False, time_format='24'), less_visible=True)
+                else:
+                    formatted_start_new = DateTimeIntoNotionFormat(start_new, date_only=False, time_format='24')
+
+                print(f"{formatted_start}    {formatted_colon}  {formatted_plain_none + '  ' if original_start is None and original_end is not None or original_start is None and original_end is None and extra is not None else formatted_start_new if original_start is not None else ''}{' ' if original_start is None and start_new is None else ''}{formatted_right_arrow + '  ' if original_start is None and original_end is not None or original_start is None and original_end is None and extra is not None else ''}{' ' if start_new is None else ''}{formatted_plain_none if start_new is None else DateTimeIntoNotionFormat(start_new, date_only=False, time_format='24') if start_new != original_start else ''} ")
+
+                # 对 end 部分的处理
+                if end_new != original_end:
+                    formatted_end_new = format_string(DateTimeIntoNotionFormat(end_new, date_only=False, time_format='24'), less_visible=True)
+                else:
+                    formatted_end_new = DateTimeIntoNotionFormat(end_new, date_only=False, time_format='24')
+
+                print(f"{formatted_end}      {formatted_colon}  {formatted_plain_none + '  ' if original_end is None and original_start is not None or original_end is None and original_start is None and extra is not None else formatted_end_new if original_end is not None else ''}{' ' if original_end is None and end_new is None else ''}{formatted_right_arrow + '  ' if original_end is None and original_start is not None or original_end is None and original_start is None and extra is not None else ''}{' ' if end_new is None else ''}{formatted_plain_none if end_new is None else DateTimeIntoNotionFormat(end_new, date_only=False, time_format='24') if end_new != original_end and start_new != end_new or original_end == original_start or original_end is None else ''}")
                 if isinstance(start_new, datetime) and isinstance(end_new, datetime):
                     if start_new.date() != end_new.date():
                         # New logic for different start and end dates
@@ -3111,13 +3111,16 @@ else:
         for details in pages_single_dates_details:
             formatted_task, formatted_prev_start, formatted_prev_end, formatted_original_start, formatted_original_end, start_end_formatted, page_title, new_start_value, new_end_value, prev_start, prev_end = details
             print(f"{formatted_task}     {formatted_colon}  {formatted_BOLD_italic.format(page_title)}")
-            if prev_start == None:
+            if prev_start is None:
                 print(f"{formatted_start}    {formatted_colon}  {DateTimeIntoNotionFormat(new_start_value, date_only=True, time_format='24')}")
             else:
+                formatted_prev_start = format_string(formatted_prev_start, less_visible=True)  # 将 prev_start 格式化为淡色文本
                 print(f"{formatted_start}    {formatted_colon}  {formatted_prev_start}  {formatted_right_arrow}  {DateTimeIntoNotionFormat(new_start_value, date_only=True, time_format='24')}")
-            if prev_end == None:
+
+            if prev_end is None:
                 print(f"{formatted_end}      {formatted_colon}  {DateTimeIntoNotionFormat(new_end_value, date_only=True, time_format='24')}")
             else:
+                formatted_prev_end = format_string(formatted_prev_end, less_visible=True)  # 将 prev_end 格式化为淡色文本
                 print(f"{formatted_end}      {formatted_colon}  {formatted_prev_end}  {formatted_right_arrow}  {DateTimeIntoNotionFormat(new_end_value, date_only=True, time_format='24')}")
             print(f"{formatted_startend} {formatted_colon}  {start_end_formatted}\n")
         if total_count_pages_single_dates > 0 and not no_pages_operated_B:
@@ -3143,12 +3146,24 @@ else:
                         # 如果start_value和prev_start_value相同，只显示一次日期和时间
                         print(f"{formatted_start}    {formatted_colon}  {DateTimeIntoNotionFormat(start_value, date_only=False, time_format='24')}")
                     else:
-                        # 如果start_value和prev_start_value不同，显示修改后的变化
-                        print(f"{formatted_start}    {formatted_colon}  {DateTimeIntoNotionFormat(prev_start_value, date_only=prev_start_value.time() == dt.time(0, 0), time_format='24')} {formatted_right_arrow} {DateTimeIntoNotionFormat(start_value, date_only=False, time_format='24')}")
+                        # 如果start_value和prev_start_value不同，显示修改后的变化，将prev_start_value打印为淡色
+                        print(f"{formatted_start}    {formatted_colon}  {format_string(DateTimeIntoNotionFormat(prev_start_value, date_only=prev_start_value.time() == dt.time(0, 0), time_format='24'), less_visible=True)} {formatted_right_arrow} {DateTimeIntoNotionFormat(start_value, date_only=False, time_format='24')}")
                 else:
                     # 处理start_value或prev_start_value为None的情况
                     print(f"{formatted_start}    {formatted_colon}  {'None' if start_value is None else DateTimeIntoNotionFormat(start_value, date_only=False, time_format='24')}")
-                print(f"{formatted_end}      {formatted_colon}  {formatted_plain_none if end_value is None else DateTimeIntoNotionFormat(prev_end_value, date_only=prev_end_value.time() == dt.time(0, 0), time_format='24')} {formatted_right_arrow if end_value is not None and prev_end_value is not None and end_value != prev_end_value else ''} {'' if end_value is not None and prev_end_value is not None and end_value == prev_end_value else end_value.strftime('%H:%M') if end_value is not None and prev_end_value is not None and end_value.date() == prev_end_value.date() else DateTimeIntoNotionFormat(end_value, date_only=False, time_format='24') if end_value is not None and prev_end_value is not None and end_value != prev_end_value else ''}")
+
+                # 修改后的 End 部分逻辑
+                if prev_end_value is None:
+                    # 如果 prev_end_value 是 None，直接打印 end_value 的日期和时间
+                    print(f"{formatted_end}      {formatted_colon}  {DateTimeIntoNotionFormat(end_value, date_only=False, time_format='24') if end_value is not None else formatted_plain_none}")
+                else:
+                    # 如果 prev_end_value 不是 None，根据 end_value 和 prev_end_value 是否相同来决定打印格式
+                    if end_value != prev_end_value:
+                        # 将prev_end_value打印为淡色
+                        print(f"{formatted_end}      {formatted_colon}  {format_string(DateTimeIntoNotionFormat(prev_end_value, date_only=prev_end_value.time() == dt.time(0, 0), time_format='24'), less_visible=True)} {formatted_right_arrow} {DateTimeIntoNotionFormat(end_value, date_only=False, time_format='24')}")
+                    else:
+                        print(f"{formatted_end}      {formatted_colon}  {DateTimeIntoNotionFormat(end_value, date_only=False, time_format='24')}")
+                
                 # Ensure 'start_end' is a tuple of datetime objects
                 if start_end is not None and isinstance(start_end[0], str):
                     start_end = (start_value, end_value)

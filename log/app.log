@@ -7390,3 +7390,748 @@ ValueError: not enough values to unpack (expected 2, got 0)
 2024-06-28 18:41:46,184 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 18:41:46] "POST /slack/events HTTP/1.0" 200 -
 2024-06-28 18:42:36,832 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
 2024-06-28 18:42:38,407 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 18:42:38] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 19:23:39,660 - root - INFO - This is an info message.
+2024-06-28 19:23:39,661 - root - ERROR - This is an error message.
+2024-06-28 19:23:40,245 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-28 19:23:40,245 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-28 19:24:10,501 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 19:24:10] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 19:24:11,450 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 19:24:11] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 19:24:15,208 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 19:24:15] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 19:24:16,139 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 19:24:16] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 19:24:20,314 - root - INFO - Jenkins job triggered successfully
+2024-06-28 19:24:20,810 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 19:24:20] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 19:24:21,254 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 19:24:21] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 19:24:21,867 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 19:24:21] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 19:25:03,351 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-28 19:25:05,009 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 19:25:05] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 19:25:36,310 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-28 19:25:37,746 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 19:25:37] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 19:26:07,331 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-28 19:26:08,876 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 19:26:08] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 19:28:09,880 - root - INFO - This is an info message.
+2024-06-28 19:28:09,881 - root - ERROR - This is an error message.
+2024-06-28 19:28:10,343 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-28 19:28:10,343 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-28 19:30:14,291 - root - INFO - This is an info message.
+2024-06-28 19:30:14,291 - root - ERROR - This is an error message.
+2024-06-28 19:30:14,754 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-28 19:30:14,754 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-28 19:30:20,127 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 19:30:20] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 19:30:21,153 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 19:30:21] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 19:30:22,935 - root - INFO - Jenkins job triggered successfully
+2024-06-28 19:30:23,455 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 19:30:23] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 19:30:23,814 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 19:30:23] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 19:30:24,854 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 19:30:24] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 19:31:10,513 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-28 19:32:01,723 - root - INFO - This is an info message.
+2024-06-28 19:32:01,724 - root - ERROR - This is an error message.
+2024-06-28 19:32:02,331 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-28 19:32:02,331 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-28 19:32:06,117 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 19:32:06] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 19:32:07,074 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 19:32:07] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 19:32:09,361 - root - INFO - Jenkins job triggered successfully
+2024-06-28 19:32:09,867 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 19:32:09] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 19:32:10,235 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 19:32:10] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 19:32:58,236 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-28 19:33:10,423 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 19:33:10] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 19:34:18,348 - root - INFO - This is an info message.
+2024-06-28 19:34:18,348 - root - ERROR - This is an error message.
+2024-06-28 19:34:18,816 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-28 19:34:18,816 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-28 19:34:26,698 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 19:34:26] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 19:34:27,737 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 19:34:27] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 19:34:30,400 - root - INFO - Jenkins job triggered successfully
+2024-06-28 19:34:30,909 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 19:34:30] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 19:34:31,217 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 19:34:31] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 19:34:31,800 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 19:34:31] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:38:24,197 - root - INFO - This is an info message.
+2024-06-28 20:38:24,200 - root - ERROR - This is an error message.
+2024-06-28 20:38:24,704 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-28 20:38:24,704 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-28 20:38:31,286 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:38:31] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:38:32,395 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:38:32] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:38:39,060 - root - INFO - Jenkins job triggered successfully
+2024-06-28 20:38:39,564 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:38:39] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:38:40,001 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:38:40] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:38:40,595 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:38:40] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:39:21,857 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-28 20:39:23,273 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:39:23] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:39:52,909 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-28 20:39:54,448 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:39:54] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:41:57,873 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:41:57] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:41:58,866 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:41:58] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:42:17,470 - root - INFO - Jenkins job triggered successfully
+2024-06-28 20:42:18,936 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:42:18] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:42:50,679 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-28 20:42:52,218 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:42:52] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:43:39,349 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:43:39] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:43:40,449 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:43:40] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:43:58,934 - root - INFO - Jenkins job triggered successfully
+2024-06-28 20:44:00,537 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:44:00] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:44:30,112 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-28 20:44:31,650 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:44:31] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:48:19,899 - root - INFO - This is an info message.
+2024-06-28 20:48:19,899 - root - ERROR - This is an error message.
+2024-06-28 20:48:20,408 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-28 20:48:20,408 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-28 20:48:24,325 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:48:24] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:48:25,250 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:48:25] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:48:31,367 - root - INFO - Jenkins job triggered successfully
+2024-06-28 20:48:32,215 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:48:32] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:48:32,236 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:48:32] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:48:33,161 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:48:33] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:50:57,967 - root - INFO - This is an info message.
+2024-06-28 20:50:57,969 - root - ERROR - This is an error message.
+2024-06-28 20:50:58,450 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-28 20:50:58,450 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-28 20:51:07,044 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:51:07] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:51:07,983 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:51:07] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:51:57,571 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:51:57] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:51:58,041 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:51:58] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:52:48,012 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:52:48] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:53:05,376 - root - INFO - This is an info message.
+2024-06-28 20:53:05,377 - root - ERROR - This is an error message.
+2024-06-28 20:53:05,838 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-28 20:53:05,838 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-28 20:53:27,321 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:53:27] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:53:28,382 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:53:28] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:53:31,262 - root - INFO - Jenkins job triggered successfully
+2024-06-28 20:53:31,803 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:53:31] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:53:32,099 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:53:32] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:53:32,763 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:53:32] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:53:47,481 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-28 20:53:48,304 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-28 20:58:07,813 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:58:07] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:58:08,351 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:58:08] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:58:30,468 - root - INFO - This is an info message.
+2024-06-28 20:58:30,468 - root - ERROR - This is an error message.
+2024-06-28 20:58:30,937 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-28 20:58:30,937 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-28 20:59:31,682 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:59:31] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:59:32,587 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:59:32] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:59:38,399 - root - INFO - Jenkins job triggered successfully
+2024-06-28 20:59:38,901 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:59:38] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:59:39,157 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:59:39] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 20:59:39,874 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 20:59:39] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 21:00:18,160 - root - INFO - This is an info message.
+2024-06-28 21:00:18,161 - root - ERROR - This is an error message.
+2024-06-28 21:00:18,695 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-28 21:00:18,695 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-28 21:00:22,575 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 21:00:22] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 21:00:23,542 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 21:00:23] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 21:00:29,197 - root - INFO - Jenkins job triggered successfully
+2024-06-28 21:00:29,744 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 21:00:29] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 21:00:30,051 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 21:00:30] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 21:00:30,616 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 21:00:30] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 21:00:43,050 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-28 21:01:14,568 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 21:01:14] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 21:01:15,311 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-28 21:01:46,853 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 21:01:46] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 21:04:12,845 - root - INFO - This is an info message.
+2024-06-28 21:04:12,847 - root - ERROR - This is an error message.
+2024-06-28 21:04:13,320 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-28 21:04:13,320 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-28 21:04:17,895 - root - INFO - Jenkins job triggered successfully
+2024-06-28 21:04:18,437 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 21:04:18] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 21:04:18,594 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 21:04:18] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 21:04:19,432 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 21:04:19] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 21:04:37,966 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-28 21:05:09,589 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 21:05:09] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 21:08:40,702 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 21:08:40] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 21:08:46,269 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 21:08:46] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 21:11:42,625 - root - INFO - This is an info message.
+2024-06-28 21:11:42,625 - root - ERROR - This is an error message.
+2024-06-28 21:11:43,118 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-28 21:11:43,118 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-28 21:11:57,371 - root - INFO - This is an info message.
+2024-06-28 21:11:57,372 - root - ERROR - This is an error message.
+2024-06-28 21:11:57,897 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-28 21:11:57,898 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-28 21:14:06,437 - root - INFO - This is an info message.
+2024-06-28 21:14:06,437 - root - ERROR - This is an error message.
+2024-06-28 21:14:06,911 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-28 21:14:06,912 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-28 21:14:08,554 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 21:14:08] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 21:14:10,927 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 21:14:10] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 21:15:54,938 - root - INFO - This is an info message.
+2024-06-28 21:15:54,941 - root - ERROR - This is an error message.
+2024-06-28 21:15:55,488 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-28 21:15:55,489 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-28 21:17:42,471 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 21:17:42] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 21:17:45,879 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 21:17:45] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 21:19:33,019 - root - INFO - This is an info message.
+2024-06-28 21:19:33,019 - root - ERROR - This is an error message.
+2024-06-28 21:19:33,581 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-28 21:19:33,581 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-28 21:21:39,678 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 21:21:39] "POST /slack/events HTTP/1.0" 200 -
+2024-06-28 21:23:23,174 - root - INFO - This is an info message.
+2024-06-28 21:23:23,174 - root - ERROR - This is an error message.
+2024-06-28 21:23:23,779 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-28 21:23:23,780 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-28 21:25:29,426 - werkzeug - INFO - 127.0.0.1 - - [28/Jun/2024 21:25:29] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 10:29:00,243 - root - INFO - This is an info message.
+2024-06-29 10:29:00,244 - root - ERROR - This is an error message.
+2024-06-29 10:29:00,749 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 10:29:00,749 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 10:29:11,002 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:29:11] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 10:29:16,405 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:29:16] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 10:29:20,398 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:29:20] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 10:33:35,276 - root - INFO - This is an info message.
+2024-06-29 10:33:35,276 - root - ERROR - This is an error message.
+2024-06-29 10:33:35,756 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 10:33:35,756 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 10:33:42,816 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:33:42] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 10:33:53,634 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:33:53] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 10:35:59,432 - root - INFO - This is an info message.
+2024-06-29 10:35:59,432 - root - ERROR - This is an error message.
+2024-06-29 10:35:59,998 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 10:35:59,998 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 10:36:02,222 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:36:02] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 10:36:10,234 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:36:10] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 10:37:59,298 - root - INFO - This is an info message.
+2024-06-29 10:37:59,299 - root - ERROR - This is an error message.
+2024-06-29 10:37:59,810 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 10:37:59,810 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 10:38:03,895 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:38:03] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 10:38:04,881 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:38:04] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 10:38:23,509 - root - INFO - Jenkins job triggered successfully
+2024-06-29 10:38:25,396 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:38:25] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 10:38:54,641 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-29 10:38:56,218 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:38:56] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 10:39:45,616 - root - INFO - This is an info message.
+2024-06-29 10:39:45,616 - root - ERROR - This is an error message.
+2024-06-29 10:39:46,196 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 10:39:46,196 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 10:40:23,565 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:40:23] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 10:52:56,145 - root - INFO - This is an info message.
+2024-06-29 10:52:56,145 - root - ERROR - This is an error message.
+2024-06-29 10:52:56,610 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 10:52:56,610 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 10:53:02,850 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 245, in message
+    buffer_timer = threading.Timer(BUFFER_TIME)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Timer.__init__() missing 1 required positional argument: 'function'
+2024-06-29 10:53:02,858 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:53:02] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-06-29 10:53:07,662 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 245, in message
+    buffer_timer = threading.Timer(BUFFER_TIME)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Timer.__init__() missing 1 required positional argument: 'function'
+2024-06-29 10:53:07,664 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:53:07] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-06-29 10:53:13,112 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 245, in message
+    buffer_timer = threading.Timer(BUFFER_TIME)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Timer.__init__() missing 1 required positional argument: 'function'
+2024-06-29 10:53:13,114 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:53:13] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-06-29 10:54:04,213 - root - INFO - This is an info message.
+2024-06-29 10:54:04,214 - root - ERROR - This is an error message.
+2024-06-29 10:54:04,808 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 10:54:04,808 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 10:54:08,488 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 232, in message
+    buffer_timer = threading.Timer(BUFFER_TIME)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Timer.__init__() missing 1 required positional argument: 'function'
+2024-06-29 10:54:08,491 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:54:08] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-06-29 10:54:08,900 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 232, in message
+    buffer_timer = threading.Timer(BUFFER_TIME)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Timer.__init__() missing 1 required positional argument: 'function'
+2024-06-29 10:54:08,901 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:54:08] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-06-29 10:54:11,969 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 232, in message
+    buffer_timer = threading.Timer(BUFFER_TIME)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Timer.__init__() missing 1 required positional argument: 'function'
+2024-06-29 10:54:11,970 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:54:11] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-06-29 10:55:09,416 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 232, in message
+    buffer_timer = threading.Timer(BUFFER_TIME)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Timer.__init__() missing 1 required positional argument: 'function'
+2024-06-29 10:55:09,419 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:55:09] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-06-29 10:55:27,988 - root - INFO - This is an info message.
+2024-06-29 10:55:27,988 - root - ERROR - This is an error message.
+2024-06-29 10:55:28,467 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 10:55:28,467 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 10:55:31,331 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:55:31] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 10:55:32,760 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:55:32] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 10:55:36,845 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:55:36] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 10:55:38,289 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:55:38] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 10:56:58,375 - root - INFO - This is an info message.
+2024-06-29 10:56:58,375 - root - ERROR - This is an error message.
+2024-06-29 10:56:58,859 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 10:56:58,860 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 10:57:01,946 - root - INFO - This is an info message.
+2024-06-29 10:57:01,946 - root - ERROR - This is an error message.
+2024-06-29 10:57:02,469 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 10:57:02,469 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 10:57:11,387 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:57:11] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 10:57:12,267 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:57:12] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 10:57:16,080 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:57:16] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 10:57:17,514 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:57:17] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 10:58:01,751 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:58:01] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 10:59:11,731 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 10:59:11] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:00:06,991 - root - INFO - This is an info message.
+2024-06-29 11:00:06,992 - root - ERROR - This is an error message.
+2024-06-29 11:00:07,504 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 11:00:07,504 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 11:00:13,334 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:00:13] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:01:26,650 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:01:26] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:01:27,778 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:01:27] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:04:22,934 - root - INFO - This is an info message.
+2024-06-29 11:04:22,936 - root - ERROR - This is an error message.
+2024-06-29 11:04:23,508 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 11:04:23,508 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 11:06:31,431 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:06:31] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:10:39,089 - root - INFO - This is an info message.
+2024-06-29 11:10:39,090 - root - ERROR - This is an error message.
+2024-06-29 11:10:39,632 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 11:10:39,633 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 11:10:44,615 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:10:44] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:10:45,668 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:10:45] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:11:08,197 - root - INFO - Jenkins job triggered successfully
+2024-06-29 11:11:08,699 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:11:08] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:11:08,945 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:11:08] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:11:09,937 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:11:09] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:13:02,661 - root - INFO - This is an info message.
+2024-06-29 11:13:02,661 - root - ERROR - This is an error message.
+2024-06-29 11:13:03,200 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 11:13:03,200 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 11:13:27,875 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:13:27] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:16:08,809 - root - INFO - This is an info message.
+2024-06-29 11:16:08,809 - root - ERROR - This is an error message.
+2024-06-29 11:16:09,280 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 11:16:09,280 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 11:16:12,731 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:16:12] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:16:14,032 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:16:14] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:16:18,310 - root - INFO - Jenkins job triggered successfully
+2024-06-29 11:16:18,798 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:16:18] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:16:19,164 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:16:19] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:16:19,812 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:16:19] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:18:27,420 - root - INFO - This is an info message.
+2024-06-29 11:18:27,420 - root - ERROR - This is an error message.
+2024-06-29 11:18:27,922 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 11:18:27,922 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 11:18:30,342 - root - INFO - Jenkins job triggered successfully
+2024-06-29 11:18:30,867 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:18:30] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:18:31,395 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:18:31] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:18:32,521 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:18:32] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:18:50,319 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-29 11:18:51,828 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:18:51] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:21:01,593 - root - INFO - This is an info message.
+2024-06-29 11:21:01,593 - root - ERROR - This is an error message.
+2024-06-29 11:21:02,119 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 11:21:02,119 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 11:21:05,510 - root - INFO - Jenkins job triggered successfully
+2024-06-29 11:21:05,985 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:21:05] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:21:06,396 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:21:06] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:21:06,960 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:21:06] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:21:25,413 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-29 11:21:27,051 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:21:27] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:22:01,840 - root - INFO - Jenkins job triggered successfully
+2024-06-29 11:22:02,328 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:22:02] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:22:02,856 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:22:02] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:22:22,033 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-29 11:22:23,346 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:22:23] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:23:47,881 - root - INFO - This is an info message.
+2024-06-29 11:23:47,881 - root - ERROR - This is an error message.
+2024-06-29 11:23:48,438 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 11:23:48,439 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 11:23:54,475 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:23:54] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:24:15,055 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-29 11:25:59,183 - root - INFO - This is an info message.
+2024-06-29 11:25:59,184 - root - ERROR - This is an error message.
+2024-06-29 11:25:59,660 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 11:25:59,661 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 11:26:02,384 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:26:02] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:26:03,398 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:26:03] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:26:05,302 - root - INFO - Jenkins job triggered successfully
+2024-06-29 11:26:05,762 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:26:05] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:26:06,265 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:26:06] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:26:07,393 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:26:07] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:26:25,516 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-29 11:30:35,455 - root - INFO - This is an info message.
+2024-06-29 11:30:35,455 - root - ERROR - This is an error message.
+2024-06-29 11:30:35,999 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 11:30:36,000 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 11:30:39,662 - root - INFO - Jenkins job triggered successfully
+2024-06-29 11:30:40,191 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:30:40] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:30:40,705 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:30:40] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:31:00,609 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-29 11:31:01,572 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:31:01] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:31:51,585 - root - INFO - This is an info message.
+2024-06-29 11:31:51,585 - root - ERROR - This is an error message.
+2024-06-29 11:31:52,046 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 11:31:52,046 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 11:32:13,680 - root - INFO - Jenkins job triggered successfully
+2024-06-29 11:32:14,184 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:32:14] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:32:14,505 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:32:14] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:32:15,365 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:32:15] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:32:35,501 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-29 11:32:37,604 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:32:37] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:34:04,341 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:34:04] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:34:10,049 - root - INFO - This is an info message.
+2024-06-29 11:34:10,049 - root - ERROR - This is an error message.
+2024-06-29 11:34:10,570 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 11:34:10,570 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 11:34:59,739 - root - INFO - Jenkins job triggered successfully
+2024-06-29 11:35:00,208 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:35:00] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:35:00,632 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:35:00] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:35:20,982 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-29 11:35:21,902 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:35:21] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:36:40,421 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:36:40] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:36:54,855 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:36:54] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:37:15,436 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-29 11:37:17,177 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:37:17] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:39:46,657 - root - INFO - This is an info message.
+2024-06-29 11:39:46,657 - root - ERROR - This is an error message.
+2024-06-29 11:39:47,204 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 11:39:47,205 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 11:40:01,941 - root - INFO - Jenkins job triggered successfully
+2024-06-29 11:40:02,463 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:40:02] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:40:03,284 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:40:03] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:40:21,668 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-29 11:40:22,702 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:40:22] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:41:10,255 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:41:10] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:42:01,241 - root - INFO - This is an info message.
+2024-06-29 11:42:01,241 - root - ERROR - This is an error message.
+2024-06-29 11:42:01,727 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 11:42:01,727 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 11:45:17,168 - root - INFO - This is an info message.
+2024-06-29 11:45:17,168 - root - ERROR - This is an error message.
+2024-06-29 11:45:17,751 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 11:45:17,751 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 11:45:20,091 - root - INFO - Jenkins job triggered successfully
+2024-06-29 11:45:20,584 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:45:20] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:45:20,900 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:45:20] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:45:21,740 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:45:21] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:45:41,435 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-29 11:45:42,917 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:45:42] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:50:43,687 - root - INFO - This is an info message.
+2024-06-29 11:50:43,692 - root - ERROR - This is an error message.
+2024-06-29 11:50:44,198 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 11:50:44,198 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 11:50:47,377 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:50:47] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:50:48,484 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:50:48] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:50:50,140 - root - INFO - Jenkins job triggered successfully
+2024-06-29 11:50:50,661 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:50:50] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:50:51,166 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:50:51] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:51:07,548 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-29 11:51:08,625 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:51:08] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:52:14,301 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:52:14] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:52:21,485 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 235, in message
+    message = f"{triggered_jobs}\n检查中 · · ·" if triggered_jobs else ""
+                                                ^^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'triggered_jobs' where it is not associated with a value
+2024-06-29 11:52:21,493 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:52:21] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-06-29 11:52:38,585 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-29 11:52:40,145 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:52:40] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:55:05,551 - root - INFO - This is an info message.
+2024-06-29 11:55:05,551 - root - ERROR - This is an error message.
+2024-06-29 11:55:06,058 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 11:55:06,058 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 11:55:23,026 - root - INFO - Jenkins job triggered successfully
+2024-06-29 11:55:23,550 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:55:23] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:55:23,835 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:55:23] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:55:24,658 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:55:24] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:55:42,926 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-29 11:55:44,307 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:55:44] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:57:18,724 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:57:18] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:57:39,235 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-29 11:57:40,874 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:57:40] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:59:31,842 - root - INFO - This is an info message.
+2024-06-29 11:59:31,843 - root - ERROR - This is an error message.
+2024-06-29 11:59:32,295 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 11:59:32,295 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 11:59:43,515 - root - INFO - Jenkins job triggered successfully
+2024-06-29 11:59:44,007 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:59:44] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:59:44,209 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:59:44] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 11:59:45,012 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 11:59:45] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:00:03,415 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-29 12:00:07,578 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:00:07] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:01:07,960 - root - INFO - This is an info message.
+2024-06-29 12:01:07,961 - root - ERROR - This is an error message.
+2024-06-29 12:01:08,611 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 12:01:08,611 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 12:01:18,953 - root - INFO - Jenkins job triggered successfully
+2024-06-29 12:01:19,430 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:01:19] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:01:20,020 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:01:20] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:01:20,628 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:01:20] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:01:39,734 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:01:39] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:01:41,723 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:01:41] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:02:03,432 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:02:03] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:08:12,457 - root - INFO - This is an info message.
+2024-06-29 12:08:12,457 - root - ERROR - This is an error message.
+2024-06-29 12:08:13,006 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 12:08:13,006 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 12:09:14,404 - root - INFO - Jenkins job triggered successfully
+2024-06-29 12:09:14,873 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:09:14] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:09:15,355 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:09:15] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:09:34,796 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:09:34] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:10:18,412 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:10:18] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:10:39,970 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:10:39] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:14:32,636 - root - INFO - This is an info message.
+2024-06-29 12:14:32,636 - root - ERROR - This is an error message.
+2024-06-29 12:14:33,126 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 12:14:33,126 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 12:15:43,889 - root - INFO - Jenkins job triggered successfully
+2024-06-29 12:15:44,389 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:15:44] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:15:44,602 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:15:44] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:15:45,378 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:15:45] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:16:03,547 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-29 12:16:05,141 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:16:05] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:45:03,236 - root - INFO - This is an info message.
+2024-06-29 12:45:03,238 - root - ERROR - This is an error message.
+2024-06-29 12:45:03,806 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-06-29 12:45:03,806 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-06-29 12:45:22,285 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:45:22] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:45:23,466 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:45:23] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:45:27,089 - root - INFO - Jenkins job triggered successfully
+2024-06-29 12:45:27,573 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:45:27] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:45:27,930 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:45:27] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:45:28,681 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:45:28] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:45:44,295 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-29 12:45:46,511 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:45:46] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:48:02,294 - root - INFO - Jenkins job triggered successfully
+2024-06-29 12:48:02,748 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:48:02] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:48:03,102 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:48:03] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:48:04,055 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:48:04] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:48:22,714 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-29 12:48:24,190 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:48:24] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:49:18,325 - root - INFO - Jenkins job triggered successfully
+2024-06-29 12:49:18,806 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:49:18] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:49:19,287 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:49:19] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:49:19,851 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:49:19] "POST /slack/events HTTP/1.0" 200 -
+2024-06-29 12:49:38,294 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-06-29 12:49:40,231 - werkzeug - INFO - 127.0.0.1 - - [29/Jun/2024 12:49:40] "POST /slack/events HTTP/1.0" 200 -
