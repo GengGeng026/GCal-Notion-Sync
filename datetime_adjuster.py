@@ -2042,7 +2042,7 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
             'sub_condition_4': set(),
         }
 
-
+        sub_condition_1_modified = False
         # Sub-Condition 1 under MASTER CONDITION D
         # Overwrite StartEnd accordingly 'Start' and 'End' existing dates and times
         # If 'Start' and 'End' have a Single-Date WITH a time component
@@ -2075,7 +2075,8 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
 
                 # Only print details and increment count if 'Start' and 'End' were actually overwritten
                 if start_value != prev_start_value or end_value != prev_end_value:
-
+                    sub_condition_1_modified = True
+                    
                     # Update 'StartEnd' as Time-Range accordingly 'Start' and 'End' existing dates and times
                     start_end_prop = (start_value, end_value)
 
@@ -2113,11 +2114,17 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
                     with lock:
                         result['details']['pages_overwritten_details'][result['page_id']] = (result['page_title'], result['original_start'], result['original_end'], result['start'], result['end'], result['prev_start_value'], result['prev_end_value'], result['start_end'])
 
+                    pages_modified['sub_condition_1'].add(page['id'])
+                    print(f"Page `{page_title}` has been modified at Sub-Condition 1 under MASTER CONDITION D\n")
+
+                # 在 Sub-Condition 1 的結束處添加：
+                if sub_condition_1_modified:
+                    return result, counts, details, processed_pages, page['id']
+
 
         # Sub-Condition 2 under MASTER CONDITION D
         # Overwrite Start or End
         # If 'Start' or 'End' have a Single-Date WITH a time component
-        
         # Ensure 'start' and 'end' are datetime objects
         if not isinstance(start, datetime):
             start = pytz.timezone('Asia/Kuala_Lumpur').localize(datetime.combine(start, time()))
@@ -2146,14 +2153,29 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
                     # Parse the dates from 'start_end_prop' and convert timezone
                     start_end_start = parse(start_end_prop['start']).astimezone(pytz.timezone('Asia/Kuala_Lumpur')) if 'start' in start_end_prop and start_end_prop['start'] is not None else None
                     start_end_end = parse(start_end_prop['end']).astimezone(pytz.timezone('Asia/Kuala_Lumpur')) if 'end' in start_end_prop and start_end_prop['end'] is not None else None
-                
-                # Check if 'StartEnd' is a Time-Range where start date is same or different from 'start' and end date is same or different from 'end'
-                # And also check if Start and End are at midnight (but not set explicitly), and they are the same as the StartEnd date range, while only StartEnd has a time component set explicitly that differs from Start and End
-                if start_end_end is not None and ((start_end_start.time() != time(0, 0) or start_end_end.time() != time(0, 0)) and
-                    (start.date() == start_end_start.date() or (start_end_end is not None and end.date() == start_end_end.date()))) or \
-                    ((start.time() == time(0, 0) and end.time() == time(0, 0) and start.date() != end.date()) and 
-                    (start.date() == start_end_start.date() and (start_end_end is not None and end.date() == start_end_end.date()) and 
-                    (start_end_start.time() != start.time() or (start_end_end is not None and start_end_end.time() != end.time())))):
+
+
+                def check_time_component(start_end_start, start_end_end):
+                    """檢查時間組件是否不為午夜"""
+                    return start_end_start.time() != time(0, 0) or start_end_end.time() != time(0, 0)
+
+                def check_dates(start, end, start_end_start, start_end_end):
+                    """檢查日期條件是否滿足"""
+                    return (start.date() == start_end_start.date() or (start_end_end is not None and end.date() == start_end_end.date()))
+
+                def check_midnight_and_date_range(start, end, start_end_start, start_end_end):
+                    """檢查是否在午夜且日期範圍匹配，且時間組件不同"""
+                    return (start.time() == time(0, 0) and end.time() == time(0, 0) and start.date() != end.date() and 
+                            start.date() == start_end_start.date() and (start_end_end is not None and end.date() == start_end_end.date()) and 
+                            (start_end_start.time() != start.time() or (start_end_end is not None and start_end_end.time() != end.time())))
+
+                # 检查时间是否相同
+                times_are_same = (start.time() == prev_start.time()) and (end.time() == prev_end.time())
+
+                # 检查StartEnd的日期是否与Start和End不同
+                start_end_date_differs = start_end_start.date() != start.date() or start_end_end.date() != end.date()
+
+                if (times_are_same and start_end_date_differs) or (start_end_end is not None and (check_time_component(start_end_start, start_end_end) and check_dates(start, end, start_end_start, start_end_end)) or check_midnight_and_date_range(start, end, start_end_start, start_end_end)):
 
                     # Extract date part from 'start_end_prop' and update 'Start' and 'End' with the same date
                     start_date = start_end_start.date()
@@ -2190,7 +2212,6 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
                     # Update the 'Previous Start' and 'Previous End' properties
                     with lock:
                         update_previous_dates(local_data.page, start, end, start_end_prop)
-                        print(f"Sub-Condition 2: If 'Start' or 'End' have a Single-Date WITH a time component")
 
                     # Update the page object
                     with lock:
@@ -2210,9 +2231,9 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
                         result['details']['pages_overwritten_details'][result['page_id']] = (result['page_title'], result['original_start'], result['original_end'], result['start'], result['end'], result['prev_start_value'], result['prev_end_value'], result['start_end'])
 
                     pages_modified['sub_condition_2'].add(page['id'])
-                    print(f"Page {page_title} has been modified")
+                    print(f"Page `{page_title}` has been modified at Sub-Condition 2 under MASTER CONDITION D\n")
 
-        if not sub_condition_2_modified and page['id'] not in pages_modified['sub_condition_2']:
+        if not sub_condition_1_modified and page['id'] not in pages_modified['sub_condition_1'] and not sub_condition_2_modified and page['id'] not in pages_modified['sub_condition_2']:
 
             # Initialize the flag
             is_modified = False
@@ -2310,76 +2331,85 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
 
 
                                 pages_modified['sub_condition_3'].add(page['id'])
-                                print(f"Page {page_title} has been modified")
+                                print(f"Page `{page_title}` has been modified at Sub-Condition 3 under MASTER CONDITION D\n")
                         
                         
             
-            if not sub_condition_2_modified and page['id'] not in pages_modified['sub_condition_2'] and not is_modified and page['id'] not in pages_modified['sub_condition_3']:
+        if (not sub_condition_1_modified and page['id'] not in pages_modified['sub_condition_1']) or (not sub_condition_2_modified and page['id'] not in pages_modified['sub_condition_2']) or (not is_modified and page['id'] not in pages_modified['sub_condition_3']):
 
-                # SUb-Sub Condition 4 under MASTER CONDITION D
-                # All-Days-Event
-                # Start and End are having Single-Date WITH time component 00:00 set explicitly while StartEnd is having different date or time range from Start and End.
-                # If 'Start' and 'End' have a Single-Date
-                    
-                start_end = page['properties']['StartEnd']['date']
+            # SUb-Sub Condition 4 under MASTER CONDITION D
+            # All-Days-Event
+            # Start and End are having Single-Date WITH time component 00:00 set explicitly while StartEnd is having different date or time range from Start and End.
+            # If 'Start' and 'End' have a Single-Date
 
-                if start_end['start'] is not None:
-                    start_end_start = parse(start_end['start']).replace(tzinfo=start.tzinfo)
-                    start_end_end = parse(start_end['end']).replace(tzinfo=end.tzinfo) if start_end['end'] is not None else None                    
+            if not has_time(local_data.page['properties']['Start']['date']['start']) and not has_time(local_data.page['properties']['End']['date']['start']):
 
-                    # 新增的輔助函數
-                    def process_start_end(start, end, start_end_start, start_end_end, StartEnd_to_Overwrite_All):
-                        if StartEnd_to_Overwrite_All:
-                            return process_overwrite_all(start, end, start_end_start, start_end_end)
-                        else:
-                            return process_no_overwrite(start, end, start_end_start, start_end_end)
+                # Check if Start or End are explicitly set 00:00
+                if start.time() == datetime.min.time() or end.time() == datetime.min.time():
 
-                    def process_overwrite_all(start, end, start_end_start, start_end_end):
-                        if start_end_end is None and start_end_start.time() == time(0, 0):
-                            return start_end_start, start_end_start
-                        elif start_end_end and start_end_start.time() == time(0, 0) and start_end_end.time() == time(0, 0):
-                            keep_start_midnight = start.time() == time(0, 0) and end.time() != time(0, 0)
-                            keep_end_midnight = end.time() == time(0, 0) and start.time() != time(0, 0)
-                            return start_end_start, start_end_end
-                        elif not ((start.time() == time(0, 0) and end.time() == time(0, 0) and start.date() != end.date()) and 
-                            ((start.date() == start_end_start.date() or end.date() == start_end_end.date()) and 
-                            (start.date() != start_end_start.date() or end.date() != start_end_end.date())) and
-                            (start_end_start.time() != time(0, 0) or start_end_end.time() != time(0, 0))):
-                            return start_end_start, start_end_end
-                        return start, end
+                    start_end = page['properties']['StartEnd']['date']
 
-                    def process_no_overwrite(start, end, start_end_start, start_end_end):
-                        # 檢查是否為全天事件且日期相同，如果是，則不進行任何處理
-                        if start.date() == end.date() == start_end_start.date() and start.time() == end.time() == time(0, 0):
-                            if start_end_end is None or start_end_start.date() == start_end_end.date():
-                                return start, end  # 直接返回原始的 start 和 end，不進行更新
-                        if not (start.date() == end.date() == start_end_start.date() and start.time() == end.time() == start_end_start.time() == time(0, 0)):
+                    if start_end['start'] is not None:
+                        start_end_start = parse(start_end['start']).replace(tzinfo=start.tzinfo)
+                        start_end_end = parse(start_end['end']).replace(tzinfo=end.tzinfo) if start_end['end'] is not None else None                    
+
+                        # 新增的輔助函數
+                        def process_start_end(start, end, start_end_start, start_end_end, StartEnd_to_Overwrite_All):
+                            if StartEnd_to_Overwrite_All is True:
+                                return process_overwrite_all(start, end, start_end_start, start_end_end)
+                            else:
+                                return process_no_overwrite(start, end, start_end_start, start_end_end)
+
+                        def process_overwrite_all(start, end, start_end_start, start_end_end):
                             if start_end_end is None and start_end_start.time() == time(0, 0):
-                                return start, end
-                            if start != end and start_end_start == start_end_end and start.date() != start_end_start.date() and end.date() != start_end_end.date():
-                                return start, end
-                            if start_end_end and start.time() == time(0, 0) and end.time() == time(0, 0) and \
-                                (start.date() != start_end_start.date() or end.date() != start_end_end.date() or start.time() != start_end_start.time() or end.time() != start_end_end.time()):
-                                return start, end
-                            if (start.time() == time(0, 0) and end.time() == time(0, 0) and (start == end)) and \
-                                (start_end_start.time() == time(0, 0) and start_end_end.time() == time(0, 0)) and \
-                                (start.date() != start_end_start.date() or end.date() != start_end_end.date()):
-                                return start, end
-                            if start_end_end and start.date() == start_end_start.date() and end.date() == start_end_end.date() and \
-                                start_end_start != start_end_end and (start.time() == time(0, 0) and end.time() == time(0, 0)) and \
-                                (start_end_start.time() != time(0, 0) or start_end_end.time() != time(0, 0)):
-                                return start, end
-                        return start_end_start, start_end_end
+                                return start_end_start, start_end_start
+                            elif start_end_end and start_end_start.time() == time(0, 0) and start_end_end.time() == time(0, 0):
+                                keep_start_midnight = start.time() == time(0, 0) and end.time() != time(0, 0)
+                                keep_end_midnight = end.time() == time(0, 0) and start.time() != time(0, 0)
+                                return start_end_start, start_end_end
+                            elif not ((start.time() == time(0, 0) and end.time() == time(0, 0) and start.date() != end.date()) and 
+                                ((start.date() == start_end_start.date() or end.date() == start_end_end.date()) and 
+                                (start.date() != start_end_start.date() or end.date() != start_end_end.date())) and
+                                (start_end_start.time() != time(0, 0) or start_end_end.time() != time(0, 0))):
+                                return start_end_start, start_end_end
+                            return start, end
 
-                    # 使用新的處理函數
-                    new_start, new_end = process_start_end(start, end, start_end_start, start_end_end, StartEnd_to_Overwrite_All)
+                        def process_no_overwrite(start, end, start_end_start, start_end_end):
+                            # 如果 Start 和 End 都被修改，以它們為準
+                            if start != prev_start or end != prev_end:
+                                return start, end
+                            # 檢查是否為全天事件且日期相同，如果是，則不進行任何處理
+                            if start.date() == end.date() == start_end_start.date() and start.time() == end.time() == time(0, 0):
+                                if start_end_end is None or start_end_start.date() == start_end_end.date():
+                                    return start, end  # 直接返回原始的 start 和 end，不進行更新
+                            if not (start.date() == end.date() == start_end_start.date() and start.time() == end.time() == start_end_start.time() == time(0, 0)):
+                                if start_end_end is None and start_end_start.time() == time(0, 0):
+                                    return start, end
+                                if start != end and start_end_start == start_end_end and start.date() != start_end_start.date() and end.date() != start_end_end.date():
+                                    return start, end
+                                if start_end_end and start.time() == time(0, 0) and end.time() == time(0, 0) and \
+                                    (start.date() != start_end_start.date() or end.date() != start_end_end.date() or start.time() != start_end_start.time() or end.time() != start_end_end.time()):
+                                    return start, end
+                                if (start.time() == time(0, 0) and end.time() == time(0, 0) and (start == end)) and \
+                                    (start_end_start.time() == time(0, 0) and start_end_end.time() == time(0, 0)) and \
+                                    (start.date() != start_end_start.date() or end.date() != start_end_end.date()):
+                                    return start, end
+                                if start_end_end and start.date() == start_end_start.date() and end.date() == start_end_end.date() and \
+                                    start_end_start != start_end_end and (start.time() == time(0, 0) and end.time() == time(0, 0)) and \
+                                    (start_end_start.time() != time(0, 0) or start_end_end.time() != time(0, 0)):
+                                    return start, end
+                            return start_end_start, start_end_end
 
-                    # 如果有變更，更新數據
-                    if new_start != start or new_end != end:
-                        start, end = new_start, new_end
-                        print(f"Sub-Condition 4: Start and End updated")
-                        result, details, start, end = update_all_data(start, end, start_end, prev_start, prev_end, result, local_data, page_title, original_start, original_end, prev_start_value, prev_end_value, new_start_value,  new_end_value, counts, start_end_value, details, keep_midnight=True)
-                    pages_modified['sub_condition_4'].add(page['id'])
+                        # 使用新的處理函數
+                        new_start, new_end = process_start_end(start, end, start_end_start, start_end_end, StartEnd_to_Overwrite_All)
+
+                        # 如果有變更，更新數據
+                        if new_start != start or new_end != end:
+                            start, end = new_start, new_end
+                            print(f"Sub-Condition 4: Start and End updated")
+                            result, details, start, end = update_all_data(start, end, start_end, prev_start, prev_end, result, local_data, page_title, original_start, original_end, prev_start_value, prev_end_value, new_start_value,  new_end_value, counts, start_end_value, details, keep_midnight=True)
+                            pages_modified['sub_condition_4'].add(page['id'])
+                            print(f"Page `{page_title}` has been modified at Sub-Condition 4 under MASTER CONDITION D\n")
         
         return result, counts, details, processed_pages, page['id']
         
