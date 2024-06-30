@@ -2325,9 +2325,7 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
 
                 if start_end['start'] is not None:
                     start_end_start = parse(start_end['start']).replace(tzinfo=start.tzinfo)
-                    start_end_end = parse(start_end['end']).replace(tzinfo=end.tzinfo) if start_end['end'] is not None else None
-
-                    
+                    start_end_end = parse(start_end['end']).replace(tzinfo=end.tzinfo) if start_end['end'] is not None else None                    
 
                     # 新增的輔助函數
                     def process_start_end(start, end, start_end_start, start_end_end, StartEnd_to_Overwrite_All):
@@ -2351,6 +2349,10 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
                         return start, end
 
                     def process_no_overwrite(start, end, start_end_start, start_end_end):
+                        # 檢查是否為全天事件且日期相同，如果是，則不進行任何處理
+                        if start.date() == end.date() == start_end_start.date() and start.time() == end.time() == time(0, 0):
+                            if start_end_end is None or start_end_start.date() == start_end_end.date():
+                                return start, end  # 直接返回原始的 start 和 end，不進行更新
                         if not (start.date() == end.date() == start_end_start.date() and start.time() == end.time() == start_end_start.time() == time(0, 0)):
                             if start_end_end is None and start_end_start.time() == time(0, 0):
                                 return start, end
@@ -2994,13 +2996,14 @@ else:
                 # Strip off 00:00 from prev_start and remove formatted_right_arrow and start_alt
                 print(f"{formatted_start}    {formatted_colon}  {DateTimeIntoNotionFormat(prev_start, date_only=True, time_format='24')}")
 
-            if prev_end.date() != end_alt.date():
-                # Format prev_end as less visible when dates are different
-                formatted_prev_end = format_string(DateTimeIntoNotionFormat(prev_end, date_only=True, time_format='24'), less_visible=True)
-                print(f"{formatted_end}      {formatted_colon}  {formatted_prev_end} {formatted_right_arrow} {DateTimeIntoNotionFormat(end_alt, date_only=True, time_format='24')}")
-            elif prev_end.time() == end_alt.time():
-                # Strip off 00:00 from prev_end and remove formatted_right_arrow and end_alt
-                print(f"{formatted_end}      {formatted_colon}  {DateTimeIntoNotionFormat(prev_end, date_only=True, time_format='24')}")
+            if end_alt is not None:  # Check if end_alt is not None
+                if prev_end.date() != end_alt.date():
+                    # Format prev_end as less visible when dates are different
+                    formatted_prev_end = format_string(DateTimeIntoNotionFormat(prev_end, date_only=True, time_format='24'), less_visible=True)
+                    print(f"{formatted_end}      {formatted_colon}  {formatted_prev_end} {formatted_right_arrow} {DateTimeIntoNotionFormat(end_alt, date_only=True, time_format='24')}")
+                elif prev_end.time() == end_alt.time():
+                    # Strip off 00:00 from prev_end and remove formatted_right_arrow and end_alt
+                    print(f"{formatted_end}      {formatted_colon}  {DateTimeIntoNotionFormat(prev_end, date_only=True, time_format='24')}")
             end_date_formatted = DateTimeIntoNotionFormat(end_alt, date_only=True)
             start_date_formatted = str(DateTimeIntoNotionFormat(start_alt, date_only=True)).strip()
             if start_date_formatted == end_date_formatted:
@@ -3045,19 +3048,25 @@ else:
 
                 print(f"{formatted_end}      {formatted_colon}  {formatted_plain_none + '  ' if original_end is None and original_start is not None or original_end is None and original_start is None and extra is not None else formatted_end_new if original_end is not None else ''}{' ' if original_end is None and end_new is None else ''}{formatted_right_arrow + '  ' if original_end is None and original_start is not None or original_end is None and original_start is None and extra is not None else ''}{' ' if end_new is None else ''}{formatted_plain_none if end_new is None else DateTimeIntoNotionFormat(end_new, date_only=False, time_format='24') if end_new != original_end and start_new != end_new or original_end == original_start or original_end is None else ''}")
                 if isinstance(start_new, datetime) and isinstance(end_new, datetime):
-                    if start_new.date() != end_new.date():
-                        # New logic for different start and end dates
+                    if start_new.date() == end_new.date():
+                        # 检查是否满足特定条件（例如，结束时间为 "00:00"）
+                        end_time_str = end_new.strftime('%H:%M')
+                        if end_time_str == "00:00":
+                            # 如果条件满足，只打印日期部分
+                            date_range_str = start_new.strftime('%b %-d, %Y')
+                        else:
+                            # 如果条件不满足，按照原有逻辑处理
+                            end_date_formatted = end_new.strftime('%-H:%M')
+                            if end_date_formatted.startswith('00:'):
+                                end_date_formatted = end_date_formatted.lstrip('0')
+                            date_range_str = f"{DateTimeIntoNotionFormat(start_new, date_only=False, time_format='24')} ─ {end_date_formatted}"
+                    else:
+                        # 新逻辑，处理不同的开始和结束日期
                         start_date_str = start_new.strftime('%-d')
                         end_date_str = end_new.strftime('%-d %b, %Y')
                         start_time_str = start_new.strftime('%H:%M')
                         end_time_str = end_new.strftime('%H:%M')
                         date_range_str = f"{start_date_str} - {end_date_str} {start_time_str} ─ {end_time_str}"
-                    else:
-                        # Existing logic for same start and end dates
-                        end_date_formatted = end_new.strftime('%-H:%M')
-                        if end_date_formatted.startswith('00:'):
-                            end_date_formatted = end_date_formatted.lstrip('0')
-                        date_range_str = f"{DateTimeIntoNotionFormat(start_new, date_only=False, time_format='24')} ─ {end_date_formatted}"
                 else:
                     end_date_formatted = None
 
@@ -3266,6 +3275,7 @@ if not no_pages_operated_B:
     print("\r\033[K", end="")
     print(f"{formatted_no} Condition is Met.\n{formatted_no} Operation is Performed.\n{formatted_no} Page is Modified\n")
 else:
+    print("\r\033[K", end="")
     print(f"Total Pages {formatted_modified} : {formatted_count.format(result['total_pages_modified'])}")
 
 stop_event.set()
