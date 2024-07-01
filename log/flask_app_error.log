@@ -5800,3 +5800,522 @@ Traceback (most recent call last):
     terminal_width = os.get_terminal_size().columns
                      ^^^^^^^^^^^^^^^^^^^^^^
 OSError: [Errno 25] Inappropriate ioctl for device
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 514, in <module>
+    logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 2125, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 30] Read-only file system: '/app.log'
+Exception in thread Thread-2 (dynamic_counter_indicator):
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1010, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 79, in dynamic_counter_indicator
+    terminal_width = os.get_terminal_size().columns
+                     ^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 25] Inappropriate ioctl for device
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 514, in <module>
+    logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 2125, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 30] Read-only file system: '/app.log'
+Exception in thread Thread-2 (dynamic_counter_indicator):
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1010, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 79, in dynamic_counter_indicator
+    terminal_width = os.get_terminal_size().columns
+                     ^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 25] Inappropriate ioctl for device
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 514, in <module>
+    logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 2125, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 30] Read-only file system: '/app.log'
+Exception in thread Thread-2 (dynamic_counter_indicator):
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1010, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 79, in dynamic_counter_indicator
+    terminal_width = os.get_terminal_size().columns
+                     ^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 25] Inappropriate ioctl for device
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 514, in <module>
+    logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 2125, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 30] Read-only file system: '/app.log'
+Exception in thread Thread-2 (dynamic_counter_indicator):
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1010, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 79, in dynamic_counter_indicator
+    terminal_width = os.get_terminal_size().columns
+                     ^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 25] Inappropriate ioctl for device
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 514, in <module>
+    logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 2125, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 30] Read-only file system: '/app.log'
+Exception in thread Thread-2 (dynamic_counter_indicator):
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1010, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 79, in dynamic_counter_indicator
+    terminal_width = os.get_terminal_size().columns
+                     ^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 25] Inappropriate ioctl for device
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 514, in <module>
+    logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 2125, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 30] Read-only file system: '/app.log'
+Exception in thread Thread-2 (dynamic_counter_indicator):
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1010, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 79, in dynamic_counter_indicator
+    terminal_width = os.get_terminal_size().columns
+                     ^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 25] Inappropriate ioctl for device
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 514, in <module>
+    logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 2125, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 30] Read-only file system: '/app.log'
+Exception in thread Thread-2 (dynamic_counter_indicator):
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1010, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 79, in dynamic_counter_indicator
+    terminal_width = os.get_terminal_size().columns
+                     ^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 25] Inappropriate ioctl for device
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 514, in <module>
+    logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 2125, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 30] Read-only file system: '/app.log'
+Exception in thread Thread-2 (dynamic_counter_indicator):
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1010, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 79, in dynamic_counter_indicator
+    terminal_width = os.get_terminal_size().columns
+                     ^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 25] Inappropriate ioctl for device
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 514, in <module>
+    logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 2125, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 30] Read-only file system: '/app.log'
+Exception in thread Thread-2 (dynamic_counter_indicator):
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1010, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 79, in dynamic_counter_indicator
+    terminal_width = os.get_terminal_size().columns
+                     ^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 25] Inappropriate ioctl for device
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 514, in <module>
+    logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 2125, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 30] Read-only file system: '/app.log'
+Exception in thread Thread-2 (dynamic_counter_indicator):
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1010, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 79, in dynamic_counter_indicator
+    terminal_width = os.get_terminal_size().columns
+                     ^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 25] Inappropriate ioctl for device
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 514, in <module>
+    logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 2125, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 30] Read-only file system: '/app.log'
+Exception in thread Thread-2 (dynamic_counter_indicator):
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1010, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 79, in dynamic_counter_indicator
+    terminal_width = os.get_terminal_size().columns
+                     ^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 25] Inappropriate ioctl for device
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 514, in <module>
+    logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 2125, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 30] Read-only file system: '/app.log'
+Exception in thread Thread-2 (dynamic_counter_indicator):
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1010, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 79, in dynamic_counter_indicator
+    terminal_width = os.get_terminal_size().columns
+                     ^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 25] Inappropriate ioctl for device
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 514, in <module>
+    logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 2125, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 30] Read-only file system: '/app.log'
+Exception in thread Thread-2 (dynamic_counter_indicator):
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1010, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 79, in dynamic_counter_indicator
+    terminal_width = os.get_terminal_size().columns
+                     ^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 25] Inappropriate ioctl for device
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 514, in <module>
+    logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 2125, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 30] Read-only file system: '/app.log'
+Exception in thread Thread-2 (dynamic_counter_indicator):
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1010, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 79, in dynamic_counter_indicator
+    terminal_width = os.get_terminal_size().columns
+                     ^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 25] Inappropriate ioctl for device
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 514, in <module>
+    logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 2125, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 30] Read-only file system: '/app.log'
+Exception in thread Thread-2 (dynamic_counter_indicator):
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1010, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 79, in dynamic_counter_indicator
+    terminal_width = os.get_terminal_size().columns
+                     ^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 25] Inappropriate ioctl for device
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 514, in <module>
+    logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 2125, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 30] Read-only file system: '/app.log'
+Exception in thread Thread-2 (dynamic_counter_indicator):
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1010, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 79, in dynamic_counter_indicator
+    terminal_width = os.get_terminal_size().columns
+                     ^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 25] Inappropriate ioctl for device
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 514, in <module>
+    logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 2125, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 30] Read-only file system: '/app.log'
+Exception in thread Thread-2 (dynamic_counter_indicator):
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1010, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 79, in dynamic_counter_indicator
+    terminal_width = os.get_terminal_size().columns
+                     ^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 25] Inappropriate ioctl for device
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 514, in <module>
+    logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 2125, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 30] Read-only file system: '/app.log'
+Exception in thread Thread-2 (dynamic_counter_indicator):
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1010, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 79, in dynamic_counter_indicator
+    terminal_width = os.get_terminal_size().columns
+                     ^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 25] Inappropriate ioctl for device
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 514, in <module>
+    logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 2125, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 30] Read-only file system: '/app.log'
+Exception in thread Thread-2 (dynamic_counter_indicator):
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1010, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 79, in dynamic_counter_indicator
+    terminal_width = os.get_terminal_size().columns
+                     ^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 25] Inappropriate ioctl for device
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 514, in <module>
+    logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 2125, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 30] Read-only file system: '/app.log'
+Exception in thread Thread-2 (dynamic_counter_indicator):
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1010, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 79, in dynamic_counter_indicator
+    terminal_width = os.get_terminal_size().columns
+                     ^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 25] Inappropriate ioctl for device
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 514, in <module>
+    logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 2125, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 30] Read-only file system: '/app.log'
+Exception in thread Thread-2 (dynamic_counter_indicator):
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1010, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 79, in dynamic_counter_indicator
+    terminal_width = os.get_terminal_size().columns
+                     ^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 25] Inappropriate ioctl for device
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 514, in <module>
+    logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 2125, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 30] Read-only file system: '/app.log'
+Exception in thread Thread-2 (dynamic_counter_indicator):
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1073, in _bootstrap_inner
+    self.run()
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/threading.py", line 1010, in run
+    self._target(*self._args, **self._kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 79, in dynamic_counter_indicator
+    terminal_width = os.get_terminal_size().columns
+                     ^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 25] Inappropriate ioctl for device
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 514, in <module>
+    logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 2125, in basicConfig
+    h = FileHandler(filename, mode,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1231, in __init__
+    StreamHandler.__init__(self, self._open())
+                                 ^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/logging/__init__.py", line 1263, in _open
+    return open_func(self.baseFilename, self.mode,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 30] Read-only file system: '/app.log'
