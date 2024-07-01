@@ -1,1 +1,1 @@
-n
+is_modified = start != prev_start or end != prev_end
