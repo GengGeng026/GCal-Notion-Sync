@@ -8797,3 +8797,8 @@ UnboundLocalError: cannot access local variable 'triggered_jobs' where it is not
 2024-06-30 23:35:26,108 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
  * Running on http://127.0.0.1:8080
 2024-06-30 23:35:26,108 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-01 11:13:44,948 - root - INFO - This is an info message.
+2024-07-01 11:13:44,951 - root - ERROR - This is an error message.
+2024-07-01 11:13:45,420 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-01 11:13:45,420 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
