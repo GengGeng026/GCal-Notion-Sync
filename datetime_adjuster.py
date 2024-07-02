@@ -2287,26 +2287,31 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
             # Start and End are having Single-Date WITHOUT time component 00:00 set explicitly while StartEnd is having different date or time range from Start and End.
             # If 'Start' and 'End' have a Single-Date
             start_end = page['properties']['StartEnd']['date']
-                        
+                                    
             if StartEnd_to_Overwrite_All == False:
-                # Convert 'start' and 'end' in start_end to datetime objects
-                if start_end['start'] is not None or start_end['end'] is not None:
-                    start_end_start = None
-                    start_end_end = None
 
-                    if start_end['start'] is not None:
-                        start_end_start = parse(start_end['start']).replace(tzinfo=start.tzinfo)
+                # Convert 'start' in start_end to datetime object
+                start_end_start = parse(start_end['start']).replace(tzinfo=start.tzinfo) if start_end['start'] is not None else None
+                # Handle 'end' being None by setting it to a default value or keeping it None
+                start_end_end = parse(start_end['end']).replace(tzinfo=end.tzinfo) if start_end['end'] is not None else None
 
-                    if start_end['end'] is not None:
-                        start_end_end = parse(start_end['end']).replace(tzinfo=end.tzinfo)
+                # Simplified condition checks
+                is_single_day_no_time = (start.time() == time(0, 0) and end.time() == time(0, 0)) or start_end['end'] is None
+                is_midnight_and_mismatch = start.time() == time(0, 0) and end.time() == time(0, 0) and start != start_end_start and end != start_end_end
+                should_swap_start_end = end < start
 
+                # Step 1: Check and perform swap if necessary
+                if should_swap_start_end:
+                    start, end = end, start
+                    is_modified = True  # Assuming this variable exists to track modifications
+
+                # Capture original values after potential swap but before any modifications
+                original_start = start
+                original_end = end
+
+                if start.time() == datetime.min.time() and end.time() == datetime.min.time() and start.date() != start_end_start.date() and (end.date() != start_end_end.date() if start_end_end is not None else True):
                     processed_sub_condtion_3 = True
 
-                    # Simplified condition checks
-                    is_single_day_no_time = (start.time() == time(0, 0) and end.time() == time(0, 0)) or start_end['end'] is None
-                    is_midnight_and_mismatch = start.time() == time(0, 0) and end.time() == time(0, 0) and start != start_end_start and end != start_end_end
-                    should_swap_start_end = end < start
-                
                     if processed_sub_condtion_3:
                         if is_single_day_no_time:
                             # Adjust start_end based on conditions
@@ -2320,7 +2325,7 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
                             # Swap start and end if necessary
                             start, end = end, start
                             is_modified = start != prev_start or end != prev_end
-                            
+
                         if is_modified:
                             # Update logic here with proper locking and checks
                             with lock:
@@ -2330,8 +2335,8 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
                                 # Update the page in the Notion database
                                 update_page_properties(notion, local_data.page, 'Start', 'End', 'StartEnd', start, end, start_end_prop)
 
-                                # Update the 'Previous Start' and 'Previous End' properties
-                                update_previous_dates(local_data.page, start, end, start_end_prop)
+                                # When updating 'Previous Start' and 'Previous End', use original_start and original_end
+                                update_previous_dates(local_data.page, original_start, original_end, start_end_prop)
 
                                 # Update the page object
                                 update_page(local_data.page, start, end, start_end_prop)

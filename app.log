@@ -2,5 +2,3 @@ googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth
 httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
 httpx - INFO - HTTP Request: PATCH https://api.notion.com/v1/pages/df52943c-2354-42a4-9583-e71fe1f5cb9e "HTTP/1.1 200 OK"
 httpx - INFO - HTTP Request: PATCH https://api.notion.com/v1/pages/df52943c-2354-42a4-9583-e71fe1f5cb9e "HTTP/1.1 200 OK"
-httpx - INFO - HTTP Request: PATCH https://api.notion.com/v1/pages/490391fd-f526-44cf-965a-f51b00828a9d "HTTP/1.1 200 OK"
-httpx - INFO - HTTP Request: PATCH https://api.notion.com/v1/pages/490391fd-f526-44cf-965a-f51b00828a9d "HTTP/1.1 200 OK"
