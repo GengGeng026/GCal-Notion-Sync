@@ -314,350 +314,6 @@ finally:
 ##### The Methods that we will use in this scipt are below
 ###########################################################################
 
-
-# Get today's date
-today = datetime.today()
-
-# Calculate the first day of this month
-this_month = datetime(today.year, today.month, 1)
-
-# Format the date to match the format used in your code
-this_month_str = this_month.strftime("%Y-%m-%dT%H:%M:%S.%f")
-
-##Query notion tasks already in Gcal, don't have to be updated, and are today or in the next week
-my_page = notion.databases.query( 
-    **{
-        "database_id": database_id,
-        "filter": {
-            "and": [
-                {
-                    "property": NeedGCalUpdate_Notion_Name, 
-                    "formula":{
-                        "checkbox":  {
-                            "equals": False
-                        }
-                    }
-                }, 
-                {
-                    "property": On_GCal_Notion_Name, 
-                    "checkbox":  {
-                        "equals": True
-                    }
-                }, 
-                {
-                    "property": Date_Notion_Name, 
-                    "date": {
-                        "on_or_after": this_month_str
-                    }
-                },
-                # {
-                #     "or": [
-                #     {
-                #         "property": Date_Notion_Name, 
-                #         "date": {
-                #             "equals": todayDate
-                #         }
-                #     }, 
-                #     {
-                #         "property": Date_Notion_Name, 
-                #         "date": {
-                #             "next_week": {}
-                #         }
-                #     }
-                # ]   
-                # },
-                {
-                    "property": Delete_Notion_Name, 
-                    "checkbox":  {
-                        "equals": False
-                    }
-                }
-            ]
-        },
-    }
-)
-
-resultList = my_page['results']
-
-#Comparison section: 
-# We need to see what times between GCal and Notion are not the same, so we are going to convert all of the notion date/times into 
-## datetime values and then compare that against the datetime value of the GCal event. If they are not the same, then we change the Notion 
-### event as appropriate
-notion_IDs_List = []
-notion_start_datetimes = []
-notion_end_datetimes = []
-notion_gCal_IDs = [] #we will be comparing this against the gCal_datetimes
-gCal_start_datetimes = []
-gCal_end_datetimes = []
-notion_gCal_CalIds = [] #going to fill this in from the select option, not the text option. 
-notion_gCal_CalNames = []
-notion_titles = []
-gCal_CalIds = []
-gCal_titles = []
-events_to_update = []
-events_info = []
-added_events = []
-modified_events = []
-added_events_counter = 0
-modified_events_counter = 0
-
-for result in resultList:
-    notion_IDs_List.append(result['id'])
-    notion_start_datetimes.append(result['properties'][Date_Notion_Name]['date']['start'])
-    notion_end_datetimes.append(result['properties'][Date_Notion_Name]['date']['end'])
-    if result['properties'][GCalEventId_Notion_Name]['rich_text']:
-        notion_gCal_IDs.append(result['properties'][GCalEventId_Notion_Name]['rich_text'][0]['text']['content'])
-    else:
-        pass
-    if result['properties'][Task_Notion_Name]['title']:
-        notion_titles.append(result['properties'][Task_Notion_Name]['title'][0]['text']['content'])
-    else:
-        notion_titles.append("Untitled")
-    try:
-        notion_gCal_CalIds.append(calendarDictionary[result['properties'][Calendar_Notion_Name]['select']['name']])
-        notion_gCal_CalNames.append(result['properties'][Calendar_Notion_Name]['select']['name'])
-    except: #keyerror occurs when there's nothing put into the calendar in the first place
-        notion_gCal_CalIds.append(calendarDictionary[DEFAULT_CALENDAR_NAME])
-        notion_gCal_CalNames.append(result['properties'][Calendar_Notion_Name]['select']['name'])
-
-
-#the reason we take off the last 6 characters is so we can focus in on just the date and time instead of any extra info
-for  i in range(len(notion_start_datetimes)):    
-    try:
-        notion_start_datetimes[i] = datetime.strptime(notion_start_datetimes[i], "%Y-%m-%d")
-    except:
-        try:
-            notion_start_datetimes[i] = datetime.strptime(notion_start_datetimes[i][:-6], "%Y-%m-%dT%H:%M:%S.000")
-        except:
-            notion_start_datetimes[i] = datetime.strptime(notion_start_datetimes[i][:-6], "%Y-%m-%dT%H:%M:%S.%f")
-
-for  i in range(len(notion_end_datetimes)):    
-    if notion_end_datetimes[i] != None:
-        try:
-            notion_end_datetimes[i] = datetime.strptime(notion_end_datetimes[i], "%Y-%m-%d")
-        except:
-            try:
-                notion_end_datetimes[i] = datetime.strptime(notion_end_datetimes[i][:-6], "%Y-%m-%dT%H:%M:%S.000")
-            except:
-                notion_end_datetimes[i] = datetime.strptime(notion_end_datetimes[i][:-6], "%Y-%m-%dT%H:%M:%S.%f")
-    else:
-        notion_end_datetimes[i] = notion_start_datetimes[i] #the reason we're doing this weird ass thing is because when we put the end time into the update or make GCal event, it'll be representative of the date
-
-##We use the gCalId from the Notion dashboard to get retrieve the start Time from the gCal event
-value =''
-exitVar = ''
-for gCalId in notion_gCal_IDs:  
-    
-    for calendarID in calendarDictionary.keys(): #just check all of the calendars of interest for info about the event
-        try:
-            x = service.events().get(calendarId=calendarDictionary[calendarID], eventId = gCalId).execute()
-        except:
-            x = {'status': 'unconfirmed'}
-        if x['status'] == 'confirmed':
-            value = x     
-            gCal_titles.append(value['summary'])
-            gCal_CalIds.append(calendarID)   
-        else:
-            continue
-        
-    try:
-        gCal_start_datetimes.append(datetime.strptime(value['start']['dateTime'][:-6], "%Y-%m-%dT%H:%M:%S"))
-    except:
-        date = datetime.strptime(value['start']['date'], "%Y-%m-%d")
-        x = datetime(date.year, date.month, date.day, 0, 0, 0)
-        gCal_start_datetimes.append(x)
-    try:
-        gCal_end_datetimes.append(datetime.strptime(value['end']['dateTime'][:-6], "%Y-%m-%dT%H:%M:%S"))
-    except:
-        date = datetime.strptime(value['end']['date'], "%Y-%m-%d")
-        x = datetime(date.year, date.month, date.day, 0, 0, 0) - timedelta(days=1)
-        gCal_end_datetimes.append(x)
-
-#Now we iterate and compare the time on the Notion Dashboard and the start time of the GCal event
-#If the datetimes don't match up,  then the Notion  Dashboard must be updated
-new_notion_start_datetimes = ['']*len(notion_start_datetimes)
-new_notion_end_datetimes = ['']*len(notion_end_datetimes)
-new_notion_titles = ['']*len(notion_titles)
-
-# Determine the length of the shorter list
-loop_length = min(len(notion_start_datetimes), len(gCal_start_datetimes))
-
-# Use loop_length to limit the range of the loop
-for i in range(loop_length):
-    if isinstance(notion_start_datetimes[i], datetime) and isinstance(gCal_start_datetimes[i], datetime):
-        if notion_start_datetimes[i] != gCal_start_datetimes[i]:
-            new_notion_start_datetimes[i] = gCal_start_datetimes[i]
-            # Additional logic here
-    else:
-        print(f"Error: Type mismatch at index {i}.")
-        # Handle the type mismatch error
-
-    if notion_end_datetimes[i] != gCal_end_datetimes[i]:
-        new_notion_end_datetimes[i] = gCal_end_datetimes[i]
-        # Additional logic here
-
-# Determine the length of the shorter list
-loop_length_titles = min(len(notion_titles), len(gCal_titles))
-
-# Use loop_length_titles to limit the range of the loop for titles comparison
-for i in range(loop_length_titles):
-    if notion_titles[i] != gCal_titles[i] and gCal_titles[i] != '':
-        new_notion_titles[i] = gCal_titles[i]
-    else:
-        new_notion_titles[i] = notion_titles[i]  # If gCal_titles[i] is empty, keep the original Notion title
-
-# Ensure that any remaining titles in notion_titles are handled if notion_titles is longer than gCal_titles
-for i in range(loop_length_titles, len(notion_titles)):
-    new_notion_titles[i] = notion_titles[i]  # 如果 gCal_titles[i] 是空值，則保持原始的 Notion 標題
-
-
-def remove_leading_zero(time_str):
-    parts = time_str.split(':')
-    if len(parts) == 2:
-        hour = str(int(parts[0]))  # 移除小时的前导零
-        minute = parts[1]  # 分钟部分不变
-        return f"{hour}:{minute}"
-    return time_str
-
-def format_date(date):
-    if date is None:
-        return " " * 12  # 返回固定长度的空字符串，以保持对齐
-    # 格式化日期，确保日和月份始终占用两个字符位置（对于日，通过在单数前添加空格实现）
-    day = date.strftime('%d').lstrip('0').rjust(2, ' ')
-    month = date.strftime('%b')
-    year = date.strftime('%Y')
-    return f"{day} {month}, {year}"
-
-def format_time(time):
-    if time is None:
-        # 可以选择不进行任何操作，或者设置一个默认值
-        return ""
-    # Use the provided remove_leading_zero function to format time without leading zeros
-    return remove_leading_zero(time.strftime('%H:%M'))
-
-def print_date_change(label, old_date, new_date, max_label_length):
-    old_date_str = old_date.strftime('%d %b, %Y')
-    new_date_str = new_date.strftime('%d %b, %Y')
-    
-    if old_date.hour != 0 or old_date.minute != 0:
-        old_date_str += '  ' + remove_leading_zero(old_date.strftime('%H:%M'))
-    
-    if new_date.hour != 0 or new_date.minute != 0:
-        new_date_str += '  ' + remove_leading_zero(new_date.strftime('%H:%M'))
-
-    print(f"{label:<{max_label_length}} :" + "  " + f" {format_string(old_date_str, less_visible=True)} " + formatted_right_arrow + f" {new_date_str}")
-
-labels = ['Title', 'Start', 'End', 'StartEnd']
-max_label_length = max(len(label) for label in labels) + 2  # 考虑到空格的数量
-
-def print_modification(notion_ID, before_title, after_title, old_start_date, new_start_date, old_end_date, new_end_date, max_label_length, notion_IDs_List):
-    
-    title_changed = before_title != after_title
-    # Modify the condition to account for None values
-    start_date_changed = old_start_date != new_start_date if new_start_date is not None else False
-    end_date_changed = old_end_date != new_end_date if new_end_date is not None else False
-    event_changed = title_changed or start_date_changed or end_date_changed
-    
-    try:
-        event_index = notion_IDs_List.index(notion_ID)
-    except ValueError:
-        print(f"Event {notion_ID} not found in the list of Notion IDs.")
-        return
-    
-    notion_ID = notion_IDs_List[event_index]
-    
-    if event_changed:
-        animate_text_wave("modifyin", repeat=1)
-
-    if title_changed:
-        stop_clear_and_print()
-        print(f"{'Before':<{max_label_length}} :" + "  " + f" {format_string(before_title, less_visible=True)}")
-        print(f"{'After':<{max_label_length}} :" + "  " + f" {format_string(after_title, bold=True)}\n")
-        start_dynamic_counter_indicator()
-    else:
-        stop_clear_and_print()
-        print(f"{'Title':<{max_label_length}} :" + "  " + f" {format_string(notion_titles[i], bold=True)}")
-        start_dynamic_counter_indicator()
-            
-    if start_date_changed:
-        if new_start_date is not None:
-            if new_start_date.hour != 0 or new_start_date.minute != 0:
-                print_date_change('Start', old_start_date, new_start_date, max_label_length)
-            else:
-                stop_clear_and_print()
-                print(f"{'Start':<{max_label_length}} :" + "   " + format_string(format_date(old_start_date), less_visible=True) + (f"  {format_time(old_start_date)}" if old_start_date.hour != 0 or old_start_date.minute != 0 else "") + '  ' + formatted_right_arrow + f" {format_date(new_start_date)}")
-                start_dynamic_counter_indicator()
-        else:  # Handle case when new_start_date is None
-            stop_clear_and_print()
-            print(f"{'Start':<{max_label_length}} :" + "   " + format_string(format_date(old_start_date), less_visible=True) + (f"  {format_time(old_start_date)}" if old_start_date.hour != 0 or old_start_date.minute != 0 else ""))
-            start_dynamic_counter_indicator()
-    else:
-        stop_clear_and_print()
-        print(f"{'Start':<{max_label_length}} :" + "   " + format_string(format_date(old_start_date), less_visible=True))
-        start_dynamic_counter_indicator()
-
-    if end_date_changed:
-        if new_end_date is not None:
-            if new_end_date.hour != 0 or new_end_date.minute != 0:
-                print_date_change('End', old_end_date, new_end_date, max_label_length)
-            else:
-                stop_clear_and_print()
-                print(f"{'End':<{max_label_length}} :" + "   " + format_string(format_date(old_end_date), less_visible=True) + (f"  {format_time(old_end_date)}" if old_end_date.hour != 0 or old_end_date.minute != 0 else "") + '  ' + formatted_right_arrow + f" {format_date(new_end_date)}")
-                start_dynamic_counter_indicator()
-        else:  # Handle case when new_end_date is None
-            stop_clear_and_print()
-            print(f"{'End':<{max_label_length}} :" + "   " + format_string(format_date(old_end_date), less_visible=True) + (f"  {format_time(old_end_date)}" if old_end_date.hour != 0 or old_end_date.minute != 0 else ""))
-            start_dynamic_counter_indicator()
-    else:
-        stop_clear_and_print()
-        print(f"{'End':<{max_label_length}} :" + "   " + format_string(format_date(old_end_date), less_visible=True))
-        start_dynamic_counter_indicator()
-
-    # Check if date has changed
-    if start_date_changed or end_date_changed:
-        # Determine the date to use for start and end (fallback to old if new is None)
-        final_start_date = new_start_date if new_start_date is not None else old_start_date
-        final_end_date = new_end_date if new_end_date is not None else old_end_date
-
-        # Non-all-day event
-        if (final_start_date.hour != 0 or final_start_date.minute != 0) or (final_end_date.hour != 0 or final_end_date.minute != 0):
-            if final_start_date.day == final_end_date.day:
-                stop_clear_and_print()
-                print(f"{'StartEnd':<{max_label_length}} :" + "  " + f" {format_date(final_start_date)}  {format_time(final_start_date)}  ─  {format_time(final_end_date)}\n")
-                start_dynamic_counter_indicator()
-            else:
-                stop_clear_and_print()
-                print(f"{'StartEnd':<{max_label_length}} :" + "  " + f" {format_date(final_start_date)}  {format_time(final_start_date)}  ─  {format_date(final_end_date)}  {format_time(final_end_date)}\n")
-                start_dynamic_counter_indicator()
-        # All-day event or Multi-days event
-        else:
-            if final_start_date.year == final_end_date.year:
-                if final_start_date.month == final_end_date.month:
-                    if final_start_date.day == final_end_date.day:
-                        stop_clear_and_print()
-                        print(f"{'StartEnd':<{max_label_length}} :" + "  " + f" {format_date(final_start_date)}\n")
-                        start_dynamic_counter_indicator()
-                    else:
-                        stop_clear_and_print()
-                        # For Multi-days events within the same month
-                        print(f"{'StartEnd':<{max_label_length}} :" + "  " + f" {final_start_date.strftime('%-d')} ─ {format_date(final_end_date)}\n")
-                        start_dynamic_counter_indicator()
-                else:
-                    stop_clear_and_print()
-                    # For events spanning different months in the same year
-                    print(f"{'StartEnd':<{max_label_length}} :" + "  " + f" {final_start_date.strftime('%-d %B')} ── {final_end_date.strftime('%-d %B')}\n")
-                    start_dynamic_counter_indicator()
-            else:
-                stop_clear_and_print()
-                # For events spanning different years
-                print(f"{'StartEnd':<{max_label_length}} :" + "  " + f" {format_date(final_start_date)} ─ {format_date(final_end_date)}\n")
-                start_dynamic_counter_indicator()
-    else:
-        stop_clear_and_print()
-        print(f"{'StartEnd':<{max_label_length}} :" + "  " + f" {format_date(old_start_date)}  ─  {format_date(new_end_date)}\n")
-        start_dynamic_counter_indicator()
-
-
 # 配置日誌，HTTPS 處理和 Slack 客戶端初始化部分)
 logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 https_handler = urllib.request.HTTPSHandler(context=ssl.create_default_context(cafile=certifi.where()))
@@ -691,7 +347,7 @@ client = WebClient(token=os.environ['SLACK_TOKEN'])
 message_buffer = []
 buffer_lock = threading.Lock()
 buffer_timer = None
-BUFFER_TIME = 20
+BUFFER_TIME = 30
 
 # 计算编辑距离的函数
 def levenshtein(s1, s2):
@@ -801,23 +457,21 @@ def check_pipeline_status(jenkins_url, username, password, job_name):
 result = check_pipeline_status(jenkins_url, username, password, job_name)
 print("Pipeline Status:", result)
 
-
-# def check_pipeline_status(jenkins_url, username, password, job_name):
-#     pipeline_url = f'{jenkins_url}/job/{job_name}/lastBuild/consoleText'
-#     response = requests.get(pipeline_url, auth=(username, password))
-#     if response.status_code == 200:
-#         build_info = response.json()
-#         build_number = build_info['lastBuild']['number']
-#         print(f"Pipeline status: {check_pipeline_status(jenkins_url, username, password, job_name)}")
-#         print(f'Latest build number for {job_name}: {build_number}')
-#         print(f"Last line status: {check_last_line_status(response.text)}")
-#         return build_info, build_number
-#     else:
-#         print(f'Failed to retrieve build information: {response.status_code}')
-    
+updated_tasks = []  # 用于存储在过去5分钟内更新的任务
+received_previous_start = False
+received_previous_end = False
+last_message_was_related = False  # 用於跟踪上一次消息是否與關鍵字相關
+waiting_for_confirmation = False  # 用於標記是否正在等待用戶確認
+confirmation_message_sent = False  # 用於標記是否已經發送確認消息
+last_triggered_keyword = None  # 用於跟踪最後一次觸發的關鍵字
+last_message = None
 
 def trigger_jenkins_job():
-    start_time = time.time()
+    response = requests.get(api_url, auth=(username, password))
+    if response.status_code == 200:
+        build_info = response.json()
+        build_number = build_info['lastBuild']['number']
+        current_build_number = build_number + 1
     try:
         print("Triggering Jenkins job...")
         response = requests.get(jenkins_job_url, timeout=0.05)
@@ -825,7 +479,7 @@ def trigger_jenkins_job():
             response_data = response.json()
             jobs = response_data.get('jobs', {})
             end_time = time.time()
-            return f"✦ {', '.join(jobs.keys())}"
+            return f"✦ {', '.join(jobs.keys())}" + " (" + f"{current_build_number}" + ")"
         else:
             logging.error(f"Failed to trigger Jenkins job. Status code: {response.status_code}")
     except requests.exceptions.RequestException as e:
@@ -846,23 +500,24 @@ def trigger_and_notify(channel_id):
             if not updated_tasks:
                 client.chat_postMessage(channel=channel_id, text="Notion 暫無變更 🥕")
                 no_change_notified = True
+                confirmation_message_sent = True
         elif result == 'SUCCESS':
             print("\n\n\n" + result + "\n\n\n")
-        return no_change_notified
+            client.chat_postMessage(channel=channel_id, text=f"同步完成 ✅\n\n")
+            confirmation_message_sent = True
+        return no_change_notified, confirmation_message_sent
 
-updated_tasks = []  # 用于存储在过去5分钟内更新的任务
-received_previous_start = False
-received_previous_end = False
-last_message_was_related = False  # 用於跟踪上一次消息是否與關鍵字相關
-waiting_for_confirmation = False  # 用於標記是否正在等待用戶確認
-confirmation_message_sent = False  # 用於標記是否已經發送確認消息
-last_triggered_keyword = None  # 用於跟踪最後一次觸發的關鍵字
-last_message = None
+trigger_lock = threading.Lock()
+processed_messages = set()
 
 @slack_event_adapter.on('message')
 def message(payload):
     global no_change_notified, buffer_timer, last_triggered_keyword, last_message_was_related, waiting_for_confirmation, confirmation_message_sent
     event = payload.get('event', {})
+    message_id = event.get('ts')  # 假设每个消息有唯一的时间戳
+    if message_id not in processed_messages:
+        # 处理消息
+        processed_messages.add(message_id)
     channel_id = event.get('channel')
     user_id = event.get('user')
     text = event.get('text').lower()  # 转换为小写以便不区分大小写的匹配
@@ -899,7 +554,9 @@ def message(payload):
         
     else:
         # 消息来自真实用户的处理逻辑
-        if BOT_ID != user_id:  # 确保消息来自用户而非机器人
+        if is_message_from_slack_user(user_id):  # 确保消息来自用户而非机器人
+            if is_message_from_notion(user_id) or BOT_ID == user_id:
+                return
             with buffer_lock:
                 message_buffer.append({'channel': channel_id, 'text': text, 'user_id': user_id})
                 
@@ -917,12 +574,17 @@ def message(payload):
                 last_message_was_related = False
                 last_triggered_keyword = None
                 if text in ['y', 'yes', 'yup','是']:  # 用戶確認要執行
-                    client.chat_postMessage(channel=channel_id, text="⚡️ 成功觸發")
-                    trigger_and_notify(channel_id)
+                    if trigger_lock.acquire(blocking=False):
+                        try:
+                            client.chat_postMessage(channel=channel_id, text="⚡️ 成功觸發")
+                            trigger_and_notify(channel_id)
+                        finally:
+                            trigger_lock.release()
                     last_triggered_keyword = keyword
                     last_message_was_related = True
                     no_change_notified = True
                     confirmation_message_sent = True
+                    waiting_for_confirmation = False
                     return no_change_notified
                 elif text in ['n', 'no', 'nope','否']:  # 用戶確認不要執行
                     client.chat_postMessage(channel=channel_id, text="確認 CANCEL")
@@ -941,12 +603,18 @@ def message(payload):
                     pass
 
             # 判斷是否與關鍵字相關
-            if not no_change_notified and text == keyword:  # 直接處理 sync 關鍵詞
-                client.chat_postMessage(channel=channel_id, text="⚡️ 成功觸發")
-                trigger_and_notify(channel_id)
-                check_for_updates()
-                last_triggered_keyword = keyword
-                last_message_was_related = True
+            if text == keyword:  # 直接處理 sync 關鍵詞
+                if trigger_lock.acquire(blocking=False):
+                    try:
+                        client.chat_postMessage(channel=channel_id, text="⚡️ 成功觸發")
+                        trigger_and_notify(channel_id)
+                    finally:
+                        trigger_lock.release()
+                        check_for_updates()
+                        last_triggered_keyword = keyword
+                        last_message_was_related = True
+                        waiting_for_confirmation = False
+                        confirmation_message_sent = True
             elif distance <= threshold:
                 last_message_was_related = True
                 if last_triggered_keyword is None or last_triggered_keyword == keyword:
@@ -1000,7 +668,6 @@ def check_for_updates():
             return True, updated_tasks
         else:
             print("\r\033[K" + f"No recent updates found in Notion", end="")
-            client.chat_postMessage(channel=channel_id, text="Notion 暫無變更 🥕")
             no_change_notified = True
             return False, [], no_change_notified
         pass
@@ -1056,39 +723,6 @@ def process_buffer():
         
         buffer_timer = None
     return response, 200
-
-for i in range(len(notion_gCal_IDs)):
-    notion_ID = notion_IDs_List[i]  # Define notion_ID at the start of the loop iteration
-    title_changed = notion_titles[i] != new_notion_titles[i]
-    new_start_date = new_notion_start_datetimes[i] or None
-    new_end_date = new_notion_end_datetimes[i] or None
-    start_date_changed = new_start_date and notion_start_datetimes[i] != new_start_date
-    end_date_changed = new_end_date and notion_end_datetimes[i] != new_end_date
-    event_changed = title_changed or start_date_changed or end_date_changed
-
-   # 如果事件没有改变，则跳过后续代码
-    if not event_changed:
-        continue  # Skip the rest of the code for this iteration if no changes are detected
-    
-    if event_changed:
-        event_info = {
-            'title': new_notion_titles[i],
-            'start_time': new_start_date,
-            'end_time': new_end_date,
-            'start_time_formatted': new_start_date.strftime('%d %b, %Y %H:%M') if new_start_date else None,
-            'end_time_formatted': new_end_date.strftime('%d %b, %Y %H:%M') if new_end_date else None
-        }
-
-        if event_info['is_added']:
-            added_events.append(event_info)
-        elif event_info['is_modified']:
-            modified_events.append(event_info)
-
-        events_to_update.append(notion_gCal_IDs[i])
-        added_events_counter += 1
-        modified_events_counter += 1
-        print_modification(notion_IDs_List[i], notion_titles[i], new_notion_titles[i], notion_start_datetimes[i], new_start_date, notion_end_datetimes[i], new_end_date, max_label_length, notion_IDs_List)
-
 
 def check_and_confirm(channel_id):
     if received_previous_start and received_previous_end:
