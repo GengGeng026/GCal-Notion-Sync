@@ -419,15 +419,6 @@ def check_last_line_status(text):
     else:
         print(f'Failed to retrieve pipeline status: {response.status_code}')
         return 'Unknown'
-
-# Authenticate and retrieve the build information
-response = requests.get(api_url, auth=(username, password))
-if response.status_code == 200:
-    build_info = response.json()
-    build_number = build_info['lastBuild']['number']
-    print(f'Latest build number for {job_name}: {build_number}')
-else:
-    print(f'Failed to retrieve build information: {response.status_code}')
                 
 def check_pipeline_status(jenkins_url, username, password, job_name):
     pipeline_url = f'{jenkins_url}/job/{job_name}/lastBuild/consoleText'
@@ -454,9 +445,6 @@ def check_pipeline_status(jenkins_url, username, password, job_name):
         print(f'Failed to retrieve pipeline status: {response.status_code}')
         return 'Unknown'
 
-result = check_pipeline_status(jenkins_url, username, password, job_name)
-print("Pipeline Status:", result)
-
 updated_tasks = []  # 用于存储在过去5分钟内更新的任务
 received_previous_start = False
 received_previous_end = False
@@ -470,16 +458,15 @@ def trigger_jenkins_job():
     response = requests.get(api_url, auth=(username, password))
     if response.status_code == 200:
         build_info = response.json()
-        build_number = build_info['lastBuild']['number']
-        current_build_number = build_number + 1
+        build_number = build_info['lastBuild']['number'] + 1
+        current_build_number = f" `{build_number}` "
     try:
-        print("Triggering Jenkins job...")
         response = requests.get(jenkins_job_url, timeout=0.05)
         if response.status_code == 200:
             response_data = response.json()
             jobs = response_data.get('jobs', {})
             end_time = time.time()
-            return f"✦ {', '.join(jobs.keys())}" + " (" + f"{current_build_number}" + ")"
+            return f"✦ {', '.join(jobs.keys())}" + f" {current_build_number}"
         else:
             logging.error(f"Failed to trigger Jenkins job. Status code: {response.status_code}")
     except requests.exceptions.RequestException as e:
@@ -495,34 +482,63 @@ def trigger_and_notify(channel_id):
         result = check_pipeline_status(jenkins_url, username, password, job_name)
         time.sleep(23)
         if result == 'No Change':
-            print("\n\n\n" + result + "\n\n\n")
             check_for_updates()
             if not updated_tasks:
                 client.chat_postMessage(channel=channel_id, text="Notion 暫無變更 🥕")
                 no_change_notified = True
                 confirmation_message_sent = True
         elif result == 'SUCCESS':
-            print("\n\n\n" + result + "\n\n\n")
-            client.chat_postMessage(channel=channel_id, text=f"同步完成 ✅\n\n")
+            client.chat_postMessage(channel=channel_id, text=f"同步完成 ✅")
             confirmation_message_sent = True
         return no_change_notified, confirmation_message_sent
+
+# 新增全局變量
+last_trigger_time = 0
+COOLDOWN_PERIOD = 60  # 冷卻時間，單位為秒
+is_syncing = False
 
 trigger_lock = threading.Lock()
 processed_messages = set()
 
+def trigger_and_notify(channel_id):
+    global no_change_notified, is_syncing, confirmation_message_sent
+    triggered_jobs = trigger_jenkins_job()
+    message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs else ""
+    client.chat_postMessage(channel=channel_id, text=message)
+    try:
+        while True:
+            result = check_pipeline_status(jenkins_url, username, password, job_name)
+            time.sleep(23)
+            if result == 'No Change':
+                check_for_updates()
+                if not updated_tasks:
+                    client.chat_postMessage(channel=channel_id, text="Notion 暫無變更 🥕")
+                    no_change_notified = True
+                    confirmation_message_sent = True
+                break
+            elif result == 'SUCCESS':
+                client.chat_postMessage(channel=channel_id, text=f"同步完成 ✅")
+                confirmation_message_sent = True
+                break
+    finally:
+        is_syncing = False
+
 @slack_event_adapter.on('message')
 def message(payload):
-    global no_change_notified, buffer_timer, last_triggered_keyword, last_message_was_related, waiting_for_confirmation, confirmation_message_sent
+    global no_change_notified, buffer_timer, last_triggered_keyword, last_message_was_related, waiting_for_confirmation, confirmation_message_sent, last_trigger_time, is_syncing
     event = payload.get('event', {})
-    message_id = event.get('ts')  # 假设每个消息有唯一的时间戳
-    if message_id not in processed_messages:
-        # 处理消息
-        processed_messages.add(message_id)
+    message_id = event.get('ts')  # 假設每個消息有唯一的時間戳
+    
+    # 檢查消息是否已經處理過
+    if message_id in processed_messages:
+        return
+    
+    processed_messages.add(message_id)
     channel_id = event.get('channel')
     user_id = event.get('user')
-    text = event.get('text').lower()  # 转换为小写以便不区分大小写的匹配
+    text = event.get('text', '').lower()  # 轉換為小寫以便不區分大小寫的匹配
 
-    # 重置 last_triggered_keyword 和 last_message_was_related 的值
+    # 重置相關變量
     last_triggered_keyword = None
     last_message_was_related = False
 
@@ -530,7 +546,7 @@ def message(payload):
     previous_messages = [msg for msg in message_buffer if "Previous" in msg['text']]
     other_messages = [msg for msg in message_buffer if "Previous" not in msg['text']]
 
-    # 检查消息是否来自Notion
+    # 檢查消息是否來自Notion
     if is_message_from_notion(user_id):
         print("Message from Notion")           
         with buffer_lock:
@@ -540,9 +556,8 @@ def message(payload):
                 buffer_timer = threading.Timer(BUFFER_TIME, process_buffer)
                 buffer_timer.start()
 
-
         if other_messages:
-            message = f"{triggered_jobs}\n检查中 · · ·" if triggered_jobs else ""
+            message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs else ""
             client.chat_postMessage(channel=channel_id, text=message)
             triggered_jobs = trigger_jenkins_job()
             last_message.append(message)
@@ -553,8 +568,8 @@ def message(payload):
         no_change_notified = True
         
     else:
-        # 消息来自真实用户的处理逻辑
-        if is_message_from_slack_user(user_id):  # 确保消息来自用户而非机器人
+        # 消息來自真實用戶的處理邏輯
+        if is_message_from_slack_user(user_id):  # 確保消息來自用戶而非機器人
             if is_message_from_notion(user_id) or BOT_ID == user_id:
                 return
             with buffer_lock:
@@ -567,25 +582,32 @@ def message(payload):
             # 計算編輯距離
             distance = levenshtein(text, keyword)
 
-
             if waiting_for_confirmation:
                 confirmation_message_sent = True
                 waiting_for_confirmation = False
                 last_message_was_related = False
                 last_triggered_keyword = None
                 if text in ['y', 'yes', 'yup','是']:  # 用戶確認要執行
-                    if trigger_lock.acquire(blocking=False):
-                        try:
-                            client.chat_postMessage(channel=channel_id, text="⚡️ 成功觸發")
-                            trigger_and_notify(channel_id)
-                        finally:
-                            trigger_lock.release()
+                    current_time = time.time()
+                    if current_time - last_trigger_time < COOLDOWN_PERIOD:
+                        client.chat_postMessage(channel=channel_id, text=f"請稍等，{COOLDOWN_PERIOD}秒內只能觸發一次同步操作。")
+                        return
+                    
+                    if not is_syncing:
+                        with trigger_lock:
+                            if not is_syncing:  # 雙重檢查
+                                is_syncing = True
+                                last_trigger_time = current_time
+                                client.chat_postMessage(channel=channel_id, text="⚡️ 成功觸發")
+                                threading.Thread(target=trigger_and_notify, args=(channel_id,)).start()
+                    else:
+                        client.chat_postMessage(channel=channel_id, text="同步操作正在進行中，請稍後再試。")
+                    
                     last_triggered_keyword = keyword
                     last_message_was_related = True
                     no_change_notified = True
                     confirmation_message_sent = True
                     waiting_for_confirmation = False
-                    return no_change_notified
                 elif text in ['n', 'no', 'nope','否']:  # 用戶確認不要執行
                     client.chat_postMessage(channel=channel_id, text="確認 CANCEL")
                     no_change_notified = True  # 重置通知標記
@@ -600,21 +622,26 @@ def message(payload):
                     last_message_was_related = False
                     waiting_for_confirmation = True
                     confirmation_message_sent = False
-                    pass
-
-            # 判斷是否與關鍵字相關
-            if text == keyword:  # 直接處理 sync 關鍵詞
-                if trigger_lock.acquire(blocking=False):
-                    try:
-                        client.chat_postMessage(channel=channel_id, text="⚡️ 成功觸發")
-                        trigger_and_notify(channel_id)
-                    finally:
-                        trigger_lock.release()
-                        check_for_updates()
-                        last_triggered_keyword = keyword
-                        last_message_was_related = True
-                        waiting_for_confirmation = False
-                        confirmation_message_sent = True
+            elif text == keyword:  # 直接處理 sync 關鍵詞
+                current_time = time.time()
+                if current_time - last_trigger_time < COOLDOWN_PERIOD:
+                    client.chat_postMessage(channel=channel_id, text=f"請稍等，{COOLDOWN_PERIOD}秒內只能觸發一次同步操作。")
+                    return
+                
+                if not is_syncing:
+                    with trigger_lock:
+                        if not is_syncing:  # 雙重檢查
+                            is_syncing = True
+                            last_trigger_time = current_time
+                            client.chat_postMessage(channel=channel_id, text="⚡️ 成功觸發")
+                            threading.Thread(target=trigger_and_notify, args=(channel_id,)).start()
+                else:
+                    client.chat_postMessage(channel=channel_id, text="同步操作正在進行中，請稍後再試。")
+                
+                last_triggered_keyword = keyword
+                last_message_was_related = True
+                waiting_for_confirmation = False
+                confirmation_message_sent = True
             elif distance <= threshold:
                 last_message_was_related = True
                 if last_triggered_keyword is None or last_triggered_keyword == keyword:

@@ -21907,3 +21907,575 @@ TypeError: can only concatenate str (not "set") to str
 2024-07-06 03:44:31,660 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:44:31] "POST /slack/events HTTP/1.0" 200 -
 2024-07-06 03:44:31,665 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
 2024-07-06 03:44:31,689 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:44:31] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 03:46:52,331 - root - INFO - This is an info message.
+2024-07-06 03:46:52,332 - root - ERROR - This is an error message.
+2024-07-06 03:46:53,013 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-06 03:46:53,013 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-06 03:47:02,175 - root - ERROR - Error triggering Jenkins job: HTTPSConnectionPool(host='balanced-poorly-shiner.ngrok-free.app', port=443): Read timed out. (read timeout=0.05)
+2024-07-06 03:47:03,137 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:47:03] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 03:47:03,749 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-07-06 03:47:03,753 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 610, in message
+    trigger_and_notify(channel_id)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 493, in trigger_and_notify
+    client.chat_postMessage(channel=channel_id, text=message)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/client.py", line 2664, in chat_postMessage
+    return self.api_call("chat.postMessage", json=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/base_client.py", line 157, in api_call
+    return self._sync_send(api_url=api_url, req_args=req_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/base_client.py", line 188, in _sync_send
+    return self._urllib_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/base_client.py", line 319, in _urllib_api_call
+    ).validate()
+      ^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/slack_response.py", line 199, in validate
+    raise e.SlackApiError(message=msg, response=self)
+slack_sdk.errors.SlackApiError: The request to the Slack API failed. (url: https://slack.com/api/chat.postMessage)
+The server responded with: {'ok': False, 'error': 'no_text'}
+2024-07-06 03:47:03,770 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:47:03] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-07-06 03:47:08,103 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:47:08] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 03:47:09,558 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:47:09] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 03:47:33,174 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-07-06 03:47:33,181 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 610, in message
+    trigger_and_notify(channel_id)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 508, in trigger_and_notify
+    return no_change_notified, confirmation_message_sent
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'confirmation_message_sent' where it is not associated with a value
+2024-07-06 03:47:33,197 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:47:33] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-07-06 03:48:07,706 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:48:07] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 03:48:08,202 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:48:08] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 03:48:32,211 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-07-06 03:48:33,323 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-07-06 03:48:33,329 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:48:33] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 03:48:34,946 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:48:34] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 03:48:47,698 - root - INFO - This is an info message.
+2024-07-06 03:48:47,699 - root - ERROR - This is an error message.
+2024-07-06 03:48:48,810 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-06 03:48:48,811 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-06 03:49:10,047 - root - ERROR - Error triggering Jenkins job: HTTPSConnectionPool(host='balanced-poorly-shiner.ngrok-free.app', port=443): Read timed out. (read timeout=0.05)
+2024-07-06 03:49:11,117 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:49:11] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 03:49:12,882 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-07-06 03:49:12,886 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 610, in message
+    trigger_and_notify(channel_id)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 493, in trigger_and_notify
+    client.chat_postMessage(channel=channel_id, text=message)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/client.py", line 2664, in chat_postMessage
+    return self.api_call("chat.postMessage", json=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/base_client.py", line 157, in api_call
+    return self._sync_send(api_url=api_url, req_args=req_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/base_client.py", line 188, in _sync_send
+    return self._urllib_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/base_client.py", line 319, in _urllib_api_call
+    ).validate()
+      ^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/slack_response.py", line 199, in validate
+    raise e.SlackApiError(message=msg, response=self)
+slack_sdk.errors.SlackApiError: The request to the Slack API failed. (url: https://slack.com/api/chat.postMessage)
+The server responded with: {'ok': False, 'error': 'no_text'}
+2024-07-06 03:49:12,909 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:49:12] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-07-06 03:50:12,945 - root - ERROR - Error triggering Jenkins job: HTTPSConnectionPool(host='balanced-poorly-shiner.ngrok-free.app', port=443): Read timed out. (read timeout=0.05)
+2024-07-06 03:50:13,021 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:50:13] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 03:50:18,838 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-07-06 03:50:18,845 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 610, in message
+    trigger_and_notify(channel_id)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 493, in trigger_and_notify
+    client.chat_postMessage(channel=channel_id, text=message)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/client.py", line 2664, in chat_postMessage
+    return self.api_call("chat.postMessage", json=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/base_client.py", line 157, in api_call
+    return self._sync_send(api_url=api_url, req_args=req_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/base_client.py", line 188, in _sync_send
+    return self._urllib_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/base_client.py", line 319, in _urllib_api_call
+    ).validate()
+      ^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/slack_response.py", line 199, in validate
+    raise e.SlackApiError(message=msg, response=self)
+slack_sdk.errors.SlackApiError: The request to the Slack API failed. (url: https://slack.com/api/chat.postMessage)
+The server responded with: {'ok': False, 'error': 'no_text'}
+2024-07-06 03:50:18,850 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:50:18] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-07-06 03:50:54,187 - root - INFO - This is an info message.
+2024-07-06 03:50:54,188 - root - ERROR - This is an error message.
+2024-07-06 03:50:54,713 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-06 03:50:54,714 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-06 03:51:01,043 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:51:01] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 03:51:01,849 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:51:01] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 03:51:24,054 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-07-06 03:51:25,077 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-07-06 03:51:25,083 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:51:25] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 03:51:25,752 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:51:25] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 03:53:09,801 - root - ERROR - Error triggering Jenkins job: HTTPSConnectionPool(host='balanced-poorly-shiner.ngrok-free.app', port=443): Read timed out. (read timeout=0.05)
+2024-07-06 03:53:10,503 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:53:10] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 03:53:10,974 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-07-06 03:53:10,979 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 610, in message
+    trigger_and_notify(channel_id)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 493, in trigger_and_notify
+    client.chat_postMessage(channel=channel_id, text=message)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/client.py", line 2664, in chat_postMessage
+    return self.api_call("chat.postMessage", json=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/base_client.py", line 157, in api_call
+    return self._sync_send(api_url=api_url, req_args=req_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/base_client.py", line 188, in _sync_send
+    return self._urllib_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/base_client.py", line 319, in _urllib_api_call
+    ).validate()
+      ^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/slack_response.py", line 199, in validate
+    raise e.SlackApiError(message=msg, response=self)
+slack_sdk.errors.SlackApiError: The request to the Slack API failed. (url: https://slack.com/api/chat.postMessage)
+The server responded with: {'ok': False, 'error': 'no_text'}
+2024-07-06 03:53:11,000 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:53:11] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-07-06 03:55:13,584 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:55:13] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 03:55:14,368 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:55:14] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 03:55:36,894 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-07-06 03:55:39,174 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:55:39] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 03:55:41,708 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-07-06 03:55:41,716 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:55:41] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 03:56:11,225 - root - INFO - This is an info message.
+2024-07-06 03:56:11,225 - root - ERROR - This is an error message.
+2024-07-06 03:56:11,705 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-06 03:56:11,705 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-06 03:56:22,032 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:56:22] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 03:56:23,018 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:56:23] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 03:56:45,511 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-07-06 03:56:46,007 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:56:46] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 03:56:47,049 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:56:47] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 03:57:24,906 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:57:24] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 03:57:48,247 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-07-06 03:57:48,762 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:57:48] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 03:57:49,200 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 03:57:49] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:00:33,643 - root - INFO - This is an info message.
+2024-07-06 04:00:33,645 - root - ERROR - This is an error message.
+2024-07-06 04:00:34,157 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-06 04:00:34,157 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-06 04:00:38,468 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:00:38] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:01:01,090 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-07-06 04:01:01,620 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:01:01] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:01:02,053 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:01:02] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:01:45,650 - root - INFO - This is an info message.
+2024-07-06 04:01:45,652 - root - ERROR - This is an error message.
+2024-07-06 04:01:46,130 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-06 04:01:46,130 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-06 04:01:52,820 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:01:52] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:01:53,788 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:01:53] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:03:04,998 - root - INFO - This is an info message.
+2024-07-06 04:03:04,998 - root - ERROR - This is an error message.
+2024-07-06 04:03:05,486 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-06 04:03:05,486 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-06 04:03:09,522 - root - ERROR - Error triggering Jenkins job: HTTPSConnectionPool(host='balanced-poorly-shiner.ngrok-free.app', port=443): Read timed out. (read timeout=0.05)
+2024-07-06 04:03:10,030 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 610, in message
+    trigger_and_notify(channel_id)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 493, in trigger_and_notify
+    client.chat_postMessage(channel=channel_id, text=message)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/client.py", line 2664, in chat_postMessage
+    return self.api_call("chat.postMessage", json=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/base_client.py", line 157, in api_call
+    return self._sync_send(api_url=api_url, req_args=req_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/base_client.py", line 188, in _sync_send
+    return self._urllib_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/base_client.py", line 319, in _urllib_api_call
+    ).validate()
+      ^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/slack_response.py", line 199, in validate
+    raise e.SlackApiError(message=msg, response=self)
+slack_sdk.errors.SlackApiError: The request to the Slack API failed. (url: https://slack.com/api/chat.postMessage)
+The server responded with: {'ok': False, 'error': 'no_text'}
+2024-07-06 04:03:10,044 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:03:10] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-07-06 04:03:10,327 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:03:10] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:03:20,642 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:03:20] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:03:21,388 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:03:21] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:03:25,179 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:03:25] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:03:43,430 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 610, in message
+    trigger_and_notify(channel_id)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 508, in trigger_and_notify
+    return no_change_notified, confirmation_message_sent
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'confirmation_message_sent' where it is not associated with a value
+2024-07-06 04:03:43,434 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:03:43] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-07-06 04:04:23,748 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:04:23] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:04:24,272 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:04:24] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:04:47,087 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-07-06 04:04:47,598 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:04:47] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:04:48,590 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:04:48] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:09:12,128 - root - ERROR - Error triggering Jenkins job: HTTPSConnectionPool(host='balanced-poorly-shiner.ngrok-free.app', port=443): Read timed out. (read timeout=0.05)
+2024-07-06 04:09:12,605 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 610, in message
+    trigger_and_notify(channel_id)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 493, in trigger_and_notify
+    client.chat_postMessage(channel=channel_id, text=message)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/client.py", line 2664, in chat_postMessage
+    return self.api_call("chat.postMessage", json=kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/base_client.py", line 157, in api_call
+    return self._sync_send(api_url=api_url, req_args=req_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/base_client.py", line 188, in _sync_send
+    return self._urllib_api_call(
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/base_client.py", line 319, in _urllib_api_call
+    ).validate()
+      ^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slack_sdk/web/slack_response.py", line 199, in validate
+    raise e.SlackApiError(message=msg, response=self)
+slack_sdk.errors.SlackApiError: The request to the Slack API failed. (url: https://slack.com/api/chat.postMessage)
+The server responded with: {'ok': False, 'error': 'no_text'}
+2024-07-06 04:09:12,608 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:09:12] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-07-06 04:09:13,034 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:09:13] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:10:09,471 - root - INFO - This is an info message.
+2024-07-06 04:10:09,471 - root - ERROR - This is an error message.
+2024-07-06 04:10:09,961 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-06 04:10:09,961 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-06 04:10:12,571 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:10:12] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:10:47,172 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:10:47] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:10:53,631 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:10:53] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:13:05,761 - root - INFO - This is an info message.
+2024-07-06 04:13:05,761 - root - ERROR - This is an error message.
+2024-07-06 04:13:06,467 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-06 04:13:06,467 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-06 04:13:13,413 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:13:13] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:13:20,869 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:13:20] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:13:22,787 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:13:22] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:13:36,586 - root - INFO - This is an info message.
+2024-07-06 04:13:36,587 - root - ERROR - This is an error message.
+2024-07-06 04:13:37,095 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-06 04:13:37,095 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-06 04:13:41,199 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:13:41] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:13:41,832 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:13:41] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:14:05,705 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-07-06 04:14:06,198 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:14:06] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:14:07,432 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:14:07] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:16:15,262 - root - INFO - This is an info message.
+2024-07-06 04:16:15,263 - root - ERROR - This is an error message.
+2024-07-06 04:16:15,726 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-06 04:16:15,726 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-06 04:16:23,626 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 533, in message
+    handle_user_message(channel_id, text, user_id)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 565, in handle_user_message
+    if buffer_timer is None:
+       ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'buffer_timer' where it is not associated with a value
+2024-07-06 04:16:23,634 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:16:23] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-07-06 04:16:29,053 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 533, in message
+    handle_user_message(channel_id, text, user_id)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 565, in handle_user_message
+    if buffer_timer is None:
+       ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'buffer_timer' where it is not associated with a value
+2024-07-06 04:16:29,054 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:16:29] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-07-06 04:17:15,237 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 533, in message
+    handle_user_message(channel_id, text, user_id)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 565, in handle_user_message
+    if buffer_timer is None:
+       ^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'buffer_timer' where it is not associated with a value
+2024-07-06 04:17:15,242 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:17:15] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-07-06 04:17:28,111 - root - INFO - This is an info message.
+2024-07-06 04:17:28,111 - root - ERROR - This is an error message.
+2024-07-06 04:17:28,643 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-06 04:17:28,643 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-06 04:25:43,633 - root - INFO - This is an info message.
+2024-07-06 04:25:43,635 - root - ERROR - This is an error message.
+2024-07-06 04:25:44,138 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-06 04:25:44,138 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-06 04:25:48,057 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:25:48] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:25:49,009 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:25:49] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:25:49,696 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:25:49] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:26:12,459 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-07-06 04:26:14,025 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:26:14] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:27:18,167 - root - INFO - This is an info message.
+2024-07-06 04:27:18,168 - root - ERROR - This is an error message.
+2024-07-06 04:27:18,668 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-06 04:27:18,668 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-06 04:27:39,606 - root - INFO - This is an info message.
+2024-07-06 04:27:39,607 - root - ERROR - This is an error message.
+2024-07-06 04:27:40,101 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-06 04:27:40,102 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-06 04:27:43,668 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:27:43] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:27:44,621 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:27:44] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:27:47,328 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:27:47] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:27:48,303 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:27:48] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:27:48,917 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:27:48] "POST /slack/events HTTP/1.0" 200 -
+2024-07-06 04:28:11,623 - httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+2024-07-06 04:28:13,295 - werkzeug - INFO - 127.0.0.1 - - [06/Jul/2024 04:28:13] "POST /slack/events HTTP/1.0" 200 -
