@@ -2153,9 +2153,10 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
                 else:
                     start_value = start
                     end_value = end
-
+                
                 # Proceed with the rest of the logic only if 'Start' and 'End' were actually overwritten
-                if start_value != prev_start_value or end_value != prev_end_value:
+                if start_value != prev_start_value or end_value != prev_end_value or \
+                    start_end_start != prev_start_value or start_end_end != prev_end_value: #新增條件判斷；不太安全，但是可以確保唯獨 SatrtEnd 有時間時，順利被 Start 和 En的 覆蓋
                     sub_condition_1_modified = True
                     
                     start_end_prop = (start_value, end_value)
@@ -2207,7 +2208,8 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
         date_format = "%Y-%m-%d"
         
         # Check if 'start' and 'end' have time information and are not already datetime objects
-        if has_time(local_data.page['properties']['Start']['date']['start']) or has_time(local_data.page['properties']['End']['date']['start']):
+        if (has_time(local_data.page['properties']['Start']['date']['start']) or has_time(local_data.page['properties']['End']['date']['start'])) or \
+        (not has_time(local_data.page['properties']['Start']['date']['start']) and not has_time(local_data.page['properties']['End']['date']['start']) and (has_time(local_data.page['properties']['StartEnd']['date']['start'] or has_time(local_data.page['properties']['StartEnd']['date']['end'])))): # 新增的條件判斷；不太安全，但即便 Start 和 End 都沒有時間時，也能確保唯獨有時間的 SatrtEnd 可順利通過
             
             # Convert 'start' and 'end' from string to datetime.date, if necessary
             if not isinstance(start, datetime):
