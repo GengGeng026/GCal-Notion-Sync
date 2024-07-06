@@ -1077,9 +1077,9 @@ def update_page_properties(notion, page, Start_Notion_Name, End_Notion_Name, Dat
     # 直接准备更新负载，避免中间状态
     properties_to_update = {}
 
-    # 根据 single_date 参数更新逻辑
-    if single_date and start == end:
-        end = None  # 清空 end
+    # # 根据 single_date 参数更新逻辑
+    # if single_date and start == end:
+    #     end = None  # 清空 end
 
     # 如果 single_date 为 False，则需要检查 start 和 end 是否与 start_end 中的值相同
     if not single_date and start == start_end[0] and end == start_end[1]:
@@ -1774,7 +1774,7 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
                     start_end_prop = local_data.page['properties']['StartEnd']['date']
                     if start_end_prop:
                         new_start = parse(start_end_prop['start']) if start_end_prop['start'] is not None else None
-                        new_end = parse(start_end_prop['end']) if start_end_prop['end'] is not None else None
+                        new_end = parse(start_end_prop['end']) if start_end_prop['end'] is not None else new_start
 
                         # 检查并保留时间部分
                         if new_start and new_start.time() != dt_time(0, 0):
@@ -2429,6 +2429,7 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
                         start_end_start = parse(start_end['start']).replace(tzinfo=start.tzinfo)
                         start_end_end = parse(start_end['end']).replace(tzinfo=end.tzinfo) if start_end['end'] is not None else None                    
 
+                    if start_end_start.date() != start.date() or start_end_start.date() != end.date() or start_end_end is not None and start_end_end.date() != end.date():
                         # 新增的輔助函數
                         def process_start_end(start, end, start_end_start, start_end_end, StartEnd_to_Overwrite_All):
                             if StartEnd_to_Overwrite_All is True:

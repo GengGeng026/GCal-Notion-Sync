@@ -494,7 +494,7 @@ def trigger_and_notify(channel_id):
 
 # 新增全局變量
 last_trigger_time = 0
-COOLDOWN_PERIOD = 60  # 冷卻時間，單位為秒
+COOLDOWN_PERIOD = 29  # 冷卻時間，單位為秒
 is_syncing = False
 
 trigger_lock = threading.Lock()
@@ -505,6 +505,7 @@ def trigger_and_notify(channel_id):
     triggered_jobs = trigger_jenkins_job()
     message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs else ""
     client.chat_postMessage(channel=channel_id, text=message)
+    threading.Timer(BUFFER_TIME, check_and_confirm, [channel_id]).start()
     try:
         while True:
             result = check_pipeline_status(jenkins_url, username, password, job_name)
@@ -517,7 +518,8 @@ def trigger_and_notify(channel_id):
                     confirmation_message_sent = True
                 break
             elif result == 'SUCCESS':
-                client.chat_postMessage(channel=channel_id, text=f"同步完成 ✅")
+                updates_count = len(updated_tasks)  # 计算已修改的 Notion 事件总数
+                client.chat_postMessage(channel=channel_id, text=f"{updates_count} 同步完成 ✅")
                 confirmation_message_sent = True
                 break
     finally:
@@ -543,19 +545,12 @@ def message(payload):
     last_message_was_related = False
 
     # 分類消息
-    previous_messages = [msg for msg in message_buffer if "Previous" in msg['text']]
-    other_messages = [msg for msg in message_buffer if "Previous" not in msg['text']]
+    previous_messages = [msg for msg in message_buffer if re.match(r'^Previous', msg['text'])]
+    other_messages = [msg for msg in message_buffer if not re.match(r'^Previous', msg['text'])]
 
     # 檢查消息是否來自Notion
     if is_message_from_notion(user_id):
-        print("Message from Notion")           
-        with buffer_lock:
-            message_buffer.append({'channel': channel_id, 'text': text, 'user_id': user_id})
-            
-            if buffer_timer is None:
-                buffer_timer = threading.Timer(BUFFER_TIME, process_buffer)
-                buffer_timer.start()
-
+        print("Message from Notion")
         if other_messages:
             message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs else ""
             client.chat_postMessage(channel=channel_id, text=message)
@@ -625,7 +620,7 @@ def message(payload):
             elif text == keyword:  # 直接處理 sync 關鍵詞
                 current_time = time.time()
                 if current_time - last_trigger_time < COOLDOWN_PERIOD:
-                    client.chat_postMessage(channel=channel_id, text=f"請稍等，{COOLDOWN_PERIOD}秒內只能觸發一次同步操作。")
+                    client.chat_postMessage(channel=channel_id, text=f"Oh no，{COOLDOWN_PERIOD} 秒內只能觸發 1 次也")
                     return
                 
                 if not is_syncing:
@@ -657,6 +652,7 @@ def message(payload):
                     no_change_notified = True  # 重置通知標記
                         
             no_change_notified = True
+        
 
 def check_for_updates():
     global message_buffer
@@ -729,6 +725,7 @@ def process_buffer():
 
         # Start a timer on receiving the first "Previous" message
         if previous_start_messages or previous_end_messages:
+            print("previous messages received: ", previous_start_messages, previous_end_messages)
             received_previous_start = True if previous_start_messages else False
             received_previous_end = True if previous_end_messages else False
             print(f"\r\033[Kgot previous : {previous_start_messages} {previous_end_messages}")
