@@ -2276,11 +2276,22 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
                             return (start.time() == time(0, 0) and end.time() == time(0, 0) and start.date() != end.date() and 
                                     start.date() == start_end_start.date() and (start_end_end is not None and end.date() == start_end_end.date()) and 
                                     (start_end_start.time() != start.time() or (start_end_end is not None and start_end_end.time() != end.time())))
-
+                        def all_dates_same_and_midnight(start, end, start_end_start, start_end_end):
+                            return (start.date() == end.date() == start_end_start.date() == (start_end_end.date() if start_end_end else start_end_start.date()) and
+                                    start.time() == end.time() == start_end_start.time() == time(0, 0) and
+                                    (start_end_end is None or start_end_end.time() == time(0, 0)))
+                            
                         times_are_same = (start.time() == prev_start.time()) and (end.time() == prev_end.time())
                         start_end_date_differs = start_end_start.date() != start.date() or (start_end_end is not None and start_end_end.date() != end.date())
 
-                        if (times_are_same or start_end_date_differs) or (start_end_end is not None and (check_time_component(start_end_start, start_end_end) and check_dates(start, end, start_end_start, start_end_end)) or check_midnight_and_date_range(start, end, start_end_start, start_end_end)):
+                        if all_dates_same_and_midnight(start, end, start_end_start, start_end_end):
+                            # All dates are the same and at midnight, remove time component
+                            start_date = start.date()
+                            end_date = end.date()
+                            start = start_date
+                            end = end_date
+                            start_end_list = [start_date, None]  # Set end to None for single date
+                        elif (times_are_same or start_end_date_differs) or (start_end_end is not None and (check_time_component(start_end_start, start_end_end) and check_dates(start, end, start_end_start, start_end_end)) or check_midnight_and_date_range(start, end, start_end_start, start_end_end)):
                             start_date = start_end_start.date()
                             if start_end_end is not None:
                                 end_date = start_end_end.date()
@@ -2300,7 +2311,9 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
                             if not has_time(local_data.page['properties']['End']['date']['start']):
                                 end = datetime.combine(end.date(), start_end_end.time(), tzinfo=start_end_end.tzinfo)
                                 end_value = end
-                                                
+                            
+                            start_end_list = [parse(start_end_prop['start']), parse(start_end_prop['end'])]
+                        
                         if start != original_start:
                             start_value = start
                         if end != original_end:
@@ -2311,7 +2324,6 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
                             prev_end = original_end
 
                             with lock:
-                                start_end_list = [parse(start_end_prop['start']), parse(start_end_prop['end'])]
                                 update_page_properties(notion, local_data.page, 'Start', 'End', 'StartEnd', start, end, start_end_list)
 
                             with lock:
@@ -2374,15 +2386,18 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
                 # Capture original values after potential swap but before any modifications
                 original_start = start
                 original_end = end
+                
+                end_equals_startEnd = (has_time(local_data.page['properties']['End']['date']['start']) and start.date() == start_end_start.date())
+                start_equals_startEnd = (has_time(local_data.page['properties']['Start']['date']['start']) and start.date() == start_end_start.date())
+                singleDate_unequals_startEnd = ((start.time() == datetime.min.time() or end.time() == datetime.min.time()) and (start.date() != start_end_start.date() or end.date() != start_end_start.date()))
+                startEnd_got_midnight = ((has_time(local_data.page['properties']['StartEnd']['date']['start']) and start_end_start.time() == datetime.min.time()) and (start.date() == start_end_start.date() and end.date() == start_end_start.date()))
 
                 if start_end_end is not None:
                     if (start.time() == datetime.min.time() or end.time() == datetime.min.time()) and (start.date() != start_end_start.date() or end.date() != start_end_end.date()):
                         processed_sub_condtion_3 = True
                         
                 else:
-                    if (has_time(local_data.page['properties']['End']['date']['start']) and start.date() == start_end_start.date()) or \
-                        (has_time(local_data.page['properties']['Start']['date']['start']) and start.date() == start_end_start.date()) or \
-                        ((start.time() == datetime.min.time() or end.time() == datetime.min.time()) and (start.date() != start_end_start.date() or end.date() != start_end_start.date())):
+                    if end_equals_startEnd or start_equals_startEnd or singleDate_unequals_startEnd or startEnd_got_midnight:
                         processed_sub_condtion_3 = True
 
                 if processed_sub_condtion_3:
@@ -3335,18 +3350,24 @@ else:
                 def ensure_datetime(date_str_or_datetime):
                     if isinstance(date_str_or_datetime, str):
                         try:
-                            return parser.parse(date_str_or_datetime)
+                            dt_obj = parser.parse(date_str_or_datetime)
+                            if isinstance(dt_obj, datetime):
+                                return dt_obj
+                            elif isinstance(dt_obj, date):
+                                return datetime.combine(dt_obj, datetime.min.time())
                         except ValueError as e:
                             print(f"Error parsing date string: {date_str_or_datetime} - {e}")
                             return None
                     elif isinstance(date_str_or_datetime, datetime):
                         return date_str_or_datetime
+                    elif isinstance(date_str_or_datetime, date):
+                        return datetime.combine(date_str_or_datetime, datetime.min.time())
                     else:
                         print(f"Unsupported type for date conversion: {type(date_str_or_datetime)}")
                         return None
- 
+
                 # Ensure 'start_end' is a tuple of datetime objects
-                if start_end is not None and isinstance(start_end[0], str):
+                if start_end is not None:
                     start_end = (ensure_datetime(start_end[0]), ensure_datetime(start_end[1]))
 
                 if start_end[0] is not None and start_end[1] is not None:
@@ -3358,6 +3379,7 @@ else:
                     else:
                         end_date_formatted = DateTimeIntoNotionFormat(start_end[1], date_only=False, plus_time=True, time_format='24')
                 startend_changed = start_end[0] != prev_start_value or start_end[1] != prev_end_value
+
 
                 startend_string = f"{formatted_startend} {formatted_colon}"
                 if startend_changed:
