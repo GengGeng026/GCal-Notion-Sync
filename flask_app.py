@@ -473,25 +473,6 @@ def trigger_jenkins_job():
         logging.error(f"Error triggering Jenkins job: {e}")
     return None
 
-def trigger_and_notify(channel_id):
-    global no_change_notified
-    triggered_jobs = trigger_jenkins_job()
-    message = f"{triggered_jobs}\n检查中 · · ·" if triggered_jobs else ""
-    client.chat_postMessage(channel=channel_id, text=message)
-    while True:
-        result = check_pipeline_status(jenkins_url, username, password, job_name)
-        time.sleep(23)
-        if result == 'No Change':
-            check_for_updates()
-            if not updated_tasks:
-                client.chat_postMessage(channel=channel_id, text="Notion 暫無變更 🥕")
-                no_change_notified = True
-                confirmation_message_sent = True
-        elif result == 'SUCCESS':
-            client.chat_postMessage(channel=channel_id, text=f"同步完成 ✅")
-            confirmation_message_sent = True
-        return no_change_notified, confirmation_message_sent
-
 # 新增全局變量
 last_trigger_time = 0
 COOLDOWN_PERIOD = 29  # 冷卻時間，單位為秒
@@ -502,8 +483,13 @@ processed_messages = set()
 
 def trigger_and_notify(channel_id):
     global no_change_notified, is_syncing, confirmation_message_sent
+    response = requests.get(api_url, auth=(username, password))
+    if response.status_code == 200:
+        build_info = response.json()
+        build_number = build_info['lastBuild']['number'] + 1
+        current_build_number = f" `{build_number}` "
     triggered_jobs = trigger_jenkins_job()
-    message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs else ""
+    message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs is not None else f"✦ TimeLinker {current_build_number}\n檢查中 · · ·"
     client.chat_postMessage(channel=channel_id, text=message)
     threading.Timer(BUFFER_TIME, check_and_confirm, [channel_id]).start()
     try:
@@ -518,19 +504,87 @@ def trigger_and_notify(channel_id):
                     confirmation_message_sent = True
                 break
             elif result == 'SUCCESS':
-                updates_count = len(updated_tasks)  # 计算已修改的 Notion 事件总数
-                client.chat_postMessage(channel=channel_id, text=f"{updates_count} 同步完成 ✅")
-                confirmation_message_sent = True
-                break
+                check_for_updates()
+                if updated_tasks:
+                    updates_count = len(updated_tasks)  # 计算已修改的 Notion 事件总数
+                    client.chat_postMessage(channel=channel_id, text=f"` {updates_count} `  件同步完成 ✅")
+                    confirmation_message_sent = True
+                    break
     finally:
         is_syncing = False
+        return no_change_notified, confirmation_message_sent
+
+def extract_text_from_blocks(blocks):
+    all_text = []
+    for block in blocks:
+        if block['type'] == 'context':
+            for element in block['elements']:
+                if element['type'] == 'mrkdwn':
+                    all_text.append(element['text'])
+        elif block['type'] == 'section':
+            for field in block['fields']:
+                all_text.append(field['text'])
+    return '\n'.join(all_text)
+
+def parse_notion_message(blocks):
+    message_info = {
+        'title': '',
+        'start': '',
+        'end': '',
+        'start_end': '',
+        'previous_start': '',
+        'previous_end': '',
+        'last_updated_time': '',
+        'calendar': '',
+        'on_gcal': ''
+    }
+
+    for block in blocks:
+        if block['type'] == 'context' and 'elements' in block:
+            for element in block['elements']:
+                if element['type'] == 'mrkdwn':
+                    text = element['text']
+                    if 'edited in' in text:
+                        message_info['title'] = text
+                    elif 'Calendar' in text:
+                        calendar_info = text.split('*Calendar*')[-1].split('*On GCal?*')
+                        message_info['calendar'] = calendar_info[0].strip()
+                        message_info['on_gcal'] = calendar_info[1].strip() if len(calendar_info) > 1 else ''
+        elif block['type'] == 'section' and 'fields' in block:
+            for field in block['fields']:
+                text = field['text']
+                if 'Start' in text and 'StartEnd' not in text:
+                    if '~' in text:  # Check for strikethrough text
+                        message_info['previous_start'] = text.split('~')[1]
+                        message_info['start'] = text.split('→')[-1].strip()
+                    else:
+                        message_info['start'] = text.split('\n')[-1]
+                elif 'End' in text and 'StartEnd' not in text:
+                    if '~' in text:  # Check for strikethrough text
+                        message_info['previous_end'] = text.split('~')[1]
+                        message_info['end'] = text.split('→')[-1].strip()
+                    else:
+                        message_info['end'] = text.split('\n')[-1]
+                elif 'StartEnd' in text:
+                    message_info['start_end'] = text.split('\n')[-1]
+                elif 'Last Updated Time' in text:
+                    if '~' in text:  # Check for strikethrough text
+                        message_info['last_updated_time'] = text.split('→')[-1].strip()
+                    else:
+                        message_info['last_updated_time'] = text.split('\n')[-1]
+
+    return message_info
 
 @slack_event_adapter.on('message')
 def message(payload):
     global no_change_notified, buffer_timer, last_triggered_keyword, last_message_was_related, waiting_for_confirmation, confirmation_message_sent, last_trigger_time, is_syncing
-    event = payload.get('event', {})
-    message_id = event.get('ts')  # 假設每個消息有唯一的時間戳
     
+    # 重置相關變量
+    last_triggered_keyword = None
+    last_message_was_related = False
+    event = payload.get('event', {})
+    blocks = event.get('blocks', [])
+    message_id = event.get('ts')  # 假設每個消息有唯一的時間戳
     # 檢查消息是否已經處理過
     if message_id in processed_messages:
         return
@@ -539,26 +593,105 @@ def message(payload):
     channel_id = event.get('channel')
     user_id = event.get('user')
     text = event.get('text', '').lower()  # 轉換為小寫以便不區分大小寫的匹配
+    # if blocks:
+    #     full_text = extract_text_from_blocks(blocks)
+    #     lines = full_text.split('\n')
+    #     for line in lines:
+    #         print(line)    
+    if blocks:
+        notion_info = parse_notion_message(blocks)
+        
+        # 处理第一个 block（标题信息）
+        title_block = blocks[0]
+        if title_block['type'] == 'context':
+            title_text = title_block['elements'][1]['text']
+            # print("Title:", title_text)
 
-    # 重置相關變量
-    last_triggered_keyword = None
-    last_message_was_related = False
+        # 处理第二个 block（变更详情）
+        if len(blocks) > 1:
+            details_block = blocks[1]
+            if details_block['type'] == 'section':
+                for field in details_block['fields']:
+                    field_text = field['text']
+                    # print(field['text'])
 
-    # 分類消息
-    previous_messages = [msg for msg in message_buffer if re.match(r'^Previous', msg['text'])]
-    other_messages = [msg for msg in message_buffer if not re.match(r'^Previous', msg['text'])]
+        # 处理第三个 block（额外信息）
+        if len(blocks) > 2:
+            extra_block = blocks[2]
+            if extra_block['type'] == 'context':
+                extra_text = extra_block['elements'][0]['text']
+                # print("Extra info:", extra_text)
 
+
+        # 现在我们可以精确地分类消息
+        previous_messages = []
+        other_messages = []
+        
+        if notion_info['previous_start']:
+            previous_messages.append({
+                'type': 'previous_start',
+                'text': notion_info['previous_start']
+            })
+
+        if notion_info['previous_end']:
+            previous_messages.append({
+                'type': 'previous_end',
+                'text': notion_info['previous_end']
+            })
+
+        if notion_info['start']:
+            other_messages.append({
+                'type': 'start',
+                'text': notion_info['start']
+            })
+
+        if notion_info['end']:
+            other_messages.append({
+                'type': 'end',
+                'text': notion_info['end']
+            })
+        
+        if notion_info['start_end']:
+            other_messages.append({
+                'type': 'start_end',
+                'text': notion_info['start_end']
+            })
+        
+        if notion_info['last_updated_time']:
+            other_messages.append({
+                'type': 'last_updated_time',
+                'text': notion_info['last_updated_time']
+            })
+
+        if notion_info:
+            if previous_messages:
+                Done_checking = True
+            elif previous_messages is None:
+                Done_checking = False
+            # # 处理这些消息...
+            # print("Previous messages:", previous_messages)
+            # print("Other messages:", other_messages)
+            
+            # 你可以根据需要处理其他信息
+            print("Title:", notion_info['title'])
+            print("Previous Start:", notion_info['previous_start'])
+            print("Previous End:", notion_info['previous_end'])
+            print("Start:", notion_info['start'])
+            print("End:", notion_info['end'])
+            print("Last Updated Time:", notion_info['last_updated_time'])
+            print("Calendar:", notion_info['calendar'])
+            print("On GCal:", notion_info['on_gcal'])
+            print("\n")
+            
     # 檢查消息是否來自Notion
     if is_message_from_notion(user_id):
-        print("Message from Notion")
-        if other_messages:
+        if Done_checking is False:
             message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs else ""
             client.chat_postMessage(channel=channel_id, text=message)
             triggered_jobs = trigger_jenkins_job()
             last_message.append(message)
                 
-        elif previous_messages:
-            print(f"got previous : {previous_messages}")
+        elif Done_checking is True:
             client.chat_postMessage(channel=channel_id, text="確認完畢 ✅✅")
         no_change_notified = True
         
@@ -685,9 +818,9 @@ def check_for_updates():
                 updated_tasks.append((task_Name, last_edited_time))  # 添加到列表中
 
         if updated_tasks:
+            print(f"Found recent update in Notion :")
             for task, time in updated_tasks:
-                print(f"Found recent update in Notion :")
-                print(f"{task}   {time}\n")
+                print(f"{task}\n")
             return True, updated_tasks
         else:
             print("\r\033[K" + f"No recent updates found in Notion", end="")
@@ -749,10 +882,17 @@ def process_buffer():
     return response, 200
 
 def check_and_confirm(channel_id):
-    if received_previous_start and received_previous_end:
-        client.chat_postMessage(channel=channel_id, text="確認完畢 ✅✅")
-    else:
-        print("Did not receive all notifications within the time limit.")
+    global received_previous_start, received_previous_end, buffer_timer
+    with buffer_lock:
+        # Copy and clear the buffer at the beginning
+        current_buffer = message_buffer.copy()
+        message_buffer.clear()
+        if not current_buffer:
+            return
+        if received_previous_start or received_previous_end:
+            client.chat_postMessage(channel=channel_id, text="確認完畢 ✅✅")
+        else:
+            print("Did not receive all notifications within the time limit.")
 
 print("\n")
 
