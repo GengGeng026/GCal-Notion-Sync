@@ -2313,8 +2313,11 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
                             if not has_time(local_data.page['properties']['End']['date']['start']):
                                 end = datetime.combine(end.date(), start_end_end.time(), tzinfo=start_end_end.tzinfo)
                                 end_value = end
-                            
-                            start_end_list = [parse(start_end_prop['start']), parse(start_end_prop['end'])]
+                                                        
+                            if start_end_prop['start'] is not None and start_end_prop['end'] is not None:
+                                start_end_list = [parse(start_end_prop['start']), parse(start_end_prop['end'])]
+                            else:
+                                start_end_list = None
                         
                         if start != original_start:
                             start_value = start
