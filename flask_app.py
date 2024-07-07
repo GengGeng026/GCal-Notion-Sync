@@ -343,12 +343,6 @@ app = Flask(__name__)
 slack_event_adapter = SlackEventAdapter(os.environ['SIGNING_SECRET'], '/slack/events', app)
 client = WebClient(token=os.environ['SLACK_TOKEN'])
 
-# 修改消息緩衝區相關變量
-message_buffer = []
-buffer_lock = threading.Lock()
-buffer_timer = None
-BUFFER_TIME = 15
-
 # 计算编辑距离的函数
 def levenshtein(s1, s2):
     if len(s1) < len(s2):
@@ -482,37 +476,78 @@ trigger_lock = threading.Lock()
 processed_messages = set()
 
 def trigger_and_notify(channel_id):
-    global no_change_notified, is_syncing, confirmation_message_sent
-    response = requests.get(api_url, auth=(username, password))
-    if response.status_code == 200:
-        build_info = response.json()
-        build_number = build_info['lastBuild']['number'] + 1
-        current_build_number = f" `{build_number}` "
-    triggered_jobs = trigger_jenkins_job()
-    message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs is not None else f"✦ TimeLinker {current_build_number}\n檢查中 · · ·"
-    client.chat_postMessage(channel=channel_id, text=message)
-    threading.Timer(BUFFER_TIME, check_and_confirm, [channel_id]).start()
+    global no_change_notified, is_syncing, confirmation_message_sent, updated_tasks
+    
     try:
+        # 觸發 Jenkins 作業
+        response = requests.get(api_url, auth=(username, password))
+        if response.status_code == 200:
+            build_info = response.json()
+            build_number = build_info['lastBuild']['number'] + 1
+            current_build_number = f" `{build_number}` "
+        
+        triggered_jobs = trigger_jenkins_job()
+        message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs is not None else f"✦ TimeLinker {current_build_number}\n檢查中 · · ·"
+        client.chat_postMessage(channel=channel_id, text=message)
+        
+        # 等待 Jenkins 作業完成
         while True:
+            time.sleep(10)
             result = check_pipeline_status(jenkins_url, username, password, job_name)
-            time.sleep(23)
-            if result == 'No Change':
+            if result in ['No Change', 'SUCCESS']:
+                print(f"Pipeline status: {result}")
+                
+                # 檢查更新並發送結果消息
                 check_for_updates()
-                if not updated_tasks:
-                    client.chat_postMessage(channel=channel_id, text="Notion 暫無變更 🥕")
-                    no_change_notified = True
-                    confirmation_message_sent = True
-                break
-            elif result == 'SUCCESS':
-                check_for_updates()
-                if updated_tasks:
-                    updates_count = len(updated_tasks)  # 计算已修改的 Notion 事件总数
+                if result == 'SUCCESS' or updated_tasks:
+                    updates_count = len(updated_tasks)
                     client.chat_postMessage(channel=channel_id, text=f" `{updates_count}`  件同步完成 ✅")
                     confirmation_message_sent = True
+                    no_change_notified = True
                     break
+                elif result == 'No Change' or not updated_tasks:
+                    client.chat_postMessage(channel=channel_id, text="Notion 暫無變更 🥕")
+                    confirmation_message_sent = True
+                    no_change_notified = True
+                    break
+    
     finally:
         is_syncing = False
         return no_change_notified, confirmation_message_sent
+
+
+# def trigger_and_notify(channel_id):
+#     global no_change_notified, is_syncing, confirmation_message_sent
+#     response = requests.get(api_url, auth=(username, password))
+#     if response.status_code == 200:
+#         build_info = response.json()
+#         build_number = build_info['lastBuild']['number'] + 1
+#         current_build_number = f" `{build_number}` "
+#     triggered_jobs = trigger_jenkins_job()
+#     message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs is not None else f"✦ TimeLinker {current_build_number}\n檢查中 · · ·"
+#     client.chat_postMessage(channel=channel_id, text=message)
+#     threading.Timer(BUFFER_TIME, check_and_confirm, [channel_id]).start()
+#     try:
+#         while True:
+#             result = check_pipeline_status(jenkins_url, username, password, job_name)
+#             time.sleep(20)
+#             if result == 'No Change':
+#                 check_for_updates()
+#                 if not updated_tasks:
+#                     client.chat_postMessage(channel=channel_id, text="Notion 暫無變更 🥕")
+#                     no_change_notified = True
+#                     confirmation_message_sent = True
+#                 break
+#             elif result == 'SUCCESS':
+#                 check_for_updates()
+#                 if updated_tasks:
+#                     updates_count = len(updated_tasks)  # 计算已修改的 Notion 事件总数
+#                     client.chat_postMessage(channel=channel_id, text=f" `{updates_count}`  件同步完成 ✅")
+#                     confirmation_message_sent = True
+#                     break
+#     finally:
+#         is_syncing = False
+#         return no_change_notified, confirmation_message_sent
 
 def extract_text_from_blocks(blocks):
     all_text = []
@@ -575,6 +610,11 @@ def parse_notion_message(blocks):
 
     return message_info
 
+# 修改消息緩衝區相關變量
+message_buffer = []
+buffer_lock = threading.Lock()
+buffer_timer = None
+BUFFER_TIME = 11
 previous_messages = []
 other_messages = []
 
@@ -585,17 +625,20 @@ def message(payload):
     # 重置相關變量
     last_triggered_keyword = None
     last_message_was_related = False
+    
     event = payload.get('event', {})
+    channel_id = event.get('channel')
+    user_id = event.get('user')
+    text = event.get('text', '').lower()  # 轉換為小寫以便不區分大小寫的匹配
     blocks = event.get('blocks', [])
-    message_id = event.get('ts')  # 假設每個消息有唯一的時間戳
+    message_id = event.get('ts')
+    
     # 檢查消息是否已經處理過
     if message_id in processed_messages:
         return
     
     processed_messages.add(message_id)
-    channel_id = event.get('channel')
-    user_id = event.get('user')
-    text = event.get('text', '').lower()  # 轉換為小寫以便不區分大小寫的匹配
+
     # if blocks:
     #     full_text = extract_text_from_blocks(blocks)
     #     lines = full_text.split('\n')
@@ -665,49 +708,42 @@ def message(payload):
             Done_checking = True
         elif previous_messages is None:
             Done_checking = False
-        # # 处理这些消息...
-        # print("Previous messages:", previous_messages)
-        # print("Other messages:", other_messages)
             
     # 檢查消息是否來自Notion
     if is_message_from_notion(user_id):
         with buffer_lock:
-            message_buffer.append({'channel': channel_id, 'text': text, 'user_id': user_id})
+            notion_info = parse_notion_message(blocks)
+            message_buffer.append({
+                'channel': channel_id,
+                'text': text,
+                'user_id': user_id,
+                'notion_info': notion_info
+            })
             
             if buffer_timer is None:
                 buffer_timer = threading.Timer(BUFFER_TIME, process_buffer)
                 buffer_timer.start()
                 
-        if Done_checking is False:
-            message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs else ""
-            client.chat_postMessage(channel=channel_id, text=message)
-            triggered_jobs = trigger_jenkins_job()
-            last_message.append(message)
-            # 你可以根据需要处理其他信息
-            # print("Title:", notion_info['title'])
-            print("Previous Start:", notion_info['previous_start'])
-            print("Previous End:", notion_info['previous_end'])
-            # print("Start:", notion_info['start'])
-            # print("End:", notion_info['end'])
-            # print("Last Updated Time:", notion_info['last_updated_time'])
-            # print("Calendar:", notion_info['calendar'])
-            # print("On GCal:", notion_info['on_gcal'])
-            print("\n")
-                
-        elif Done_checking is True:
-            client.chat_postMessage(channel=channel_id, text="確認完畢 ✅✅")
-            # 你可以根据需要处理其他信息
-            # print("Title:", notion_info['title'])
-            print("Previous Start:", notion_info['previous_start'])
-            print("Previous End:", notion_info['previous_end'])
-            # print("Start:", notion_info['start'])
-            # print("End:", notion_info['end'])
-            # print("Last Updated Time:", notion_info['last_updated_time'])
-            # print("Calendar:", notion_info['calendar'])
-            # print("On GCal:", notion_info['on_gcal'])
-            print("\n")
-        no_change_notified = False
-        return previous_messages, other_messages, notion_info, message_buffer
+            if Done_checking is False:
+                response = requests.get(api_url, auth=(username, password))
+                if response.status_code == 200:
+                    build_info = response.json()
+                    build_number = build_info['lastBuild']['number'] + 1
+                    current_build_number = f" `{build_number}` "
+                triggered_jobs = trigger_jenkins_job()
+                message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs is not None else f"✦ TimeLinker {current_build_number}\n檢查中 · · ·"
+                client.chat_postMessage(channel=channel_id, text=message)
+                last_message.append(message)
+                # print("Previous Start:", notion_info['previous_start'])
+                # print("Previous End:", notion_info['previous_end'])
+                # print("\n")
+            elif Done_checking is True:
+                # client.chat_postMessage(channel=channel_id, text="確認完畢 ✅✅")
+                print("Previous Start:", notion_info['previous_start'])
+                print("Previous End:", notion_info['previous_end'])
+                # print("\n")
+            no_change_notified = False
+            return previous_messages, other_messages, notion_info, message_buffer
     else:
         # 消息來自真實用戶的處理邏輯
         if is_message_from_slack_user(user_id):  # 確保消息來自用戶而非機器人
@@ -742,7 +778,8 @@ def message(payload):
                                 client.chat_postMessage(channel=channel_id, text="⚡️ 成功觸發")
                                 threading.Thread(target=trigger_and_notify, args=(channel_id,)).start()
                     else:
-                        client.chat_postMessage(channel=channel_id, text="同步操作正在進行中，請稍後再試。")
+                        pass
+                        # client.chat_postMessage(channel=channel_id, text="同步操作正在進行中，請稍後再試。")
                     
                     last_triggered_keyword = keyword
                     last_message_was_related = True
@@ -777,7 +814,8 @@ def message(payload):
                             client.chat_postMessage(channel=channel_id, text="⚡️ 成功觸發")
                             threading.Thread(target=trigger_and_notify, args=(channel_id,)).start()
                 else:
-                    client.chat_postMessage(channel=channel_id, text="同步操作正在進行中，請稍後再試。")
+                    pass
+                    # client.chat_postMessage(channel=channel_id, text="同步操作正在進行中，請稍後再試。")
                 
                 last_triggered_keyword = keyword
                 last_message_was_related = True
@@ -798,7 +836,38 @@ def message(payload):
                     no_change_notified = True  # 重置通知標記
                         
             no_change_notified = True
-    return message_buffer
+    return message_buffer, is_syncing
+
+def process_buffer():
+    global message_buffer, buffer_timer, updated_tasks
+    
+    with buffer_lock:
+        if not message_buffer:
+            return
+    
+        channel_id = message_buffer[0]['channel']
+        notion_messages = [msg for msg in message_buffer if is_message_from_notion(msg['user_id'])]
+        current_buffer = message_buffer.copy()
+        message_buffer.clear()
+        if not current_buffer:
+            return
+
+        print("\r\033[K" + f"Processing {len(current_buffer)} message from buffer", end="")
+
+        # 檢查是否有包含 "Previous" 的消息
+        has_previous = any(
+            'previous' in msg['notion_info'] or 'Previous' in msg['notion_info']
+            for msg in notion_messages
+        )
+
+        # 處理 Notion 消息
+        if has_previous:
+            client.chat_postMessage(channel=channel_id, text=f"確認 `{len(updated_tasks)}` 件完畢\n\n")
+
+        # 清空緩衝區
+        message_buffer.clear()
+        buffer_timer = None
+
 
 def check_for_updates():
     global message_buffer
@@ -851,41 +920,6 @@ def check_for_updates():
     # 如果一切正常，返回 True 表示检查更新成功
     return True
 
-def process_buffer():
-    global message_buffer, buffer_timer, updated_tasks, no_change_notified, received_previous_start, received_previous_end, last_triggered_keyword, last_message_was_related, waiting_for_confirmation, confirmation_message_sent, last_message
-    if not message_buffer:
-        return
-    channel_id = message_buffer[0]['channel']
-    with buffer_lock:
-        # Copy and clear the buffer at the beginning
-        current_buffer = message_buffer.copy()
-        message_buffer.clear()
-        if not current_buffer:
-            return
-
-        print("\r\033[K" + f"Processing {len(current_buffer)} message from buffer", end="")
-
-        # Start a timer on receiving the first "Previous" message
-        if previous_messages:
-            received_previous_start = True if previous_messages else False
-            received_previous_end = True if previous_messages else False
-            threading.Timer(BUFFER_TIME, check_and_confirm, [channel_id]).start()
-            if not no_change_notified:
-                if check_for_updates():
-                    if updated_tasks:
-                        # 如果有更新，发送相应的消息
-                        updates_count = len(updated_tasks)  # 计算已修改的 Notion 事件总数
-                        client.chat_postMessage(channel=channel_id, text=f"{updates_count}  件同步完成 ✅\n\n")
-                        pass
-                    else:
-                        client.chat_postMessage(channel=channel_id, text="Notion 暫無變更 🥕")
-                        no_change_notified = True
-                        return Response(), 200, no_change_notified
-                    pass
-        
-        buffer_timer = None
-    return response, 200
-
 def check_and_confirm(channel_id):
     global received_previous_start, received_previous_end, buffer_timer
     with buffer_lock:
@@ -895,7 +929,7 @@ def check_and_confirm(channel_id):
         if not current_buffer:
             return
         if received_previous_start or received_previous_end:
-            client.chat_postMessage(channel=channel_id, text="確認完畢 ✅✅")
+            client.chat_postMessage(channel=channel_id, text="確認完畢")
         else:
             print("Did not receive all notifications within the time limit.")
 
