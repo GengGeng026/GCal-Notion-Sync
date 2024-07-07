@@ -1259,6 +1259,50 @@ def update_previous_dates(page, start, end, start_end, original_end=None, as_dat
         properties=properties
     )
 
+# def update_previous_dates(page, start, end, start_end, original_end=None, as_date=False, keep_midnight=False):
+#     target_tz = pytz.timezone('Asia/Kuala_Lumpur')
+
+#     # 轉換輸入為 datetime 對象
+#     start = format_date_time(start, keep_midnight=keep_midnight, target_tz=target_tz)
+#     end = format_date_time(end, keep_midnight=keep_midnight, target_tz=target_tz)
+#     original_end = format_date_time(original_end, keep_midnight=keep_midnight, target_tz=target_tz)
+
+#     # 處理 start_end
+#     if isinstance(start_end, dict):
+#         start_end = [format_date_time(start_end.get('start'), target_tz=target_tz),
+#                      format_date_time(start_end.get('end'), target_tz=target_tz)]
+#     elif isinstance(start_end, (tuple, list)):
+#         start_end = [format_date_time(date, target_tz=target_tz) for date in start_end]
+#     elif isinstance(start_end, (datetime, date)):
+#         start_end = [format_date_time(start_end, target_tz=target_tz), None]
+#     else:
+#         start_end = [None, None]
+
+#     # 檢查是否為單日日期情況
+#     is_single_date = start_end[0] is not None and start_end[1] is None
+
+#     # 準備更新負載
+#     properties = {}
+
+#     if is_single_date:
+#         single_date_str = format_date_time(start_end[0], keep_midnight=keep_midnight, target_tz=target_tz)
+#         properties['Previous Start'] = {'date': {'start': single_date_str}}
+#         properties['Previous End'] = {'date': {'start': single_date_str}}
+#     else:
+#         properties['Previous Start'] = {'date': {'start': start}}
+#         if end is not None:
+#             properties['Previous End'] = {'date': {'start': end}}
+
+#     # 更新 Start_end（如果需要）
+#     if 'Start_end' in page['properties']:
+#         properties['Start_end'] = {'date': {
+#             'start': format_date_time(start_end[0], keep_midnight=True, target_tz=target_tz),
+#             'end': format_date_time(start_end[1], keep_midnight=True, target_tz=target_tz) if start_end[1] else None
+#         }}
+
+#     # 更新 Notion 頁面
+#     notion.pages.update(page_id=page['id'], properties=properties)
+
 def update_page(page, start, end, start_end):
     # Check the type of 'start_end'
     if isinstance(start_end, dict):
