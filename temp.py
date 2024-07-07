@@ -1,156 +1,134 @@
 
-def update_page_properties(notion, page, Start_Notion_Name, End_Notion_Name, Date_Notion_Name, start, end, start_end, as_date=False, single_date=False, update_all=True, keep_midnight=False, remove_start_end_midnight=False, keep_start_midnight=False, keep_end_midnight=False, StartEnd_to_Overwrite_All=False):
-    # Convert 'start' and 'end' into datetime objects if they are not already
-    if isinstance(start, date) and not isinstance(start, datetime):
-        start = datetime.combine(start, datetime.min.time())
-    if end is not None and isinstance(end, date) and not isinstance(end, datetime):
-        end = datetime.combine(end, datetime.min.time())
+def update_previous_dates(page, start, end, start_end, original_end=None, as_date=False, keep_midnight=False):
+    # 定义目标时区，例如 'Asia/Kuala_Lumpur'
+    target_tz = pytz.timezone('Asia/Kuala_Lumpur')
 
-    # 在更新 start 和 end 之前，首先检查 start 是否为空，并根据 start_end 进行更新
-    if start is None and end is not None:
-        if isinstance(start_end, (list, tuple)) and len(start_end) == 2:
-            start = start_end[0]  # 使用 start_end 的第一个元素更新 start
-        else:
-            print("Error: start_end does not have the expected format.")
-            return
+    # 辅助函数：安全解析日期时间
+    def safe_parse(date_value):
+        if date_value is None:
+            return None
+        if isinstance(date_value, str):
+            return parse(date_value).astimezone(target_tz)
+        if isinstance(date_value, date) and not isinstance(date_value, datetime):
+            return datetime.combine(date_value, datetime.min.time(), tzinfo=pytz.UTC).astimezone(target_tz)
+        if isinstance(date_value, datetime):
+            return date_value.astimezone(target_tz)
+        return None
 
-    if isinstance(start_end, (list, tuple)) and len(start_end) == 2:
-        start_end = [datetime.combine(d, datetime.min.time()) if isinstance(d, date) and not isinstance(d, datetime) else d for d in start_end]
-        if start_end[1] is None:
-            start_end[1] = start_end[0]
+    # 确保 'start' 和 'end' 是时区感知的 datetime 对象
+    start = safe_parse(start)
+    end = safe_parse(end)
+    original_end = safe_parse(original_end)
 
-    if isinstance(start_end, (list, tuple)) and len(start_end) == 1 and isinstance(start_end[0], datetime):
-        start_end.append(start_end[0])
-
-    if not isinstance(start, datetime) or (end is not None and not isinstance(end, datetime)) or not isinstance(start_end, (list, tuple)) or len(start_end) != 2 or not all(isinstance(date, datetime) for date in start_end):
-        print("Error: Invalid input types.")
-        return
-
-    # Get the current timezone for Asia/Kuala Lumpur
-    kuala_lumpur_tz = pytz.timezone('Asia/Kuala_Lumpur')
-
-    # Function to adjust datetime to Kuala Lumpur timezone without adding extra hours
-    def adjust_to_kl_timezone(dt, tz):
-        # Check if datetime is naive or already in the target timezone
-        if dt.tzinfo is None or dt.tzinfo.utcoffset(dt) is None:
-            # If naive, localize to the target timezone
-            return tz.localize(dt)
-        else:
-            # If already timezone-aware, convert to the target timezone
-            # Use normalize to correctly handle daylight saving time transitions
-            return tz.normalize(dt.astimezone(tz))
-
-    # Adjust 'start' and 'end' to Kuala Lumpur timezone
-    start = adjust_to_kl_timezone(start, kuala_lumpur_tz)
-    if end is not None:
-        end = adjust_to_kl_timezone(end, kuala_lumpur_tz)
-
-    # 在日期对象验证通过后，构建更新负载之前添加
-    if end is not None and start > end:
-        # 如果 start 晚于 end，则交换它们
-        start, end = end, start
-        
-    # 直接准备更新负载，避免中间状态
-    properties_to_update = {}
-
-    # # 根据 single_date 参数更新逻辑
-    # if single_date and start == end:
-    #     end = None  # 清空 end
-
-    # 如果 single_date 为 False，则需要检查 start 和 end 是否与 start_end 中的值相同
-    if not single_date and start == start_end[0] and end == start_end[1]:
-        # 如果 start 和 end 与 start_end[1] 相同，不应清空 end
-        pass  # 保持 end 不变
-
-    # Ensure start and end are not None before proceeding
-    if start is not None and end is not None:
-        # 检查 start 和 end 的日期是否与 StartEnd 相同，并且时间都为 00:00
-        if start.date() == start_end[0].date() and end.date() == start_end[1].date() and start.time() == time(0, 0) and end.time() == time(0, 0):
-            # 移除 00:00 时间
-            start_date = format_date_time(start, keep_midnight=False, remove_midnight=True)
-            end_date = format_date_time(end, keep_midnight=False, remove_midnight=True)
-        else:
-            # 检查 start 和 end 的日期是否与 StartEnd 相同
-            if start.date() == start_end[0].date() and end.date() == start_end[1].date():
-                # 检查 start 或 end 是否为 00:00
-                if start.time() == time(0, 0) or end.time() == time(0, 0):
-                    # 如果 start 为 00:00，则在更新时保留这个时间
-                    if start.time() == time(0, 0):
-                        start_date = format_date_time(start, keep_midnight=True, remove_midnight=False)
-                    else:
-                        start_date = format_date_time(start, keep_midnight=keep_start_midnight, remove_midnight=remove_start_end_midnight)
-                    
-                    # 如果 end 为 00:00，则在更新时保留这个时间
-                    if end.time() == time(0, 0):
-                        end_date = format_date_time(end, keep_midnight=True, remove_midnight=False)
-                    else:
-                        end_date = format_date_time(end, keep_midnight=keep_end_midnight, remove_midnight=remove_start_end_midnight)
-                else:
-                    # 如果不满足特定条件，则使用原始逻辑
-                    start_date = format_date_time(start, keep_midnight=keep_start_midnight, remove_midnight=remove_start_end_midnight)
-                    end_date = format_date_time(end, keep_midnight=keep_end_midnight, remove_midnight=remove_start_end_midnight)
-            else:
-                # 如果日期不匹配
-                # 检查 start 和 end 是否都为 00:00
-                if start.time() == time(0, 0) and end.time() == time(0, 0):
-                    # 移除 00:00 时间
-                    start_date = format_date_time(start, keep_midnight=False, remove_midnight=True)
-                    end_date = format_date_time(end, keep_midnight=False, remove_midnight=True)
-                else:
-                    # 如果不是全都 00:00，使用原始逻辑
-                    start_date = format_date_time(start, keep_midnight=keep_start_midnight, remove_midnight=remove_start_end_midnight)
-                    end_date = format_date_time(end, keep_midnight=keep_end_midnight, remove_midnight=remove_start_end_midnight)
+    # Handle conversion of 'start_end'
+    if isinstance(start_end, dict):
+        start_end = [safe_parse(start_end.get('start')), safe_parse(start_end.get('end'))]
+    elif isinstance(start_end, (tuple, list)):
+        start_end = [safe_parse(date) for date in start_end]
+    elif isinstance(start_end, datetime):
+        start_end = [start_end, start_end]
     else:
-        # Handle the case where start or end is None
-        print("Error: start or end is None")
-        return
+        start_end = [None, None]
 
-    # # Apply midnight removal consistently if needed
-    # if remove_start_end_midnight:
-    #     start_date = format_date_time(start, keep_midnight=False, remove_midnight=True) if start.time() == time(0, 0) else start_date
-    #     end_date = format_date_time(end, keep_midnight=False, remove_midnight=True) if end.time() == time(0, 0) else end_date
-    # else:
-    #     start_date = format_date_time(start, keep_midnight=keep_start_midnight)
-    #     end_date = format_date_time(end, keep_midnight=keep_end_midnight)
+    # 检查是否为单日日期情况
+    is_single_date = start_end[0] is not None and start_end[1] is None
 
-    # 如果 start 和 end 相同，则视为单一日期
-    if start == end:
-        properties_to_update[Date_Notion_Name] = {
-            'date': {
-                'start': start_date,
-                'end': None  # 或者使用 end_date，根据实际情况决定
-            }
-        }
+    # Function to format datetime objects
+    def format_date_time(date, keep_midnight=False):
+        if date is None:
+            return None
+        date = date.astimezone(target_tz)
+        if date.time() != time(0) or keep_midnight:
+            return date.isoformat()
+        else:
+            return date.strftime('%Y-%m-%d')
+
+    # 确定是否保留午夜时间
+    keep_start_midnight = keep_midnight or (start and start.time() != time(0, 0)) or (start and start.time() == time(0, 0) and end and end.time() != time(0, 0))
+    keep_end_midnight = keep_midnight or (end and end.time() != time(0, 0)) or (end and end.time() == time(0, 0) and start and start.time() != time(0, 0))
+
+    # 格式化日期时间
+    start_str = format_date_time(start, keep_midnight=keep_start_midnight)
+    end_str = format_date_time(end, keep_midnight=keep_end_midnight)
+
+    # 初始化 properties 字典
+    properties = {}
+
+    # 更新 Previous Start 和 Previous End
+    if is_single_date:
+        # 如果是单日日期，使用 start_end[0] 更新 Previous Start 和 Previous End
+        single_date_str = format_date_time(start_end[0], keep_midnight=keep_midnight)
+        properties['Previous Start'] = {'date': {'start': single_date_str}}
+        properties['Previous End'] = {'date': {'start': single_date_str}}
     else:
-        properties_to_update[Date_Notion_Name] = {
-            'date': {
-                'start': start_date,
-                'end': end_date
-            }
-        }
+        # 否则使用 start 和 end 更新
+        properties['Previous Start'] = {'date': {'start': start_str}}
+        if end_str is not None:
+            properties['Previous End'] = {'date': {'start': end_str}}
 
-    # 更新 Start 和 End（如果需要）
-    if update_all:
-        properties_to_update[Start_Notion_Name] = {
-            'date': {
-                'start': start_date,
-                'end': None  # Start 通常不需要 end 时间
-            }
-        }
-        if end_date is not None:
-            properties_to_update[End_Notion_Name] = {
-                'date': {
-                    'start': end_date,  # End 可能只需要 start 时间，这里根据实际情况调整
-                    'end': None
-                }
-            }
+    # 检查是否需要更新 Start_end
+    if 'Start_end' in page['properties']:
+        properties['Start_end'] = {'date': {
+            'start': format_date_time(start_end[0], keep_midnight=True),
+            'end': format_date_time(start_end[1], keep_midnight=True) if start_end[1] else None
+        }}
 
-    # 一次性更新 Notion 页面，避免不必要的中间状态
+    # 更新 Notion 页面
     notion.pages.update(
         page_id=page['id'],
-        properties=properties_to_update
+        properties=properties
     )
 
+
+def update_all_data(start, end, start_end, prev_start, prev_end, result, local_data, page_title, original_start, original_end, prev_start_value, prev_end_value, new_start_value, new_end_value, counts, start_end_value, details, keep_start_midnight=False, keep_end_midnight=False, keep_midnight=False):
+    # Check and swap start and end dates if start date is after end date
+    if start is not None and end is not None and start > end:
+        start, end = end, start  # Swapping the dates
+    
+    if prev_start is not None and prev_end is not None:
+        prev_start = prev_start.strftime('%Y-%m-%d %H:%M:%S%z')
+        prev_end = prev_end.strftime('%Y-%m-%d %H:%M:%S%z')
+
+    start_end = check_list([start, end])
+
+    if not isinstance(start_end, tuple) or len(start_end) != 2:
+        start_end = (start, end)
+    if start_end == (None, None):
+        raise ValueError("Invalid start and end dates")
+
+    with lock:
+        result = update_result(result, local_data.page, page_title, original_start, original_end, start, end, start_end, prev_start, prev_end, prev_start_value, prev_end_value, new_start_value, new_end_value)
+
+    if start_end is not None:
+        with lock:
+            counts['count_alldayevent'] += 1
+            result['total_pages_modified'] = calculate_total(counts)
+
+    with lock:
+        update_page(local_data.page, start, end, start_end)
+
+    with lock:
+        update_page_properties(notion, local_data.page, Start_Notion_Name, End_Notion_Name, Date_Notion_Name, start, end, start_end, as_date=True, single_date=True, keep_midnight=keep_midnight)
+        
+    if start is not None and end is not None:
+        with lock:
+            update_previous_dates(local_data.page, start.date(), end.date(), start_end, as_date=True)
+    elif start is not None and end is None:
+        with lock:
+            update_previous_dates(local_data.page, start.date(), None, start_end, as_date=True)
+
+    if start_end_value is None:
+        with lock:
+            result['details']['set_alldayevent_details'][result['page_id']] = (result['page_title'], result['start'], result['end'], start_end_value, result['start_end'])
+
+    details['prev_start'] = prev_start
+    details['prev_end'] = prev_end
+
+    # Update the start and end values in the result dictionary
+    result['start'] = start
+    result['end'] = end
+
+    return result, details, start, end
 
 
 def process_pages_condition_A(page, counts, details, lock, processed_pages, return_values):
@@ -268,7 +246,7 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
     # Use a re-entrant lock
     lock = threading.RLock()
     
-            # SUb-Sub Condition 4 under MASTER CONDITION D
+            # Sub Condition 4 under MASTER CONDITION D
             # All-Days-Event
             # Start and End are having Single-Date WITH time component 00:00 set explicitly while StartEnd is having different date or time range from Start and End.
             # If 'Start' and 'End' have a Single-Date
