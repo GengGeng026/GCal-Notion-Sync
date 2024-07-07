@@ -116,7 +116,7 @@ formatted_part1 = format_string('All', bold=True) if 'JENKINS_HOME' not in os.en
 formatted_part2 = format_string('Day', bold=True) if 'JENKINS_HOME' not in os.environ else skip_in_jenkins(lambda: format_string('Day', bold=True))
 formatted_part3 = format_string('(s)', 'C2', bold=True) if 'JENKINS_HOME' not in os.environ else skip_in_jenkins(lambda: format_string('(s)', 'C2', bold=True))
 formatted_part4 = format_string('Event', bold=True) if 'JENKINS_HOME' not in os.environ else skip_in_jenkins(lambda: format_string('Event', bold=True))
-formatted_alldaysevent = formatted_part1 + '-' + formatted_part2 + formatted_part3 + '-' + formatted_part4
+formatted_alldaysevent = formatted_part1 + '-' + formatted_part2 + formatted_part3 + '-' + formatted_part4 if 'JENKINS_HOME' not in os.environ else skip_in_jenkins(lambda: (formatted_part1() + '-' + formatted_part2() + formatted_part3() + '-' + formatted_part4()))
 formatted_alldayevent = format_string('All-Day-Event', bold=True) if 'JENKINS_HOME' not in os.environ else skip_in_jenkins(lambda: format_string('All-Day-Event', bold=True))
 formatted_daterange = format_string('Date', 'C2', bold=True) + '-' + format_string('Range', 'C2', bold=True) if 'JENKINS_HOME' not in os.environ else skip_in_jenkins(lambda: format_string('Date-Range', 'C2', bold=True))
 formatted_alternate_alldayevent = format_string('Alternate All-Day-Event', 'C2', bold=True) if 'JENKINS_HOME' not in os.environ else skip_in_jenkins(lambda: format_string('Alternate All-Day-Event', 'C2', bold=True))

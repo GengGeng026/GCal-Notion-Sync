@@ -25928,3 +25928,44 @@ IndexError: list index out of range
 2024-07-08 07:08:18,787 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:08:18] "POST /slack/events HTTP/1.0" 200 -
 2024-07-08 07:08:39,184 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:08:39] "POST /slack/events HTTP/1.0" 200 -
 2024-07-08 07:09:21,733 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:09:21] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:18:58,709 - root - INFO - This is an info message.
+2024-07-08 07:18:58,720 - root - ERROR - This is an error message.
+2024-07-08 07:18:59,227 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-08 07:18:59,229 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-08 07:19:23,139 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:19:23] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:19:24,219 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:19:24] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:19:26,667 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:19:26] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:19:27,551 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:19:27] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:19:28,802 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:19:28] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:19:43,442 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:19:43] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:20:10,887 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:20:10] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:20:57,281 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 797, in message
+    if Done_checking is False:
+       ^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'Done_checking' where it is not associated with a value
+2024-07-08 07:20:57,291 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:20:57] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-07-08 07:21:58,333 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:21:58] "POST /slack/events HTTP/1.0" 200 -
