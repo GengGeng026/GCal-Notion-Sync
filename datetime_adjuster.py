@@ -2976,6 +2976,10 @@ else:
             print(f"{formatted_task}     {formatted_colon}  {formatted_BOLD_italic.format(page_title)}")
             original_start_str = (formatted_plain_none if original_start is None else DateTimeIntoNotionFormat(original_start, date_only=True)).strip()
             start_str = (formatted_plain_none if start is None else DateTimeIntoNotionFormat(start, plus_time=True, time_format='24')).strip()
+            prev_start_value = getattr(page, 'previous_start', None)
+            prev_end_value = getattr(page, 'previous_end', None)
+            start_value = getattr(page, 'start', None)
+            end_value = getattr(page, 'end', None)
             # 检查 start 部分是否有变化，如果有，则使用 format_string 格式化 original_start_str
             formatted_original_start_str = format_string(original_start_str, less_visible=True) if prev_start_value != start_value else original_start_str
 
@@ -2997,7 +3001,7 @@ else:
                 if end.strftime('%H:%M') == '00:00':
                     end_time_formatted = end.strftime('%b %d, %Y  %H:%M')
                 else:
-                    end_time_formatted = end.strftime('%b %d, %Y  %H:%M').lstrip('0')
+                    end_time_formatted = end.strftime('%b %-d, %Y  %H:%M').lstrip('0')
 
             if start_end is not None and future_dict['start_end'] is not None:
                 print(f"{formatted_startend} {formatted_colon}  {formatted_plain_none} {formatted_right_arrow} {DateTimeIntoNotionFormat(start, plus_time=True, time_format='24')} — {end_time_formatted}\n")
