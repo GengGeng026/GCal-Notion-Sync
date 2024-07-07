@@ -235,3 +235,25 @@ IndexError: list index out of range
 2024-07-08 07:03:05,471 - INFO - 127.0.0.1 - - [08/Jul/2024 07:03:05] "POST /slack/events HTTP/1.0" 200 -
 2024-07-08 07:03:26,649 - INFO - 127.0.0.1 - - [08/Jul/2024 07:03:26] "POST /slack/events HTTP/1.0" 200 -
 2024-07-08 07:04:18,907 - INFO - 127.0.0.1 - - [08/Jul/2024 07:04:18] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:07:22,509 - INFO - This is an info message.
+2024-07-08 07:07:22,525 - ERROR - This is an error message.
+2024-07-08 07:07:22,986 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-08 07:07:22,987 - INFO - [33mPress CTRL+C to quit[0m
+2024-07-08 07:07:24,601 - INFO - 127.0.0.1 - - [08/Jul/2024 07:07:24] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:07:25,744 - INFO - 127.0.0.1 - - [08/Jul/2024 07:07:25] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:07:26,361 - INFO - 127.0.0.1 - - [08/Jul/2024 07:07:26] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:07:46,644 - INFO - 127.0.0.1 - - [08/Jul/2024 07:07:46] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:08:08,566 - INFO - This is an info message.
+2024-07-08 07:08:08,566 - ERROR - This is an error message.
+2024-07-08 07:08:09,032 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-08 07:08:09,033 - INFO - [33mPress CTRL+C to quit[0m
+2024-07-08 07:08:13,836 - INFO - 127.0.0.1 - - [08/Jul/2024 07:08:13] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:08:14,833 - INFO - 127.0.0.1 - - [08/Jul/2024 07:08:14] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:08:17,055 - INFO - 127.0.0.1 - - [08/Jul/2024 07:08:17] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:08:17,164 - ERROR - Error triggering Jenkins job: HTTPSConnectionPool(host='balanced-poorly-shiner.ngrok-free.app', port=443): Read timed out. (read timeout=0.05)
+2024-07-08 07:08:18,070 - INFO - 127.0.0.1 - - [08/Jul/2024 07:08:18] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:08:18,787 - INFO - 127.0.0.1 - - [08/Jul/2024 07:08:18] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:08:39,184 - INFO - 127.0.0.1 - - [08/Jul/2024 07:08:39] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:09:21,733 - INFO - 127.0.0.1 - - [08/Jul/2024 07:09:21] "POST /slack/events HTTP/1.0" 200 -
