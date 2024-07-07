@@ -25969,3 +25969,32 @@ Traceback (most recent call last):
 UnboundLocalError: cannot access local variable 'Done_checking' where it is not associated with a value
 2024-07-08 07:20:57,291 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:20:57] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
 2024-07-08 07:21:58,333 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:21:58] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:22:54,334 - root - INFO - This is an info message.
+2024-07-08 07:22:54,334 - root - ERROR - This is an error message.
+2024-07-08 07:22:54,839 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-08 07:22:54,839 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-08 07:23:05,275 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:23:05] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:23:06,165 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:23:06] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:23:06,910 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:23:06] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:23:27,422 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:23:27] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:25:02,490 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:25:02] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:27:58,491 - root - INFO - This is an info message.
+2024-07-08 07:27:58,491 - root - ERROR - This is an error message.
+2024-07-08 07:27:58,977 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-08 07:27:58,977 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-08 07:28:03,639 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:28:03] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:28:04,582 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:28:04] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:28:05,209 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:28:05] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:28:25,999 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:28:25] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:29:08,959 - root - INFO - This is an info message.
+2024-07-08 07:29:08,959 - root - ERROR - This is an error message.
+2024-07-08 07:29:09,421 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-08 07:29:09,421 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-08 07:29:37,370 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:29:37] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:29:38,348 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:29:38] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:29:39,213 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:29:39] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:29:59,689 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:29:59] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 07:30:02,869 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 07:30:02] "POST /slack/events HTTP/1.0" 200 -
