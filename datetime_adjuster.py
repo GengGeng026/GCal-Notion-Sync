@@ -2378,21 +2378,21 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
                                 
                             sub_condition_2_modified = True
 
-                        if sub_condition_2_modified:
-                            with lock:
-                                update_page(local_data.page, start, end, start_end_prop)
+                if sub_condition_2_modified:
+                    with lock:
+                        update_page(local_data.page, start, end, start_end_prop)
 
-                            with lock:
-                                result = update_result(result, local_data.page, page_title, original_start, original_end, start, end, start_end_prop, prev_start, prev_end, original_start, original_end)
+                    with lock:
+                        result = update_result(result, local_data.page, page_title, original_start, original_end, start, end, start_end_prop, prev_start, prev_end, original_start, original_end)
 
-                            with lock:
-                                counts['count_pages_overwritten'] += 1
-                                result['total_pages_modified'] = calculate_total(counts)
+                    with lock:
+                        counts['count_pages_overwritten'] += 1
+                        result['total_pages_modified'] = calculate_total(counts)
 
-                            with lock:
-                                result['details']['pages_overwritten_details'][result['page_id']] = (result['page_title'], result['original_start'], result['original_end'], result['start'], result['end'], result['prev_start_value'], result['prev_end_value'], result['start_end'])
+                    with lock:
+                        result['details']['pages_overwritten_details'][result['page_id']] = (result['page_title'], result['original_start'], result['original_end'], result['start'], result['end'], result['prev_start_value'], result['prev_end_value'], result['start_end'])
 
-                            print(f"Page `{page_title}` has been modified at Sub-Condition 2 under MASTER CONDITION D\n")
+                    print(f"Page `{page_title}` has been modified at Sub-Condition 2 under MASTER CONDITION D\n")
 
 
             # 在 Sub-Condition 2 的結束處添加：

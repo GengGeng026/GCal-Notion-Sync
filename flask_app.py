@@ -413,8 +413,11 @@ def check_last_line_status(text):
     else:
         print(f'Failed to retrieve pipeline status: {response.status_code}')
         return 'Unknown'
-                
+
+modified_pages_count = 0
+
 def check_pipeline_status(jenkins_url, username, password, job_name):
+    global modified_pages_count
     pipeline_url = f'{jenkins_url}/job/{job_name}/lastBuild/consoleText'
     response = requests.get(pipeline_url, auth=(username, password))
     
@@ -422,14 +425,20 @@ def check_pipeline_status(jenkins_url, username, password, job_name):
         lines = response.text.split('\n')
         status = 'Unknown'
         no_changes = False
+        print(response.text)
         
         for line in lines:
             if ': 0' in line or 'Page Modified' in line:
                 no_changes = True
-            elif line.startswith('Finished: SUCCESS'):
+            elif line.startswith('Finished: SUCCESS') or 'Total Pages' in line:
                 status = 'SUCCESS'
+                match = re.search(r'Total Pages  : (\d+)', line)
+                if match:
+                    modified_pages_count = int(match.group(1))
+                    print(f"Modified pages count: {modified_pages_count}")
             elif line.startswith('Finished: FAILURE'):
                 status = 'FAILURE'
+
         
         if status == 'SUCCESS' and no_changes:
             return 'No Change'
@@ -475,8 +484,67 @@ is_syncing = False
 trigger_lock = threading.Lock()
 processed_messages = set()
 
+
+def check_for_updates():
+    global message_buffer, updated_tasks
+    if not message_buffer:
+        return
+    channel_id = message_buffer[0]['channel']
+    try:
+        # 获取数据库中最近更新的页面
+        response = notion.databases.query(
+            database_id=NOTION_DATABASE_ID,
+            sorts=[
+                {
+                    "property": Task_Notion_Name,
+                    "direction": "descending"
+                },
+                {
+                    "property": LastEditedTime_Notion_Name,
+                    "direction": "descending"
+                }]
+            # 移除page_size=1以获取所有结果
+        )
+
+        for result in response["results"]:
+            task_Name = result["properties"][Task_Notion_Name]["title"][0]["text"]["content"]
+            last_edited_time = result["last_edited_time"]
+            last_edited_datetime = datetime.fromisoformat(last_edited_time.replace("Z", "+00:00"))
+            now = last_edited_datetime <= datetime.now()
+                        
+            # 获取当前时间的上一分钟
+            current_time = datetime.datetime.now()
+            previous_minute = current_time - datetime.timedelta(minutes=1)
+            start_time = previous_minute - datetime.timedelta(minutes=5)
+
+             # 在过去5分钟内
+            if (datetime.now(last_edited_datetime.tzinfo) - last_edited_datetime < timedelta(minutes=5)) or now:
+            # if (start_time <= last_edited_datetime < previous_minute:
+                updated_tasks.append((task_Name, last_edited_time))  # 添加到列表中
+
+        if updated_tasks:
+            print("\r\033[K" + f"Found recent update in Notion", end="")
+            for task, time in updated_tasks:
+                print(f"{task}")
+            return True, updated_tasks
+        else:
+            print("\r\033[K" + f"No recent updates found in Notion", end="")
+            no_change_notified = True
+            return False, [], no_change_notified
+        pass
+    except KeyError as e:
+        print(f"Error checking for updates in Notion: {e}")
+        # 设置一个错误标志，而不是直接发送消息
+        return False
+    except Exception as e:
+        # 处理其他可能的错误
+        print(f"Unexpected error: {e}")
+        return False
+    # 如果一切正常，返回 True 表示检查更新成功
+    return True
+
 def trigger_and_notify(channel_id):
-    global no_change_notified, is_syncing, confirmation_message_sent, updated_tasks
+    global no_change_notified, is_syncing, confirmation_message_sent, updated_tasks, modified_pages_count
     
     try:
         # 觸發 Jenkins 作業
@@ -500,8 +568,7 @@ def trigger_and_notify(channel_id):
                 # 檢查更新並發送結果消息
                 check_for_updates()
                 if result == 'SUCCESS' or updated_tasks:
-                    updates_count = len(updated_tasks)
-                    client.chat_postMessage(channel=channel_id, text=f" `{updates_count}`  件同步完成 ✅")
+                    client.chat_postMessage(channel=channel_id, text=f" `{modified_pages_count}`  件同步完成 ✅")
                     confirmation_message_sent = True
                     no_change_notified = True
                     break
@@ -703,7 +770,7 @@ def message(payload):
                 'type': 'last_updated_time',
                 'text': notion_info['last_updated_time']
             })
-
+        
         if previous_messages:
             Done_checking = True
         elif previous_messages is None:
@@ -738,10 +805,11 @@ def message(payload):
                 # print("Previous End:", notion_info['previous_end'])
                 # print("\n")
             elif Done_checking is True:
-                # client.chat_postMessage(channel=channel_id, text="確認完畢 ✅✅")
-                print("Previous Start:", notion_info['previous_start'])
-                print("Previous End:", notion_info['previous_end'])
+                # # client.chat_postMessage(channel=channel_id, text="確認完畢 ✅✅")
+                # print("Previous Start:", notion_info['previous_start'])
+                # print("Previous End:", notion_info['previous_end'])
                 # print("\n")
+                pass
             no_change_notified = False
             return previous_messages, other_messages, notion_info, message_buffer
     else:
@@ -867,58 +935,6 @@ def process_buffer():
         # 清空緩衝區
         message_buffer.clear()
         buffer_timer = None
-
-
-def check_for_updates():
-    global message_buffer
-    if not message_buffer:
-        return
-    channel_id = message_buffer[0]['channel']
-    try:
-        # 获取数据库中最近更新的页面
-        response = notion.databases.query(
-            database_id=NOTION_DATABASE_ID,
-            sorts=[
-                {
-                    "property": Task_Notion_Name,
-                    "direction": "descending"
-                },
-                {
-                    "property": LastEditedTime_Notion_Name,
-                    "direction": "descending"
-                }]
-            # 移除page_size=1以获取所有结果
-        )
-
-        for result in response["results"]:
-            task_Name = result["properties"][Task_Notion_Name]["title"][0]["text"]["content"]
-            last_edited_time = result["last_edited_time"]
-            last_edited_datetime = datetime.fromisoformat(last_edited_time.replace("Z", "+00:00"))
-            
-            # 检查最后编辑时间是否在过去5分钟内
-            if datetime.now(last_edited_datetime.tzinfo) - last_edited_datetime < timedelta(minutes=5):
-                updated_tasks.append((task_Name, last_edited_time))  # 添加到列表中
-
-        if updated_tasks:
-            print("\r\033[K" + f"Found recent update in Notion", end="")
-            # for task, time in updated_tasks:
-            #     print(f"{task}\n")
-            return True, updated_tasks
-        else:
-            print("\r\033[K" + f"No recent updates found in Notion", end="")
-            no_change_notified = True
-            return False, [], no_change_notified
-        pass
-    except KeyError as e:
-        print(f"Error checking for updates in Notion: {e}")
-        # 设置一个错误标志，而不是直接发送消息
-        return False
-    except Exception as e:
-        # 处理其他可能的错误
-        print(f"Unexpected error: {e}")
-        return False
-    # 如果一切正常，返回 True 表示检查更新成功
-    return True
 
 def check_and_confirm(channel_id):
     global received_previous_start, received_previous_end, buffer_timer
