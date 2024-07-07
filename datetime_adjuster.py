@@ -66,7 +66,9 @@ def skip_in_jenkins(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         if 'JENKINS_HOME' in os.environ:
-            return ''  # Return an empty string instead of None
+            # 在 Jenkins 中執行時，將常數恢復為普通字符串
+            for key, value in COLORS.items():
+                COLORS[key] = ''
         return func(*args, **kwargs)
     return wrapper
 

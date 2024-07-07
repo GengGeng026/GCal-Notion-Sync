@@ -423,6 +423,7 @@ def check_pipeline_status(jenkins_url, username, password, job_name):
     
     if response.status_code == 200:
         lines = response.text.split('\n')
+        total_pages_line = None
         status = 'Unknown'
         no_changes = False
         print(response.text)
@@ -432,13 +433,15 @@ def check_pipeline_status(jenkins_url, username, password, job_name):
                 no_changes = True
             elif line.startswith('Finished: SUCCESS') or 'Total Pages' in line:
                 status = 'SUCCESS'
-                match = re.search(r'Total Pages  : (\d+)', line)
+                last_line = response.text.split('\n')[-9]  # 從倒數第二行開始選擇
+                print(f"\n\n\n\nlast_line:", {last_line})
+                match = re.search(r'Total Pages\s*:\s*(\d+)', line)
                 if match:
                     modified_pages_count = int(match.group(1))
-                    print(f"Modified pages count: {modified_pages_count}")
+                    print(f"\n\nModified pages count: {modified_pages_count}")                    
             elif line.startswith('Finished: FAILURE'):
                 status = 'FAILURE'
-
+                
         
         if status == 'SUCCESS' and no_changes:
             return 'No Change'
