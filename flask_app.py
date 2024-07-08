@@ -414,6 +414,7 @@ def check_last_line_status(text):
         print(f'Failed to retrieve pipeline status: {response.status_code}')
         return 'Unknown'
 
+
 modified_pages_count = 0
 
 def extract_number(text):
@@ -428,13 +429,14 @@ def extract_number(text):
         return None
 
 def check_pipeline_status(jenkins_url, username, password, job_name):
+    global modified_pages_count
     pipeline_url = f'{jenkins_url}/job/{job_name}/lastBuild/consoleText'
     response = requests.get(pipeline_url, auth=(username, password))
     
     if response.status_code == 200:
-        print("完整的 response.text:")
-        print(response.text)
-        print("------------------------")
+        # print("完整的 response.text:")
+        # print(response.text)
+        # print("------------------------")
 
         lines = response.text.split('\n')
         status = 'Unknown'
@@ -442,34 +444,34 @@ def check_pipeline_status(jenkins_url, username, password, job_name):
         modified_pages_count = None
         
         for line in lines:
-            print(f"處理行: {line}")
+            # print(f"處理行: {line}")
             if 'Total Pages Modified : 0' in line:
                 no_changes = True
-                print("發現 'Total Pages Modified : 0'")
+                # print("發現 'Total Pages Modified : 0'")
             elif line.startswith('Finished: SUCCESS') or 'Total Pages' in line:
                 status = 'SUCCESS'
-                print("設置 status 為 'SUCCESS'")
+                # print("設置 status 為 'SUCCESS'")
             if 'Total Pages Modified' in line:
-                print(f"發現 'Total Pages Modified'，原始行內容: '{line}'")
+                # print(f"發現 'Total Pages Modified'，原始行內容: '{line}'")
                 parts = line.split(':')
                 if len(parts) == 2:
-                    try:
+                    # try:
                         modified_pages_count = int(parts[1].strip())
-                        print(f"提取的數字: {modified_pages_count}")
-                    except ValueError:
-                        print(f"無法將 '{parts[1].strip()}' 轉換為整數")
-                else:
-                    print(f"無法分割行: '{line}'")
+                #         print(f"提取的數字: {modified_pages_count}")
+                #     except ValueError:
+                #         print(f"無法將 '{parts[1].strip()}' 轉換為整數")
+                # else:
+                #     print(f"無法分割行: '{line}'")
             elif line.startswith('Finished: FAILURE'):
                 status = 'FAILURE'
-                print("設置 status 為 'FAILURE'")
+                # print("設置 status 為 'FAILURE'")
         
-        print(f"最終的 modified_pages_count : {modified_pages_count}")
+        # print(f"最終的 modified_pages_count : {modified_pages_count}")
         
         if status == 'SUCCESS' and no_changes:
-            return 'No Change', modified_pages_count
+            return 'No Change'
         else:
-            return status, modified_pages_count
+            return status
     else:
         print(f'無法獲取管道狀態: {response.status_code}')
         return 'Unknown', None
@@ -488,14 +490,14 @@ def trigger_jenkins_job():
     if response.status_code == 200:
         build_info = response.json()
         build_number = build_info['lastBuild']['number'] + 1
-        current_build_number = f" `{build_number}` "
+        current_build_number = f" ` {build_number} ` "
     try:
         response = requests.get(jenkins_job_url, timeout=0.05)
         if response.status_code == 200:
             response_data = response.json()
             jobs = response_data.get('jobs', {})
             end_time = time.time()
-            return f"✦ {', '.join(jobs.keys())}" + f" {current_build_number}"
+            return f" ✦  {', '.join(jobs.keys())}" + f"{current_build_number}"
         else:
             logging.error(f"Failed to trigger Jenkins job. Status code: {response.status_code}")
     except requests.exceptions.RequestException as e:
@@ -504,7 +506,7 @@ def trigger_jenkins_job():
 
 # 新增全局變量
 last_trigger_time = 0
-COOLDOWN_PERIOD = 29  # 冷卻時間，單位為秒
+COOLDOWN_PERIOD = 16  # 冷卻時間，單位為秒
 is_syncing = False
 
 trigger_lock = threading.Lock()
@@ -578,31 +580,27 @@ def trigger_and_notify(channel_id):
         if response.status_code == 200:
             build_info = response.json()
             build_number = build_info['lastBuild']['number'] + 1
-            current_build_number = f" `{build_number}` "
+            current_build_number = f" ` {build_number} ` "
         
         triggered_jobs = trigger_jenkins_job()
-        message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs is not None else f"✦ TimeLinker {current_build_number}\n檢查中 · · ·"
+        message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs is not None else f"✦  TimeLinker {current_build_number}\n檢查中 · · ·"
         client.chat_postMessage(channel=channel_id, text=message)
         
         # 等待 Jenkins 作業完成
         while True:
             time.sleep(10)
             result = check_pipeline_status(jenkins_url, username, password, job_name)
-            if result in ['No Change', 'SUCCESS']:
-                print(f"Pipeline status: {result}")
-                
-                # 檢查更新並發送結果消息
-                check_for_updates()
-                if result == 'SUCCESS' or updated_tasks:
-                    client.chat_postMessage(channel=channel_id, text=f" `{modified_pages_count}`  件同步完成 ✅")
+            if result == 'SUCCESS':
+                if modified_pages_count is not None:
+                    client.chat_postMessage(channel=channel_id, text=f"`#{modified_pages_count}`  件同步完成")
                     confirmation_message_sent = True
                     no_change_notified = True
                     break
-                elif result == 'No Change' or not updated_tasks:
-                    client.chat_postMessage(channel=channel_id, text="Notion 暫無變更 🥕")
-                    confirmation_message_sent = True
-                    no_change_notified = True
-                    break
+            elif result == 'No Change':
+                client.chat_postMessage(channel=channel_id, text="Notion 暫無變更 🥕")
+                confirmation_message_sent = True
+                no_change_notified = True
+                break
     
     finally:
         is_syncing = False
@@ -822,9 +820,9 @@ def message(payload):
                 if response.status_code == 200:
                     build_info = response.json()
                     build_number = build_info['lastBuild']['number'] + 1
-                    current_build_number = f" `{build_number}` "
+                    current_build_number = f" ` {build_number} ` "
                 triggered_jobs = trigger_jenkins_job()
-                message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs is not None else f"✦ TimeLinker {current_build_number}\n檢查中 · · ·"
+                message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs is not None else f" ✦  TimeLinker {current_build_number}  \n檢查中 · · ·"
                 client.chat_postMessage(channel=channel_id, text=message)
                 last_message.append(message)
                 # print("Previous Start:", notion_info['previous_start'])
@@ -869,7 +867,7 @@ def message(payload):
                             if not is_syncing:  # 雙重檢查
                                 is_syncing = True
                                 last_trigger_time = current_time
-                                client.chat_postMessage(channel=channel_id, text="⚡️ 成功觸發")
+                                # client.chat_postMessage(channel=channel_id, text="⚡️ 成功觸發")
                                 threading.Thread(target=trigger_and_notify, args=(channel_id,)).start()
                     else:
                         pass
@@ -897,7 +895,7 @@ def message(payload):
             elif text == keyword:  # 直接處理 sync 關鍵詞
                 current_time = time.time()
                 if current_time - last_trigger_time < COOLDOWN_PERIOD:
-                    client.chat_postMessage(channel=channel_id, text=f"Oh no，{COOLDOWN_PERIOD} 秒內只能觸發 1 次也")
+                    client.chat_postMessage(channel=channel_id, text=f"Ops，`{COOLDOWN_PERIOD}`s 內只能觸發 1 次喲")
                     return
                 
                 if not is_syncing:
@@ -905,7 +903,7 @@ def message(payload):
                         if not is_syncing:  # 雙重檢查
                             is_syncing = True
                             last_trigger_time = current_time
-                            client.chat_postMessage(channel=channel_id, text="⚡️ 成功觸發")
+                            # client.chat_postMessage(channel=channel_id, text="⚡️ 成功觸發")
                             threading.Thread(target=trigger_and_notify, args=(channel_id,)).start()
                 else:
                     pass
@@ -918,7 +916,7 @@ def message(payload):
             elif distance <= threshold:
                 last_message_was_related = True
                 if last_triggered_keyword is None or last_triggered_keyword == keyword:
-                    client.chat_postMessage(channel=channel_id, text=f"是要 `{keyword}` 嗎？ (yes／no)")
+                    client.chat_postMessage(channel=channel_id, text=f"是要 `{keyword}` 嗎？   y / n ")
                     no_change_notified = False
                     waiting_for_confirmation = True
                     confirmation_message_sent = False
