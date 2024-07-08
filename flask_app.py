@@ -592,9 +592,10 @@ def trigger_and_notify(channel_id):
             result = check_pipeline_status(jenkins_url, username, password, job_name)
             if result == 'SUCCESS':
                 if modified_pages_count is not None:
-                    client.chat_postMessage(channel=channel_id, text=f"`#{modified_pages_count}`  件同步完成")
+                    client.chat_postMessage(channel=channel_id, text=f"# `{modified_pages_count}` 件同步完成")
                     confirmation_message_sent = True
                     no_change_notified = True
+                    process_buffer()  # 添加這行
                     break
             elif result == 'No Change':
                 client.chat_postMessage(channel=channel_id, text="Notion 暫無變更 🥕")
@@ -705,7 +706,7 @@ def parse_notion_message(blocks):
 message_buffer = []
 buffer_lock = threading.Lock()
 buffer_timer = None
-BUFFER_TIME = 11
+BUFFER_TIME = 20
 previous_messages = []
 other_messages = []
 
@@ -811,9 +812,7 @@ def message(payload):
                 'notion_info': notion_info
             })
             
-            if buffer_timer is None:
-                buffer_timer = threading.Timer(BUFFER_TIME, process_buffer)
-                buffer_timer.start()
+            process_buffer()
                 
             if Done_checking is False:
                 response = requests.get(api_url, auth=(username, password))
@@ -830,8 +829,8 @@ def message(payload):
                 # print("\n")
             elif Done_checking is True:
                 # # client.chat_postMessage(channel=channel_id, text="確認完畢 ✅✅")
-                # print("Previous Start:", notion_info['previous_start'])
-                # print("Previous End:", notion_info['previous_end'])
+                print("Previous Start:", notion_info['previous_start'])
+                print("Previous End:", notion_info['previous_end'])
                 # print("\n")
                 pass
             no_change_notified = False
@@ -931,7 +930,7 @@ def message(payload):
     return message_buffer, is_syncing
 
 def process_buffer():
-    global message_buffer, buffer_timer, updated_tasks
+    global message_buffer, buffer_timer, modified_pages_count, updated_tasks
     
     with buffer_lock:
         if not message_buffer:
@@ -946,15 +945,21 @@ def process_buffer():
 
         print("\r\033[K" + f"Processing {len(current_buffer)} message from buffer", end="")
 
-        # 檢查是否有包含 "Previous" 的消息
-        has_previous = any(
-            'previous' in msg['notion_info'] or 'Previous' in msg['notion_info']
-            for msg in notion_messages
-        )
 
-        # 處理 Notion 消息
-        if has_previous:
-            client.chat_postMessage(channel=channel_id, text=f"確認 `{len(updated_tasks)}` 件完畢\n\n")
+        if notion_messages:
+            # 處理 Notion 消息
+            for msg in notion_messages:
+
+                # 檢查是否有包含 "Previous" 的消息
+                has_previous = any(
+                    'previous' in msg['notion_info'] or 'Previous' in msg['notion_info']
+                    for msg in notion_messages
+                )
+                modified_pages_count =+ 1
+
+                # 處理 Notion 消息
+                if has_previous:
+                    client.chat_postMessage(channel=channel_id, text=f"確認 `{len(modified_pages_count)}` 件完畢\n\n")
 
         # 清空緩衝區
         message_buffer.clear()

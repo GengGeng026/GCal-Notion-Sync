@@ -26602,3 +26602,125 @@ IndexError: list index out of range
 2024-07-08 10:00:25,902 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 10:00:25] "POST /slack/events HTTP/1.0" 200 -
 2024-07-08 10:00:45,300 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 10:00:45] "POST /slack/events HTTP/1.0" 200 -
 2024-07-08 10:01:17,193 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 10:01:17] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 10:06:35,152 - root - INFO - This is an info message.
+2024-07-08 10:06:35,155 - root - ERROR - This is an error message.
+2024-07-08 10:06:35,626 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-08 10:06:35,626 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-08 10:07:04,173 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 10:07:04] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 10:07:05,729 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 10:07:05] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 10:07:36,322 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 10:07:36] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 10:08:06,712 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 744, in message
+    title_text = title_block['elements'][1]['text']
+                 ~~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-08 10:08:06,721 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 10:08:06] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-07-08 10:08:42,307 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 10:08:42] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 10:10:10,545 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 10:10:10] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 10:14:11,467 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 10:14:11] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 11:08:56,661 - root - INFO - This is an info message.
+2024-07-08 11:08:56,664 - root - ERROR - This is an error message.
+2024-07-08 11:08:57,233 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-08 11:08:57,233 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-08 11:09:13,409 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 11:09:13] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 11:09:14,941 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 11:09:14] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 11:09:35,526 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 11:09:35] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 11:11:10,984 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 11:11:10] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 11:29:45,180 - root - INFO - This is an info message.
+2024-07-08 11:29:45,181 - root - ERROR - This is an error message.
+2024-07-08 11:29:45,739 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-08 11:29:45,739 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-08 11:29:53,965 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 11:29:53] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 11:29:55,500 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 11:29:55] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 11:30:16,019 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 11:30:16] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 11:31:49,573 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 11:31:49] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 11:43:20,594 - root - INFO - This is an info message.
+2024-07-08 11:43:20,597 - root - ERROR - This is an error message.
+2024-07-08 11:43:21,096 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-08 11:43:21,097 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-08 11:43:30,235 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 11:43:30] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 11:43:31,782 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 11:43:31] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 11:43:52,526 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 11:43:52] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 11:48:49,796 - root - INFO - This is an info message.
+2024-07-08 11:48:49,796 - root - ERROR - This is an error message.
+2024-07-08 11:48:50,268 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-08 11:48:50,268 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-08 11:48:57,268 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 11:48:57] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 11:48:58,326 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 11:48:58] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 11:49:01,041 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 11:49:01] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 11:49:50,632 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 11:49:50] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 11:49:51,605 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 11:49:51] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 11:49:52,597 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 11:49:52] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 11:49:52,822 - root - ERROR - Error triggering Jenkins job: HTTPSConnectionPool(host='balanced-poorly-shiner.ngrok-free.app', port=443): Read timed out. (read timeout=0.05)
+2024-07-08 11:49:54,448 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 11:49:54] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 11:50:24,777 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 11:50:24] "POST /slack/events HTTP/1.0" 200 -
+2024-07-08 11:51:55,273 - werkzeug - INFO - 127.0.0.1 - - [08/Jul/2024 11:51:55] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 01:11:09,648 - root - INFO - This is an info message.
+2024-07-09 01:11:09,649 - root - ERROR - This is an error message.
+2024-07-09 01:11:10,269 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-09 01:11:10,269 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-09 01:11:16,728 - werkzeug - INFO - 127.0.0.1 - - [09/Jul/2024 01:11:16] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 01:11:18,353 - werkzeug - INFO - 127.0.0.1 - - [09/Jul/2024 01:11:18] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 01:11:38,865 - werkzeug - INFO - 127.0.0.1 - - [09/Jul/2024 01:11:38] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 01:13:52,149 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 745, in message
+    title_text = title_block['elements'][1]['text']
+                 ~~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+2024-07-09 01:13:52,157 - werkzeug - INFO - 127.0.0.1 - - [09/Jul/2024 01:13:52] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-07-09 01:19:52,403 - werkzeug - INFO - 127.0.0.1 - - [09/Jul/2024 01:19:52] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 01:28:23,483 - werkzeug - INFO - 127.0.0.1 - - [09/Jul/2024 01:28:23] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 01:28:24,439 - werkzeug - INFO - 127.0.0.1 - - [09/Jul/2024 01:28:24] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 01:28:25,327 - werkzeug - INFO - 127.0.0.1 - - [09/Jul/2024 01:28:25] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 01:28:26,966 - werkzeug - INFO - 127.0.0.1 - - [09/Jul/2024 01:28:26] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 01:28:57,789 - werkzeug - INFO - 127.0.0.1 - - [09/Jul/2024 01:28:57] "POST /slack/events HTTP/1.0" 200 -
