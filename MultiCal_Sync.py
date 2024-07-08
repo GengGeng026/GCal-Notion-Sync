@@ -33,6 +33,7 @@ import traceback
 import pprint
 import shutil
 import functools
+from tenacity import retry, stop_after_attempt
 
 ###########################################################################
 ##### Print Tool Section. Will be used throughoout entire script. 
@@ -142,7 +143,8 @@ def get_console_width():
     # return shutil.get_terminal_size().columns
 
 @skip_in_jenkins
-def dynamic_counter_indicator(stop_event, message, timeout=15):
+@retry(stop_after_attempt=3)
+def dynamic_counter_indicator(stop_event, message, timeout=20):
     start_time = time.time()
     dot_counter = 0
     total_dots = 0
@@ -1671,6 +1673,7 @@ animate_text_wave_with_progress(text="Loading", new_text="Checked 2.7", target_p
 
 print("\r\033[K", end="")
 
+@retry(stop_after_attempt=3)
 def update_notion_page_with_retry(page_id, updates, max_retries=5):
     retry_count = 0
     backoff_factor = 1  # Initial backoff duration in seconds
