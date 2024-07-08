@@ -416,42 +416,63 @@ def check_last_line_status(text):
 
 modified_pages_count = 0
 
+def extract_number(text):
+    pattern = r"Total\s+Pages\s+Modified\s*:\s*(\d+)"
+    match = re.search(pattern, text, re.IGNORECASE | re.MULTILINE)
+    if match:
+        print(f"匹配到的文本: {match.group(0)}")
+        print(f"提取的數字: {match.group(1)}")
+        return int(match.group(1))
+    else:
+        print("未找到匹配的文本")
+        return None
+
 def check_pipeline_status(jenkins_url, username, password, job_name):
-    global modified_pages_count
     pipeline_url = f'{jenkins_url}/job/{job_name}/lastBuild/consoleText'
     response = requests.get(pipeline_url, auth=(username, password))
     
     if response.status_code == 200:
+        print("完整的 response.text:")
+        print(response.text)
+        print("------------------------")
+
         lines = response.text.split('\n')
-        total_pages_line = None
         status = 'Unknown'
         no_changes = False
-        print(response.text)
+        modified_pages_count = None
         
         for line in lines:
-            if 'Total Pages  : 0' in line or 'No Page Modified' in line:
+            print(f"處理行: {line}")
+            if 'Total Pages Modified : 0' in line:
                 no_changes = True
+                print("發現 'Total Pages Modified : 0'")
             elif line.startswith('Finished: SUCCESS') or 'Total Pages' in line:
                 status = 'SUCCESS'
-                total_pages_line = line
-                break
+                print("設置 status 為 'SUCCESS'")
+            if 'Total Pages Modified' in line:
+                print(f"發現 'Total Pages Modified'，原始行內容: '{line}'")
+                parts = line.split(':')
+                if len(parts) == 2:
+                    try:
+                        modified_pages_count = int(parts[1].strip())
+                        print(f"提取的數字: {modified_pages_count}")
+                    except ValueError:
+                        print(f"無法將 '{parts[1].strip()}' 轉換為整數")
+                else:
+                    print(f"無法分割行: '{line}'")
             elif line.startswith('Finished: FAILURE'):
                 status = 'FAILURE'
-                break
+                print("設置 status 為 'FAILURE'")
         
-        if total_pages_line:
-            match = re.search(r'Total Pages\s*:\s*(\d+)', total_pages_line)
-            if match:
-                modified_pages_count = int(match.group(1))
-                print(f"Total Pages: {modified_pages_count}")
+        print(f"最終的 modified_pages_count : {modified_pages_count}")
         
         if status == 'SUCCESS' and no_changes:
-            return 'No Change'
+            return 'No Change', modified_pages_count
         else:
-            return status
+            return status, modified_pages_count
     else:
-        print(f'Failed to retrieve pipeline status: {response.status_code}')
-        return 'Unknown'
+        print(f'無法獲取管道狀態: {response.status_code}')
+        return 'Unknown', None
 
 updated_tasks = []  # 用于存储在过去5分钟内更新的任务
 received_previous_start = False

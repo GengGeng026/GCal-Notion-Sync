@@ -579,12 +579,12 @@ local_data = threading.local()
 no_pages_operated_A_lock = threading.Lock()
 
 
-formatted_italic = f"{ITALIC}{{}}{RESET}"
-formatted_task = f"{BOLD}Task{RESET}"
-formatted_to_auto_sync = f"{BOLD}{COLORS['C2']}to Auto-Sync{RESET}"
-formatted_count = f"{BOLD}{COLORS['C2']}{{}}{RESET}"
-formatted_within_current_month = f"{BOLD}{ITALIC}within current month{RESET}"
-formatted_colon = f"{BOLD}{COLORS['C2']}:{RESET}"
+formatted_italic = f"{ITALIC}{{}}{RESET}" if not 'JENKINS_HOME' in os.environ else f"{{}}"
+formatted_task = f"{BOLD}Task{RESET}" if not 'JENKINS_HOME' in os.environ else f"Task"
+formatted_to_auto_sync = f"{BOLD}{COLORS['C2']}to Auto-Sync{RESET}" if not 'JENKINS_HOME' in os.environ else f"to Auto-Sync"
+formatted_count = f"{BOLD}{COLORS['C2']}{{}}{RESET}" if not 'JENKINS_HOME' in os.environ else f"{{}}"
+formatted_within_current_month = f"{BOLD}{ITALIC}within current month{RESET}" if not 'JENKINS_HOME' in os.environ else f"within current month"
+formatted_colon = f"{BOLD}{COLORS['C2']}:{RESET}" if not 'JENKINS_HOME' in os.environ else f":"
 
 # Get the current month and year
 now = datetime.now()
