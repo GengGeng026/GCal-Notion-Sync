@@ -142,6 +142,13 @@ def get_console_width():
     return 150
     # return shutil.get_terminal_size().columns
 
+class CustomStopStrategy:
+    def __init__(self, max_attempts):
+        self.max_attempts = max_attempts
+
+    def __call__(self, retry_state):
+        return retry_state.attempt_number >= self.max_attempts
+
 @skip_in_jenkins
 @retry(stop_after_attempt=3)
 def dynamic_counter_indicator(stop_event, message, timeout=20):
@@ -1673,7 +1680,7 @@ animate_text_wave_with_progress(text="Loading", new_text="Checked 2.7", target_p
 
 print("\r\033[K", end="")
 
-@retry(stop_after_attempt=3)
+@retry(stop=CustomStopStrategy(3))
 def update_notion_page_with_retry(page_id, updates, max_retries=5):
     retry_count = 0
     backoff_factor = 1  # Initial backoff duration in seconds
