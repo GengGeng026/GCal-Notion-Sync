@@ -33,7 +33,6 @@ import traceback
 import pprint
 import shutil
 import functools
-from tenacity import retry, stop_after_attempt
 
 ###########################################################################
 ##### Print Tool Section. Will be used throughoout entire script. 
@@ -143,7 +142,6 @@ def get_console_width():
     # return shutil.get_terminal_size().columns
 
 @skip_in_jenkins
-@retry(stop_after_attempt=3)
 def dynamic_counter_indicator(stop_event, message, timeout=20):
     start_time = time.time()
     dot_counter = 0
