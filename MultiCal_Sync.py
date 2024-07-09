@@ -84,51 +84,51 @@ def format_string(text, color=None, bold=False, italic=False, less_visible=False
     return f"{BOLD if bold else ''}{ITALIC if italic else ''}{LESS_VISIBLE if less_visible else ''}{UNDERLINE if underline else ''}{LIGHT_GRAY if light_color else ''}{color_code}{text}{RESET}"
 
 # Use the function to format text
-formatted_dot = format_string('.', 'C2', bold=True)
-formatted_BOLD_italic = format_string('{}', bold=True, italic=True)
-formatted_right_arrow = format_string(' ▸ ', 'C2', bold=True)
-formatted_indicator = format_string('{}', 'C2', bold=True)
-formatted_successful = format_string('Successful', 'C2', bold=True)
-formatted_added = format_string('Added', 'C2', bold=True)
-formatted_updated = format_string('Updated', 'C2', bold=True, italic=True)
-formatted_failed = format_string('Failed', 'C3', bold=True)
-formatted_deleted = format_string('Deleted', 'C3', bold=True, italic=True)
-formatted_title = format_string('Title', bold=True)
-formatted_start = format_string('Start', bold=True)
-formatted_end = format_string('End', bold=True)
-formatted_startend = format_string('StartEnd', bold=True)
-formatted_condition_met = format_string('Condition Met', bold=True)
-formatted_no = format_string('No', bold=True, italic=True)
-formatted_has_time = format_string('has time', bold=True, italic=True)
-formatted_is_changed = format_string('have been Changed', bold=True, italic=True)
-formatted_count = format_string('{}', 'C2', bold=True)
-formatted_plus = format_string('+', 'C2', bold=True)
-formatted_slash = format_string('/', 'C2', bold=True)
-formatted_colon = format_string(':', 'C2', bold=True)
-formatted_semicolon = format_string(';', 'C1', bold=True)
-formatted_reset_default_setting = format_string('RESET accordingly Default Setting', 'C2', bold=True)
-formatted_default_time = format_string('Default Time Range', 'C2', bold=True)
-formatted_time_range = format_string('Time Range', 'C2', bold=True)
-formatted_explicitly_set = format_string('Explicitly Set', bold=True)
-formatted_explicitly_set_0000 = format_string('Explicitly set to 00:00', bold=True)
-formatted_alldayevent = format_string('All-Day-Event', 'C2', bold=True)
-formatted_alternate_alldayevent = format_string('Alternate All-Day-Event', 'C2', bold=True)
-formatted_have_time = format_string('have Time', bold=True, italic=True)
-formatted_have_single_date = format_string('have Single-Date', bold=True, italic=True)
-formatted_no_time = format_string('No Time', 'C1', bold=True, italic=True)
-formatted_is_filled_accordingly = format_string('is Filled accordingly', 'C2', bold=True)
-formatted_is_filled_single_date = format_string('is Filled Single-Date', 'C2', bold=True)
-formatted_overwritten = format_string('Overwritten', 'C2', bold=True)
-formatted_done = format_string('Done', 'C2', bold=True)
-formatted_Printing = format_string('Printing', 'C2', bold=True)
-formatted_error = format_string('error', 'C3', bold=True)
-formatted_plain_none = format_string('None', italic=True, less_visible=True)
-formatted_plain_previous = format_string('Previous', italic=True, less_visible=True)
-formatted_AFTER = format_string('AFTER', 'C1', bold=True, italic=True)
-formatted_none = format_string('None', 'C1', bold=True, italic=True)
-formatted_nothing = format_string('Nothing', bold=True)
-formatted_all_none = format_string('All None', 'C1', bold=True, italic=True)
-formatted_modified = format_string('Modified', 'C2', bold=True)
+formatted_dot = format_string('.', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else '.'
+formatted_BOLD_italic = format_string('{}', bold=True, italic=True) if not 'JENKINS_HOME' in os.environ else '{}'
+formatted_right_arrow = format_string(' ▸ ', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else ' ▸ '
+formatted_indicator = format_string('{}', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else '{}'
+formatted_successful = format_string('Successful', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else 'Successful'
+formatted_added = format_string('Added', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else 'Added'
+formatted_updated = format_string('Updated', 'C2', bold=True, italic=True) if not 'JENKINS_HOME' in os.environ else 'Updated'
+formatted_failed = format_string('Failed', 'C3', bold=True) if not 'JENKINS_HOME' in os.environ else 'Failed'
+formatted_deleted = format_string('Deleted', 'C3', bold=True, italic=True) if not 'JENKINS_HOME' in os.environ else 'Deleted'
+formatted_title = format_string('Title', bold=True) if not 'JENKINS_HOME' in os.environ else 'Title'
+formatted_start = format_string('Start', bold=True) if not 'JENKINS_HOME' in os.environ else 'Start'
+formatted_end = format_string('End', bold=True) if not 'JENKINS_HOME' in os.environ else 'End'
+formatted_startend = format_string('StartEnd', bold=True) if not 'JENKINS_HOME' in os.environ else 'StartEnd'
+formatted_condition_met = format_string('Condition Met', bold=True) if not 'JENKINS_HOME' in os.environ else 'Condition Met'
+formatted_no = format_string('No', bold=True, italic=True) if not 'JENKINS_HOME' in os.environ else 'No'
+formatted_has_time = format_string('has time', bold=True, italic=True) if not 'JENKINS_HOME' in os.environ else 'has time'
+formatted_is_changed = format_string('have been Changed', bold=True, italic=True) if not 'JENKINS_HOME' in os.environ else 'have been Changed'
+formatted_count = format_string('{}', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else '{}'
+formatted_plus = format_string('+', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else '+'
+formatted_slash = format_string('/', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else '/'
+formatted_colon = format_string(':', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else ':'
+formatted_semicolon = format_string(';', 'C1', bold=True) if not 'JENKINS_HOME' in os.environ else ';'
+formatted_reset_default_setting = format_string('RESET accordingly Default Setting', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else 'RESET accordingly Default Setting'
+formatted_default_time = format_string('Default Time Range', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else 'Default Time Range'
+formatted_time_range = format_string('Time Range', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else 'Time Range'
+formatted_explicitly_set = format_string('Explicitly Set', bold=True) if not 'JENKINS_HOME' in os.environ else 'Explicitly Set'
+formatted_explicitly_set_0000 = format_string('Explicitly set to 00:00', bold=True) if not 'JENKINS_HOME' in os.environ else 'Explicitly set to 00:00'
+formatted_alldayevent = format_string('All-Day-Event', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else 'All-Day-Event'
+formatted_alternate_alldayevent = format_string('Alternate All-Day-Event', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else 'Alternate All-Day-Event'
+formatted_have_time = format_string('have Time', bold=True, italic=True) if not 'JENKINS_HOME' in os.environ else 'have Time'
+formatted_have_single_date = format_string('have Single-Date', bold=True, italic=True) if not 'JENKINS_HOME' in os.environ else 'have Single-Date'
+formatted_no_time = format_string('No Time', 'C1', bold=True, italic=True) if not 'JENKINS_HOME' in os.environ else 'No Time'
+formatted_is_filled_accordingly = format_string('is Filled accordingly', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else 'is Filled accordingly'
+formatted_is_filled_single_date = format_string('is Filled Single-Date', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else 'is Filled Single-Date'
+formatted_overwritten = format_string('Overwritten', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else 'Overwritten'
+formatted_done = format_string('Done', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else 'Done'
+formatted_Printing = format_string('Printing', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else 'Printing'
+formatted_error = format_string('error', 'C3', bold=True) if not 'JENKINS_HOME' in os.environ else 'error'
+formatted_plain_none = format_string('None', italic=True, less_visible=True) if not 'JENKINS_HOME' in os.environ else 'None'
+formatted_plain_previous = format_string('Previous', italic=True, less_visible=True) if not 'JENKINS_HOME' in os.environ else 'Previous'
+formatted_AFTER = format_string('AFTER', 'C1', bold=True, italic=True) if not 'JENKINS_HOME' in os.environ else 'AFTER'
+formatted_none = format_string('None', 'C1', bold=True, italic=True) if not 'JENKINS_HOME' in os.environ else 'None'
+formatted_nothing = format_string('Nothing', bold=True) if not 'JENKINS_HOME' in os.environ else 'Nothing'
+formatted_all_none = format_string('All None', 'C1', bold=True, italic=True) if not 'JENKINS_HOME' in os.environ else 'All None'
+formatted_modified = format_string('Modified', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else 'Modified'
 
 
 # Global variable to track progress
