@@ -83,9 +83,9 @@ def format_string(text, color=None, bold=False, italic=False, less_visible=False
 formatted_dot = format_string('.', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else '.'
 formatted_left_parenthesis = format_string(' (', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else ' ('
 formatted_right_parenthesis = format_string(')', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else ')'
-formatted_BOLD_italic = format_string('{}', bold=True, italic=True) if not 'JENKINS_HOME' in os.environ else ''
+formatted_BOLD_italic = format_string('{}', bold=True, italic=True) if not 'JENKINS_HOME' in os.environ else format_string('{}')
 formatted_right_arrow = format_string(' ▸ ', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else ' ▸ '
-formatted_indicator = format_string('{}', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else ''
+formatted_indicator = format_string('{}', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else format_string('{}')
 formatted_successful = format_string('Successful', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else 'Successful'
 formatted_failed = format_string('Failed', 'C3', bold=True) if not 'JENKINS_HOME' in os.environ else 'Failed'
 formatted_page_title = format_string('page_title', 'C1', bold=True) if not 'JENKINS_HOME' in os.environ else 'page_title'
@@ -2261,7 +2261,7 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
                         result['details']['pages_overwritten_details'][result['page_id']] = (result['page_title'], result['original_start'], result['original_end'], result['start'], result['end'], result['prev_start_value'], result['prev_end_value'], result['start_end'])
 
                     pages_modified['sub_condition_1'].add(page['id'])
-                    print(f"Page `{page_title}` has been modified at Sub-Condition 1 under MASTER CONDITION D\n")
+                    # print(f"Page `{page_title}` has been modified at Sub-Condition 1 under MASTER CONDITION D\n")
             
             # 在 Sub-Condition 1 的結束處添加：
             if sub_condition_1_modified:
@@ -2403,7 +2403,7 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
                     with lock:
                         result['details']['pages_overwritten_details'][result['page_id']] = (result['page_title'], result['original_start'], result['original_end'], result['start'], result['end'], result['prev_start_value'], result['prev_end_value'], result['start_end'])
 
-                    print(f"Page `{page_title}` has been modified at Sub-Condition 2 under MASTER CONDITION D\n")
+                    # print(f"Page `{page_title}` has been modified at Sub-Condition 2 under MASTER CONDITION D\n")
 
 
             # 在 Sub-Condition 2 的結束處添加：
@@ -2501,7 +2501,7 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
                             result['details']['pages_overwritten_details'][result['page_id']] = (result['page_title'], result['original_start'], result['original_end'], result['start'], result['end'], prev_start, prev_end, start_end)
 
                             pages_modified['sub_condition_3'].add(page['id'])
-                            print(f"Page `{page_title}` has been modified at Sub-Condition 3 under MASTER CONDITION D\n")
+                            # print(f"Page `{page_title}` has been modified at Sub-Condition 3 under MASTER CONDITION D\n")
 
 
             # 在 Sub-Condition 3 的結束處添加：
@@ -2590,7 +2590,7 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
                             start, end = new_start, new_end
                             result, details, start, end = update_all_data(start, end, start_end, prev_start, prev_end, result, local_data, page_title, original_start, original_end, prev_start_value, prev_end_value, new_start_value,  new_end_value, counts, start_end_value, details, keep_midnight=True)
                             pages_modified['sub_condition_4'].add(page['id'])
-                            print(f"Page `{page_title}` has been modified at Sub-Condition 4 under MASTER CONDITION D\n")
+                            # print(f"Page `{page_title}` has been modified at Sub-Condition 4 under MASTER CONDITION D\n")
         
         return result, counts, details, processed_pages, page['id']
         

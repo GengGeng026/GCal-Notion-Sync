@@ -31,6 +31,7 @@ from google.auth.transport.requests import Request
 from bs4 import BeautifulSoup
 import json
 import http
+import shutil
 
 
 ###########################################################################
@@ -79,7 +80,10 @@ def dynamic_counter_indicator(stop_event, formatted_dot=format_string('.', 'C2',
         total_dots += 1
 
         if dot_counter == 4:
-            terminal_width = os.get_terminal_size().columns
+            try:
+                terminal_width = shutil.get_terminal_size((80, 20)).columns
+            except OSError:
+                terminal_width = 80  # Default to 80 columns if not available
             print("\r" + " " * min(len(formatted_dot) * total_dots + 10, terminal_width) + "\r", end="", flush=True)
             dot_counter = 0
             if stop_event.is_set():
@@ -315,7 +319,8 @@ finally:
 ###########################################################################
 
 # 配置日誌，HTTPS 處理和 Slack 客戶端初始化部分)
-logging.basicConfig(filename='app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename='/Users/mac/Desktop/GCal-Notion-Sync/log/app.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 https_handler = urllib.request.HTTPSHandler(context=ssl.create_default_context(cafile=certifi.where()))
 opener = urllib.request.build_opener(https_handler)
 urllib.request.install_opener(opener)
@@ -365,6 +370,7 @@ def levenshtein(s1, s2):
 
 
 keyword = "sync"
+alt_keyword = "s"
 # 使用正则表达式匹配任何由字母组成的字符串，不区分大小写
 match = re.match(r'^[a-zA-Z]+$', keyword, re.IGNORECASE)
 threshold = 2  # 设置编辑距离的阈值
@@ -513,66 +519,66 @@ trigger_lock = threading.Lock()
 processed_messages = set()
 
 
-def check_for_updates():
-    global message_buffer, updated_tasks
-    if not message_buffer:
-        return
-    channel_id = message_buffer[0]['channel']
-    try:
-        # 获取数据库中最近更新的页面
-        response = notion.databases.query(
-            database_id=NOTION_DATABASE_ID,
-            sorts=[
-                {
-                    "property": Task_Notion_Name,
-                    "direction": "descending"
-                },
-                {
-                    "property": LastEditedTime_Notion_Name,
-                    "direction": "descending"
-                }]
-            # 移除page_size=1以获取所有结果
-        )
+# def check_for_updates():
+#     global message_buffer, updated_tasks
+#     if not message_buffer:
+#         return
+#     channel_id = message_buffer[0]['channel']
+#     try:
+#         # 获取数据库中最近更新的页面
+#         response = notion.databases.query(
+#             database_id=NOTION_DATABASE_ID,
+#             sorts=[
+#                 {
+#                     "property": Task_Notion_Name,
+#                     "direction": "descending"
+#                 },
+#                 {
+#                     "property": LastEditedTime_Notion_Name,
+#                     "direction": "descending"
+#                 }]
+#             # 移除page_size=1以获取所有结果
+#         )
 
-        for result in response["results"]:
-            task_Name = result["properties"][Task_Notion_Name]["title"][0]["text"]["content"]
-            last_edited_time = result["last_edited_time"]
-            last_edited_datetime = datetime.fromisoformat(last_edited_time.replace("Z", "+00:00"))
-            now = last_edited_datetime <= datetime.now()
+#         for result in response["results"]:
+#             task_Name = result["properties"][Task_Notion_Name]["title"][0]["text"]["content"]
+#             last_edited_time = result["last_edited_time"]
+#             last_edited_datetime = datetime.fromisoformat(last_edited_time.replace("Z", "+00:00"))
+#             now = last_edited_datetime <= datetime.now()
                         
-            # 获取当前时间的上一分钟
-            current_time = datetime.datetime.now()
-            previous_minute = current_time - datetime.timedelta(minutes=1)
-            start_time = previous_minute - datetime.timedelta(minutes=5)
+#             # 获取当前时间的上一分钟
+#             current_time = datetime.datetime.now()
+#             previous_minute = current_time - datetime.timedelta(minutes=1)
+#             start_time = previous_minute - datetime.timedelta(minutes=5)
 
-             # 在过去5分钟内
-            if (datetime.now(last_edited_datetime.tzinfo) - last_edited_datetime < timedelta(minutes=5)) or now:
-            # if (start_time <= last_edited_datetime < previous_minute:
-                updated_tasks.append((task_Name, last_edited_time))  # 添加到列表中
+#              # 在过去5分钟内
+#             if (datetime.now(last_edited_datetime.tzinfo) - last_edited_datetime < timedelta(minutes=5)) or now:
+#             # if (start_time <= last_edited_datetime < previous_minute:
+#                 updated_tasks.append((task_Name, last_edited_time))  # 添加到列表中
 
-        if updated_tasks:
-            print("\r\033[K" + f"Found recent update in Notion", end="")
-            for task, time in updated_tasks:
-                print(f"{task}")
-            return True, updated_tasks
-        else:
-            print("\r\033[K" + f"No recent updates found in Notion", end="")
-            no_change_notified = True
-            return False, [], no_change_notified
-        pass
-    except KeyError as e:
-        print(f"Error checking for updates in Notion: {e}")
-        # 设置一个错误标志，而不是直接发送消息
-        return False
-    except Exception as e:
-        # 处理其他可能的错误
-        print(f"Unexpected error: {e}")
-        return False
-    # 如果一切正常，返回 True 表示检查更新成功
-    return True
+#         if updated_tasks:
+#             print("\r\033[K" + f"Found recent update in Notion", end="")
+#             for task, time in updated_tasks:
+#                 print(f"{task}")
+#             return True, updated_tasks
+#         else:
+#             print("\r\033[K" + f"No recent updates found in Notion", end="")
+#             no_change_notified = True
+#             return False, [], no_change_notified
+#         pass
+#     except KeyError as e:
+#         print(f"Error checking for updates in Notion: {e}")
+#         # 设置一个错误标志，而不是直接发送消息
+#         return False
+#     except Exception as e:
+#         # 处理其他可能的错误
+#         print(f"Unexpected error: {e}")
+#         return False
+#     # 如果一切正常，返回 True 表示检查更新成功
+#     return True
 
 def trigger_and_notify(channel_id):
-    global no_change_notified, is_syncing, confirmation_message_sent, updated_tasks, modified_pages_count
+    global no_change_notified, is_syncing, confirmation_message_sent, modified_pages_count
     
     try:
         # 觸發 Jenkins 作業
@@ -592,10 +598,9 @@ def trigger_and_notify(channel_id):
             result = check_pipeline_status(jenkins_url, username, password, job_name)
             if result == 'SUCCESS':
                 if modified_pages_count is not None:
-                    client.chat_postMessage(channel=channel_id, text=f"# `{modified_pages_count}` 件同步完成")
+                    client.chat_postMessage(channel=channel_id, text=f"#` {modified_pages_count} `件同步完成")
                     confirmation_message_sent = True
                     no_change_notified = True
-                    process_buffer()  # 添加這行
                     break
             elif result == 'No Change':
                 client.chat_postMessage(channel=channel_id, text="Notion 暫無變更 🥕")
@@ -709,10 +714,11 @@ buffer_timer = None
 BUFFER_TIME = 20
 previous_messages = []
 other_messages = []
+last_updated_tasks_count = 0
 
 @slack_event_adapter.on('message')
 def message(payload):
-    global no_change_notified, buffer_timer, last_triggered_keyword, last_message_was_related, waiting_for_confirmation, confirmation_message_sent, last_trigger_time, is_syncing
+    global no_change_notified, buffer_timer, last_triggered_keyword, last_message_was_related, waiting_for_confirmation, confirmation_message_sent, last_trigger_time, is_syncing, updated_tasks
     
     # 重置相關變量
     last_triggered_keyword = None
@@ -811,9 +817,11 @@ def message(payload):
                 'user_id': user_id,
                 'notion_info': notion_info
             })
-            
-            process_buffer()
-                
+
+            if buffer_timer is None:
+                buffer_timer = threading.Timer(BUFFER_TIME, process_buffer)
+                buffer_timer.start()
+
             if Done_checking is False:
                 response = requests.get(api_url, auth=(username, password))
                 if response.status_code == 200:
@@ -829,12 +837,14 @@ def message(payload):
                 # print("\n")
             elif Done_checking is True:
                 # # client.chat_postMessage(channel=channel_id, text="確認完畢 ✅✅")
-                print("Previous Start:", notion_info['previous_start'])
-                print("Previous End:", notion_info['previous_end'])
+                updated_tasks.append((channel_id, text))  # 添加到列表中
+                print("Updated tasks added:", len(updated_tasks))
+                # print("Previous Start:", notion_info['previous_start'])
+                # print("Previous End:", notion_info['previous_end'])
                 # print("\n")
                 pass
             no_change_notified = False
-            return previous_messages, other_messages, notion_info, message_buffer
+            return previous_messages, other_messages, notion_info, message_buffer, updated_tasks
     else:
         # 消息來自真實用戶的處理邏輯
         if is_message_from_slack_user(user_id):  # 確保消息來自用戶而非機器人
@@ -855,10 +865,10 @@ def message(payload):
                 waiting_for_confirmation = False
                 last_message_was_related = False
                 last_triggered_keyword = None
-                if text in ['y', 'yes', 'yup','是']:  # 用戶確認要執行
+                if text in ['ok', 'okay', 'y', 'yes', 'yea', 'ya', 'yup', '是']:  # 用戶確認要執行
                     current_time = time.time()
                     if current_time - last_trigger_time < COOLDOWN_PERIOD:
-                        client.chat_postMessage(channel=channel_id, text=f"請稍等，{COOLDOWN_PERIOD}秒內只能觸發一次同步操作。")
+                        client.chat_postMessage(channel=channel_id, text=f"Ops，` {COOLDOWN_PERIOD} `s 內只能觸發 1 次喲")
                         return
                     
                     if not is_syncing:
@@ -872,7 +882,7 @@ def message(payload):
                         pass
                         # client.chat_postMessage(channel=channel_id, text="同步操作正在進行中，請稍後再試。")
                     
-                    last_triggered_keyword = keyword
+                    last_triggered_keyword = keyword or alt_keyword
                     last_message_was_related = True
                     no_change_notified = True
                     confirmation_message_sent = True
@@ -884,17 +894,17 @@ def message(payload):
                     last_message_was_related = False  # 重置上一次消息是否與關鍵字相關
                     waiting_for_confirmation = False
                     confirmation_message_sent = True
-                elif confirmation_message_sent is False and text not in ['y', 'yes', 'yup','是','n', 'no', 'nope','否']:  # 用戶輸入錯誤
+                elif confirmation_message_sent is False and text not in ['ok', 'okay', 'y', 'yes', 'yea', 'ya', 'yup', '是','n', 'no', 'nope','否']:  # 用戶輸入錯誤
                     client.chat_postMessage(channel=channel_id, text="當你準備好了，再讓我知道")
                     no_change_notified = True  # 重置通知標記
                     last_triggered_keyword = None  # 重置最後觸發的關鍵字
                     last_message_was_related = False
                     waiting_for_confirmation = True
                     confirmation_message_sent = False
-            elif text == keyword:  # 直接處理 sync 關鍵詞
+            elif text == keyword or text == alt_keyword:  # 直接處理 sync 關鍵詞
                 current_time = time.time()
                 if current_time - last_trigger_time < COOLDOWN_PERIOD:
-                    client.chat_postMessage(channel=channel_id, text=f"Ops，`{COOLDOWN_PERIOD}`s 內只能觸發 1 次喲")
+                    client.chat_postMessage(channel=channel_id, text=f"Ops，` {COOLDOWN_PERIOD} `s 內只能觸發 1 次喲")
                     return
                 
                 if not is_syncing:
@@ -908,13 +918,13 @@ def message(payload):
                     pass
                     # client.chat_postMessage(channel=channel_id, text="同步操作正在進行中，請稍後再試。")
                 
-                last_triggered_keyword = keyword
+                last_triggered_keyword = keyword or alt_keyword
                 last_message_was_related = True
                 waiting_for_confirmation = False
                 confirmation_message_sent = True
             elif distance <= threshold:
                 last_message_was_related = True
-                if last_triggered_keyword is None or last_triggered_keyword == keyword:
+                if last_triggered_keyword is None or last_triggered_keyword == keyword or last_triggered_keyword == alt_keyword:
                     client.chat_postMessage(channel=channel_id, text=f"是要 `{keyword}` 嗎？   y / n ")
                     no_change_notified = False
                     waiting_for_confirmation = True
@@ -927,10 +937,12 @@ def message(payload):
                     no_change_notified = True  # 重置通知標記
                         
             no_change_notified = True
-    return message_buffer, is_syncing
+    return message_buffer, is_syncing, updated_tasks
+
+
 
 def process_buffer():
-    global message_buffer, buffer_timer, modified_pages_count, updated_tasks
+    global message_buffer, buffer_timer, modified_pages_count, updated_tasks, last_updated_tasks_count
     
     with buffer_lock:
         if not message_buffer:
@@ -938,6 +950,10 @@ def process_buffer():
     
         channel_id = message_buffer[0]['channel']
         notion_messages = [msg for msg in message_buffer if is_message_from_notion(msg['user_id'])]
+
+        # 累积更新任务
+        print(f"累計更新 {len(updated_tasks)} 件")
+
         current_buffer = message_buffer.copy()
         message_buffer.clear()
         if not current_buffer:
@@ -945,21 +961,18 @@ def process_buffer():
 
         print("\r\033[K" + f"Processing {len(current_buffer)} message from buffer", end="")
 
+        # 檢查是否有包含 "Previous" 的消息
+        def check_previous(notion_messages):
+            has_previous = any('previous' in str(message).lower() for message in notion_messages)
+            return has_previous
+        has_previous = check_previous(notion_messages)
+        print(f'Has previous: {has_previous}')
 
-        if notion_messages:
-            # 處理 Notion 消息
-            for msg in notion_messages:
-
-                # 檢查是否有包含 "Previous" 的消息
-                has_previous = any(
-                    'previous' in msg['notion_info'] or 'Previous' in msg['notion_info']
-                    for msg in notion_messages
-                )
-                modified_pages_count =+ 1
-
-                # 處理 Notion 消息
-                if has_previous:
-                    client.chat_postMessage(channel=channel_id, text=f"確認 `{len(modified_pages_count)}` 件完畢\n\n")
+        total_previous = f"` {len(updated_tasks)} `" if has_previous else ""
+        
+        # 检查累积任务数量是否发生变化
+        if has_previous:
+            client.chat_postMessage(channel=channel_id, text=f"確認 ` {total_previous} ` 件完畢\n\n")
 
         # 清空緩衝區
         message_buffer.clear()
