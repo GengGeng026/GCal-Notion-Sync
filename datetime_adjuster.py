@@ -81,9 +81,9 @@ def format_string(text, color=None, bold=False, italic=False, less_visible=False
 formatted_dot = format_string('.', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else '.'
 formatted_left_parenthesis = format_string(' (', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else ' ('
 formatted_right_parenthesis = format_string(')', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else ')'
-formatted_BOLD_italic = format_string('{}', bold=True, italic=True) if not 'JENKINS_HOME' in os.environ else format_string('{}')
+formatted_BOLD_italic = format_string('{}', bold=True, italic=True) if not 'JENKINS_HOME' in os.environ else '{}'
 formatted_right_arrow = format_string(' ▸ ', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else ' ▸ '
-formatted_indicator = format_string('{}', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else format_string('{}')
+formatted_indicator = format_string('{}', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else '{}'
 formatted_successful = format_string('Successful', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else 'Successful'
 formatted_failed = format_string('Failed', 'C3', bold=True) if not 'JENKINS_HOME' in os.environ else 'Failed'
 formatted_page_title = format_string('page_title', 'C1', bold=True) if not 'JENKINS_HOME' in os.environ else 'page_title'

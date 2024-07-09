@@ -968,11 +968,11 @@ def process_buffer():
         has_previous = check_previous(notion_messages)
         print(f'Has previous: {has_previous}')
 
-        total_previous = f"` {len(updated_tasks)} `" if has_previous else ""
+        total_previous = f"{len(updated_tasks)}" if has_previous else ""
         
         # 检查累积任务数量是否发生变化
         if has_previous:
-            client.chat_postMessage(channel=channel_id, text=f"確認{total_previous}件完畢\n\n")
+            client.chat_postMessage(channel=channel_id, text=f"確認` {total_previous} `件完畢\n\n")
 
         # 清空緩衝區
         message_buffer.clear()
