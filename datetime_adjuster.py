@@ -3533,10 +3533,8 @@ def clear_line():
     print("\r\033[K", end="")
 
 if not no_pages_operated_B:
-    clear_line()
     print(f"{formatted_no} Condition is Met.\n{formatted_no} Operation is Performed.\n{formatted_no} Page is Modified\n")
 else:
-    clear_line()
     print(f"Total Pages {formatted_modified} : {formatted_count.format(result['total_pages_modified'])}")
 
 stop_event.set()
