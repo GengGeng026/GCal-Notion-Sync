@@ -72,10 +72,8 @@ COLORS = {
 def skip_in_jenkins(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        if os.environ.get('ANSI_COLORS_DISABLED') == 'true':
-            # 在 Jenkins 中執行時，將 formatted constant 還原為普通字符串
-            for key, value in COLORS.items():
-                COLORS[key] = ''
+        if 'JENKINS_HOME' in os.environ:
+            return ''  # Return an empty string instead of None
         return func(*args, **kwargs)
     return wrapper
 
