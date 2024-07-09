@@ -231,6 +231,7 @@ Delete_Notion_Name = 'Delete from GCal?'
 # Declare total_dots as a global variable at the top of your script
 total_dots = 0
 
+@skip_in_jenkins
 def dynamic_counter_indicator(stop_event, message):
     dot_counter = 0
     total_dots = 0
@@ -651,6 +652,7 @@ else:
 print('\n' + '-' * terminal_width + '\n')
 
 # Define a function to print the "Printing" message and dots
+@skip_in_jenkins
 def dynamic_counter_indicator(stop_event):
     dot_counter = 0
     total_dots = 0  # New variable to keep track of the total number of dots

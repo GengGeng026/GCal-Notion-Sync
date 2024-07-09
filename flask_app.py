@@ -711,7 +711,7 @@ def parse_notion_message(blocks):
 message_buffer = []
 buffer_lock = threading.Lock()
 buffer_timer = None
-BUFFER_TIME = 25
+BUFFER_TIME = 30
 previous_messages = []
 other_messages = []
 last_updated_tasks_count = 0
@@ -966,16 +966,17 @@ def process_buffer():
             has_previous = any('previous' in str(message).lower() for message in notion_messages)
             return has_previous
         has_previous = check_previous(notion_messages)
-        print(f'Has previous: {has_previous}')
 
         total_previous = f"{len(updated_tasks)}" if has_previous else ""
         
         # 检查累积任务数量是否发生变化
         if has_previous:
-            client.chat_postMessage(channel=channel_id, text=f"確認` {total_previous} `件完畢\n\n")
+            if len(updated_tasks) > 0:  # Check the length of the list
+                client.chat_postMessage(channel=channel_id, text=f"確認 ` {total_previous} ` 件完畢 ✓\n\n")
 
         # 清空緩衝區
         message_buffer.clear()
+        updated_tasks = []
         buffer_timer = None
 
 def check_and_confirm(channel_id):
