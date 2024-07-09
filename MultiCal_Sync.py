@@ -142,6 +142,10 @@ def get_console_width():
     # return shutil.get_terminal_size().columns
 
 @skip_in_jenkins
+def clear_line():
+    print("\r\033[K", end="")
+
+@skip_in_jenkins
 def dynamic_counter_indicator(stop_event, message, timeout=20):
     start_time = time.time()
     dot_counter = 0
@@ -169,7 +173,7 @@ def dynamic_counter_indicator(stop_event, message, timeout=20):
             dot_counter += 1
             total_dots += 1
         sys.stdout.flush()
-    print("\r\033[K", end="")
+    clear_line()
 
 @skip_in_jenkins
 def stop_clear_and_print():
@@ -273,7 +277,7 @@ def animate_text_wave_with_progress(text, new_text, target_percentage, current_p
 ##### The Set-Up Section. Please follow the comments to understand the code. 
 ###########################################################################
 
-print("\r\033[K", end="")
+clear_line()
 
 load_dotenv()
 NOTION_TOKEN = os.getenv("NOTION_API_KEY") #the secret_something from Notion Integration
@@ -441,7 +445,7 @@ def obtain_calendar(service):
 # Main code
 try:
     animate_text_wave("initializing", repeat=1)
-    print("\r\033[K", end="")
+    clear_line()
     credentials = refresh_token()
     service = build("calendar", "v3", credentials=credentials)
     calendar = obtain_calendar(service)
@@ -751,7 +755,7 @@ resultList = my_page['results']
 
 animate_text_wave_with_progress(text="Loading", new_text="Checked 1", target_percentage=5, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
 
-print("\r\033[K", end="")
+clear_line()
 
 TaskNames = []
 start_Dates = []
@@ -976,7 +980,7 @@ if len(resultList) > 0:
 
 animate_text_wave_with_progress(text="Loading", new_text="Checked 1", target_percentage=7, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
 
-print("\r\033[K", end="")
+clear_line()
 
 processedEvents = set()  # Initialize the set outside the loop
 totalEventsProcessed = 0  # 在循环开始之前初始化计数器
@@ -1028,7 +1032,7 @@ if totalEventsProcessed > 0:
 
 animate_text_wave_with_progress(text="Loading", new_text="Checked 1", target_percentage=10, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
 
-print("\r\033[K", end="")
+clear_line()
 
 ###########################################################################
 ##### Part 2: Updating GCal Events that Need To Be Updated (Changed on Notion but need to be changed on GCal)
@@ -1141,7 +1145,7 @@ resultList = my_page['results']
 
 animate_text_wave_with_progress(text="Loading", new_text="Checked 1.5", target_percentage=20, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
 
-print("\r\033[K", end="")
+clear_line()
 
 updatingNotionPageIds = []
 updatingCalEventIds = []
@@ -1253,7 +1257,7 @@ todayDate = datetime.today().strftime("%Y-%m-%d")
 
 animate_text_wave_with_progress(text="Loading", new_text="Checked 2", target_percentage=30, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
 
-print("\r\033[K", end="")
+clear_line()
 
 ###########################################################################
 ##### Part 3: Sync GCal event updates for events already in Notion back to Notion!
@@ -1340,7 +1344,7 @@ modified_events_counter = 0
 
 animate_text_wave_with_progress(text="Loading", new_text="Checked 2.1", target_percentage=35, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
 
-print("\r\033[K", end="")
+clear_line()
 
 for result in resultList:
     notion_IDs_List.append(result['id'])
@@ -1363,7 +1367,7 @@ for result in resultList:
 
 animate_text_wave_with_progress(text="Loading", new_text="Checked 2.2", target_percentage=40, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
 
-print("\r\033[K", end="")
+clear_line()
 
 #the reason we take off the last 6 characters is so we can focus in on just the date and time instead of any extra info
 for  i in range(len(notion_start_datetimes)):    
@@ -1390,7 +1394,7 @@ for  i in range(len(notion_end_datetimes)):
 
 animate_text_wave_with_progress(text="Loading", new_text="Checked 2.3", target_percentage=40, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
 
-print("\r\033[K", end="")
+clear_line()
 
 ##We use the gCalId from the Notion dashboard to get retrieve the start Time from the gCal event
 value =''
@@ -1425,7 +1429,7 @@ for gCalId in notion_gCal_IDs:
 
 animate_text_wave_with_progress(text="Loading", new_text="Checked 2.4", target_percentage=45, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
 
-print("\r\033[K", end="")
+clear_line()
 
 #Now we iterate and compare the time on the Notion Dashboard and the start time of the GCal event
 #If the datetimes don't match up,  then the Notion  Dashboard must be updated
@@ -1467,7 +1471,7 @@ for i in range(loop_length_titles, len(notion_titles)):
 
 animate_text_wave_with_progress(text="Loading", new_text="Checked 2.5", target_percentage=50, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
 
-print("\r\033[K", end="")
+clear_line()
 
 @skip_in_jenkins
 def format_time(time):
@@ -1669,7 +1673,7 @@ if modified_events_counter > 0:
 
 animate_text_wave_with_progress(text="Loading", new_text="Checked 2.7", target_percentage=60, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
 
-print("\r\033[K", end="")
+clear_line()
 
 def update_notion_page_with_retry(page_id, updates, max_retries=5):
     retry_count = 0
@@ -2082,7 +2086,7 @@ for i in range(len(new_notion_start_datetimes)):
     
 animate_text_wave_with_progress(text="Loading", new_text="Checked 3", target_percentage=70, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
 
-print("\r\033[K", end="")
+clear_line()
 
 ###########################################################################
 ##### Part 4: Bring events (not in Notion) from GCal to Notion
@@ -2109,7 +2113,7 @@ start_dynamic_counter_indicator()
 
 animate_text_wave_with_progress(text="Loading", new_text="Checked 3.1", target_percentage=72, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
 
-print("\r\033[K", end="")
+clear_line()
 
 ##Get the GCal Ids and other Event Info from Google Calendar 
 events = []
@@ -2165,7 +2169,7 @@ for item in calItems:
 
 animate_text_wave_with_progress(text="Loading", new_text="Checked 3.5", target_percentage=78, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
 
-print("\r\033[K", end="")
+clear_line()
 
 #Now, we compare the Ids from Notion and Ids from GCal. If the Id from GCal is not in the list from Notion, then 
 ## we know that the event does not exist in Notion yet, so we should bring that over. 
@@ -2442,7 +2446,7 @@ for i, calId in enumerate(calIds):
 
 animate_text_wave_with_progress(text="Loading", new_text="Checked 3.7", target_percentage=80, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
 
-print("\r\033[K", end="")
+clear_line()
 
 # After the loop, calculate the visual width of the longest title
 max_width = 0
@@ -2509,7 +2513,7 @@ if unique_added_counter > 0:
     no_new_updated = False
 
 animate_text_wave_with_progress(text="Loading", new_text="Checked 4", target_percentage=90, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
-print("\r\033[K", end="")
+clear_line()
 
 ###########################################################################
 ##### Part 5: Deletion Sync -- If marked Done in Notion, then it will delete the GCal event (and the Notion event once Python API updates)
@@ -2544,7 +2548,7 @@ for el in resultList:
         events_by_calendar[calendar_name][task_title] += 1
 
 animate_text_wave_with_progress(text="Loading", new_text="Checked 4.5", target_percentage=94, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
-print("\r\033[K", end="")
+clear_line()
 
 if DELETE_OPTION == 0 and len(resultList) > 0: #delete gCal event (and Notion task once the Python API is updated)
     stop_clear_and_print()
@@ -2627,7 +2631,7 @@ if DELETE_OPTION == 0 and len(resultList) > 0: #delete gCal event (and Notion ta
                 start_dynamic_counter_indicator()
             else:
                 stop_clear_and_print()
-                print("\r\033[K", end="")
+                clear_line()
                 print(f"{task_counter}. {task_title}")
                 start_dynamic_counter_indicator()
             task_counter += 1  # 更新任务计数器
@@ -2647,7 +2651,7 @@ animate_text_wave("FINAL checked", repeat=1)
 start_dynamic_counter_indicator()
 
 animate_text_wave_with_progress(text="Loading", new_text="Checked 5", target_percentage=100, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
-print("\r\033[K", end="")
+clear_line()
 
 printed_no_new_added = False
 printed_no_new_updated = False
