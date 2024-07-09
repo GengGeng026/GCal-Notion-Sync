@@ -405,7 +405,7 @@ def check_last_line_status(text):
         status = 'Unknown'
         no_changes = False
         for line in lines:
-            if 'Total Pages  : 0' in line or 'No Page Modified' in line:
+            if 'No Condition is Met' in line or 'No Operation is Performed' in line or 'No Page is Modified' in line:
                 no_changes = True
             elif line.startswith('Finished: SUCCESS'):
                 status = 'SUCCESS'
@@ -451,7 +451,7 @@ def check_pipeline_status(jenkins_url, username, password, job_name):
         
         for line in lines:
             # print(f"處理行: {line}")
-            if 'Total Pages Modified : 0' in line:
+            if 'No Condition is Met' in line or 'No Operation is Performed' in line or 'No Page is Modified' in line:
                 no_changes = True
                 # print("發現 'Total Pages Modified : 0'")
             elif line.startswith('Finished: SUCCESS') or 'Total Pages' in line:
