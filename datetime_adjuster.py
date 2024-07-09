@@ -656,7 +656,7 @@ print('\n' + '-' * terminal_width + '\n')
 def dynamic_counter_indicator(stop_event):
     dot_counter = 0
     total_dots = 0  # New variable to keep track of the total number of dots
-    formatted_Printing = f"{BOLD}{COLORS['C2']}Printing{RESET}"
+    formatted_Printing = f"{BOLD}{COLORS['C2']}Printing{RESET}" if not 'JENKINS_HOME' in os.environ else f"Printing"
     
     print(f"{formatted_Printing}", end="", flush=True)
     while not stop_event.is_set():
@@ -3529,11 +3529,15 @@ while not return_values.empty():
 # After the loop, you can get the total number of modified pages like this:
 result['total_pages_modified'] = len(modified_pages)
 
-if not no_pages_operated_B:
+@skip_in_jenkins
+def clear_line():
     print("\r\033[K", end="")
+
+if not no_pages_operated_B:
+    clear_line()
     print(f"{formatted_no} Condition is Met.\n{formatted_no} Operation is Performed.\n{formatted_no} Page is Modified\n")
 else:
-    print("\r\033[K", end="")
+    clear_line()
     print(f"Total Pages {formatted_modified} : {formatted_count.format(result['total_pages_modified'])}")
 
 stop_event.set()
