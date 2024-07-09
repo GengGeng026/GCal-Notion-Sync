@@ -79,6 +79,7 @@ def skip_in_jenkins(func):
         return func(*args, **kwargs)
     return wrapper
 
+@skip_in_jenkins
 def format_string(text, color=None, bold=False, italic=False, less_visible=False, underline=False, light_color=False):
     text = str(text)  # 確保text為字符串
     color_code = COLORS.get(color, '')  # 使用get來避免KeyError，如果color不在COLORS中，則返回空字符串
