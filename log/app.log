@@ -27691,3 +27691,19 @@ UnboundLocalError: cannot access local variable 'Done_checking' where it is not 
 2024-07-09 08:52:32,745 - werkzeug - INFO - 127.0.0.1 - - [09/Jul/2024 08:52:32] "POST /slack/events HTTP/1.0" 200 -
 2024-07-09 08:52:54,455 - INFO - 127.0.0.1 - - [09/Jul/2024 08:52:54] "POST /slack/events HTTP/1.0" 200 -
 2024-07-09 08:52:54,455 - werkzeug - INFO - 127.0.0.1 - - [09/Jul/2024 08:52:54] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 09:00:02,539 - INFO - This is an info message.
+2024-07-09 09:00:02,539 - root - INFO - This is an info message.
+2024-07-09 09:00:02,542 - ERROR - This is an error message.
+2024-07-09 09:00:02,542 - root - ERROR - This is an error message.
+2024-07-09 09:00:03,102 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-09 09:00:03,102 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-09 09:00:03,102 - INFO - [33mPress CTRL+C to quit[0m
+2024-07-09 09:00:03,102 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-09 09:00:06,987 - INFO - 127.0.0.1 - - [09/Jul/2024 09:00:06] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 09:00:06,987 - werkzeug - INFO - 127.0.0.1 - - [09/Jul/2024 09:00:06] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 09:00:09,340 - INFO - 127.0.0.1 - - [09/Jul/2024 09:00:09] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 09:00:09,340 - werkzeug - INFO - 127.0.0.1 - - [09/Jul/2024 09:00:09] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 09:00:29,235 - INFO - 127.0.0.1 - - [09/Jul/2024 09:00:29] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 09:00:29,235 - werkzeug - INFO - 127.0.0.1 - - [09/Jul/2024 09:00:29] "POST /slack/events HTTP/1.0" 200 -

@@ -236,7 +236,7 @@ total_dots = 0
 def dynamic_counter_indicator(stop_event, message):
     dot_counter = 0
     total_dots = 0
-    print(f"{BOLD}{COLORS['C2']}{message}{RESET}", end="", flush=True)
+    print(f"{BOLD}{COLORS['C2']}{message}{RESET}", end="", flush=True) if not 'JENKINS_HOME' in os.environ else print(message, end="", flush=True)
     while not stop_event.is_set():
         if dot_counter == 4:
             print("\r" + " " * (len(message) + total_dots + 15) + "\r", end="", flush=True)
@@ -656,7 +656,7 @@ print('\n' + '-' * terminal_width + '\n')
 def dynamic_counter_indicator(stop_event):
     dot_counter = 0
     total_dots = 0  # New variable to keep track of the total number of dots
-    formatted_Printing = f"{BOLD}{COLORS['C2']}Printing{RESET}" if not 'JENKINS_HOME' in os.environ else f"Printing"
+    formatted_Printing = f"{BOLD}{COLORS['C2']}Printing{RESET}" if not 'JENKINS_HOME' in os.environ else ''
     
     print(f"{formatted_Printing}", end="", flush=True)
     while not stop_event.is_set():
