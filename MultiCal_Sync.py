@@ -72,16 +72,17 @@ COLORS = {
 def skip_in_jenkins(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
-        if 'JENKINS_HOME' in os.environ:
-            return ''  # Return an empty string instead of None
+        if os.environ.get('ANSI_COLORS_DISABLED') == 'true':
+            # 在 Jenkins 中執行時，將 formatted constant 還原為普通字符串
+            for key, value in COLORS.items():
+                COLORS[key] = ''
         return func(*args, **kwargs)
     return wrapper
 
-@skip_in_jenkins
 def format_string(text, color=None, bold=False, italic=False, less_visible=False, underline=False, light_color=False):
     text = str(text)  # 確保text為字符串
     color_code = COLORS.get(color, '')  # 使用get來避免KeyError，如果color不在COLORS中，則返回空字符串
-    return f"{BOLD if bold else ''}{ITALIC if italic else ''}{LESS_VISIBLE if less_visible else ''}{UNDERLINE if underline else ''}{LIGHT_GRAY if light_color else ''}{color_code}{text}{RESET}"
+    return f"{BOLD if bold else ''}{ITALIC if italic else ''}{LESS_VISIBLE if less_visible else ''}{UNDERLINE if underline else ''}{LIGHT_GRAY if light_color else ''}{color_code}{text}{RESET}" if not 'JENKINS_HOME' in os.environ else text
 
 # Use the function to format text
 formatted_dot = format_string('.', 'C2', bold=True) if not 'JENKINS_HOME' in os.environ else '.'

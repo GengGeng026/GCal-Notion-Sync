@@ -27713,3 +27713,113 @@ UnboundLocalError: cannot access local variable 'Done_checking' where it is not 
 2024-07-09 09:05:08,964 - werkzeug - INFO - 127.0.0.1 - - [09/Jul/2024 09:05:08] "POST /slack/events HTTP/1.0" 200 -
 2024-07-09 09:05:29,444 - INFO - 127.0.0.1 - - [09/Jul/2024 09:05:29] "POST /slack/events HTTP/1.0" 200 -
 2024-07-09 09:05:29,444 - werkzeug - INFO - 127.0.0.1 - - [09/Jul/2024 09:05:29] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 10:04:10,595 - INFO - This is an info message.
+2024-07-09 10:04:10,595 - root - INFO - This is an info message.
+2024-07-09 10:04:10,598 - ERROR - This is an error message.
+2024-07-09 10:04:10,598 - root - ERROR - This is an error message.
+2024-07-09 10:04:11,107 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-09 10:04:11,107 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-09 10:04:11,107 - INFO - [33mPress CTRL+C to quit[0m
+2024-07-09 10:04:11,107 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-09 10:05:05,399 - INFO - This is an info message.
+2024-07-09 10:05:05,399 - root - INFO - This is an info message.
+2024-07-09 10:05:05,403 - ERROR - This is an error message.
+2024-07-09 10:05:05,403 - root - ERROR - This is an error message.
+2024-07-09 10:05:05,880 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-09 10:05:05,880 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-09 10:05:05,880 - INFO - [33mPress CTRL+C to quit[0m
+2024-07-09 10:05:05,880 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-09 10:06:25,400 - INFO - 127.0.0.1 - - [09/Jul/2024 10:06:25] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 10:06:25,400 - werkzeug - INFO - 127.0.0.1 - - [09/Jul/2024 10:06:25] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 10:06:27,308 - INFO - 127.0.0.1 - - [09/Jul/2024 10:06:27] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 10:06:27,308 - werkzeug - INFO - 127.0.0.1 - - [09/Jul/2024 10:06:27] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 10:06:57,877 - INFO - 127.0.0.1 - - [09/Jul/2024 10:06:57] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 10:06:57,877 - werkzeug - INFO - 127.0.0.1 - - [09/Jul/2024 10:06:57] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 10:07:16,094 - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 825, in message
+    if Done_checking is False:
+       ^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'Done_checking' where it is not associated with a value
+2024-07-09 10:07:16,094 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 825, in message
+    if Done_checking is False:
+       ^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'Done_checking' where it is not associated with a value
+2024-07-09 10:07:16,103 - INFO - 127.0.0.1 - - [09/Jul/2024 10:07:16] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-07-09 10:07:16,103 - werkzeug - INFO - 127.0.0.1 - - [09/Jul/2024 10:07:16] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-07-09 10:07:34,196 - INFO - 127.0.0.1 - - [09/Jul/2024 10:07:34] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 10:07:34,196 - werkzeug - INFO - 127.0.0.1 - - [09/Jul/2024 10:07:34] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 10:07:37,659 - INFO - 127.0.0.1 - - [09/Jul/2024 10:07:37] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 10:07:37,659 - werkzeug - INFO - 127.0.0.1 - - [09/Jul/2024 10:07:37] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 10:07:38,682 - INFO - 127.0.0.1 - - [09/Jul/2024 10:07:38] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 10:07:38,682 - werkzeug - INFO - 127.0.0.1 - - [09/Jul/2024 10:07:38] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 10:08:00,288 - INFO - 127.0.0.1 - - [09/Jul/2024 10:08:00] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 10:08:00,288 - werkzeug - INFO - 127.0.0.1 - - [09/Jul/2024 10:08:00] "POST /slack/events HTTP/1.0" 200 -
+2024-07-09 10:12:02,126 - INFO - This is an info message.
+2024-07-09 10:12:02,126 - root - INFO - This is an info message.
+2024-07-09 10:12:02,126 - ERROR - This is an error message.
+2024-07-09 10:12:02,126 - root - ERROR - This is an error message.
+2024-07-09 10:12:02,680 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-09 10:12:02,680 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-09 10:12:02,681 - INFO - [33mPress CTRL+C to quit[0m
+2024-07-09 10:12:02,681 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-07-09 10:12:39,776 - INFO - This is an info message.
+2024-07-09 10:12:39,776 - root - INFO - This is an info message.
+2024-07-09 10:12:39,776 - ERROR - This is an error message.
+2024-07-09 10:12:39,776 - root - ERROR - This is an error message.
+2024-07-09 10:12:40,264 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-09 10:12:40,264 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-07-09 10:12:40,264 - INFO - [33mPress CTRL+C to quit[0m
+2024-07-09 10:12:40,264 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
