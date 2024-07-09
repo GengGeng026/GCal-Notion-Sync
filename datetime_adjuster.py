@@ -3485,7 +3485,6 @@ else:
         
         page_printed = process_pages_overwritten_details(pages_overwritten_details)
 
-        page_printed = True
         if page_printed:            
             no_pages_operated_B = True
 
