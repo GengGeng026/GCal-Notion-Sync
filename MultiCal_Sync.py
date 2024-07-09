@@ -2657,10 +2657,10 @@ printed_no_new_added = False
 printed_no_new_updated = False
 
 # Modify the calls to format_string to ensure None is handled
-formatted_page_added = format_string("Page Added") or ''
-formatted_page_updated = format_string("Page Updated") or ''
-formatted_fr = format_string("fr.", italic=True, less_visible=True) or ''
-formatted_notion = format_string(" Notion", less_visible=True) or ''
+formatted_page_added = format_string("Page Added") or "Page Added"
+formatted_page_updated = format_string("Page Updated") or "Page Updated"
+formatted_fr = format_string("fr.", italic=True, less_visible=True) or 'fr.'
+formatted_notion = format_string(" Notion", less_visible=True) or ' Notion'
 
 # Apply the modified variables in the print statements
 if no_new_added:
