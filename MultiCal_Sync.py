@@ -1698,16 +1698,17 @@ def update_notion_page_with_retry(page_id, updates, max_retries=5):
 CalNames = list(calendarDictionary.keys())
 CalIds = list(calendarDictionary.values())
 
-def get_calendar_id(gCalId, CalNames, CalIds):
-    try:
-        return CalIds[CalNames.index(gCalId)]
-    except ValueError:
-        print(f"Error: Calendar '{gCalId}' not found in CalNames.")
-        print(f"Available calendars: {CalNames}")
-        print(f"Current gCalId: '{gCalId}'")
-        # 可以選擇返回一個默認值或拋出自定義異常
-        return "default_calendar_id: '{DEFAULT_CALENDAR_ID}'"  # 或者使用 raise CustomError("Calendar not found")
+# 首先，創建一個從 ID 到名稱的映射
+CalIdToName = dict(zip(CalIds, CalNames))
 
+def get_calendar_name(gCalId, CalIdToName):
+    if gCalId in CalIdToName:
+        return CalIdToName[gCalId]
+    else:
+        print(f"Error: Calendar ID '{gCalId}' not found.")
+        print(f"Available calendar IDs: {list(CalIdToName.keys())}")
+        return None  # 或者返回一個默認值
+    
 for i in range(len(new_notion_start_datetimes)):
     if new_notion_start_datetimes[i]  != '' and new_notion_end_datetimes[i] != '': #both start and end time need to be updated
         start = new_notion_start_datetimes[i]
@@ -1795,9 +1796,7 @@ for i in range(len(new_notion_start_datetimes)):
                     },
                 },
             )
-        else: #update Notin using datetime format
-            calendar_id = get_calendar_id(gCalId, CalNames, CalIds)
-            
+        else: #update Notin using datetime format 
             my_page = update_notion_page_with_retry( #update the notion dashboard with the new datetime and update the last updated time
                 **{
                     "page_id": notion_IDs_List[i],
@@ -1826,13 +1825,13 @@ for i in range(len(new_notion_start_datetimes)):
                         Current_Calendar_Id_Notion_Name: {
                             "rich_text": [{
                                 'text': {
-                                    'content': calendar_id
+                                    'content': CalIds[CalNames.index(gCalId)] if gCalId in CalNames else DEFAULT_CALENDAR_ID
                                 }
                             }]
                         },
                         Calendar_Notion_Name: {
                             'select': {
-                                "name": gCalId 
+                                "name": calendar_name 
                             },
                         },
                     },
