@@ -1713,6 +1713,10 @@ for i in range(len(new_notion_start_datetimes)):
     if new_notion_start_datetimes[i]  != '' and new_notion_end_datetimes[i] != '': #both start and end time need to be updated
         start = new_notion_start_datetimes[i]
         end = new_notion_end_datetimes[i]
+        
+        calendar_name = get_calendar_name(gCalId, CalIdToName)
+        if calendar_name is None:
+            continue  # 跳過這個事件，或者根據需要處理錯誤
  
         if start.hour == 0 and start.minute == 0 and start == end: #you're given 12 am dateTimes so you want to enter them as dates (not datetimes) into Notion
             my_page = update_notion_page_with_retry( #update the notion dashboard with the new datetime and update the last updated time
