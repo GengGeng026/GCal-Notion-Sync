@@ -1,0 +1,23 @@
+2024-09-05 00:53:26,793 INFO Increased RLIMIT_NOFILE limit to 1024
+2024-09-05 00:53:26,800 INFO daemonizing the supervisord process
+2024-09-05 00:53:26,801 INFO supervisord started with pid 79173
+2024-09-05 00:53:27,804 INFO spawned: 'flask_app' with pid 79184
+2024-09-05 00:53:28,805 INFO success: flask_app entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2024-09-05 00:57:48,040 WARN received SIGTERM indicating exit request
+2024-09-05 00:57:48,041 INFO waiting for flask_app to die
+2024-09-05 00:57:48,047 WARN stopped: flask_app (terminated by SIGTERM)
+2024-09-05 00:58:46,302 INFO Increased RLIMIT_NOFILE limit to 1024
+2024-09-05 00:58:46,308 INFO daemonizing the supervisord process
+2024-09-05 00:58:46,310 INFO supervisord started with pid 80835
+2024-09-05 00:58:47,315 INFO spawned: 'flask_app' with pid 80837
+2024-09-05 00:58:48,321 INFO success: flask_app entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2024-09-05 01:25:03,517 INFO daemonizing the supervisord process
+2024-09-05 01:25:03,519 INFO supervisord started with pid 83499
+2024-09-05 01:25:04,524 INFO spawned: 'flask_app' with pid 83500
+2024-09-05 01:25:05,530 INFO success: flask_app entered RUNNING state, process has stayed up for > than 1 seconds (startsecs)
+2024-09-05 01:28:08,827 WARN received SIGTERM indicating exit request
+2024-09-05 01:28:08,828 INFO waiting for flask_app to die
+2024-09-05 01:28:08,835 WARN stopped: flask_app (terminated by SIGTERM)
+2024-09-05 01:28:17,472 WARN received SIGTERM indicating exit request
+2024-09-05 01:28:17,473 INFO waiting for flask_app to die
+2024-09-05 01:28:17,480 WARN stopped: flask_app (terminated by SIGTERM)
