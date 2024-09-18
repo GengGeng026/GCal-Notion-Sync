@@ -1820,7 +1820,7 @@ for i in range(len(new_notion_start_datetimes)):
                         },
                         Calendar_Notion_Name: {
                             'select': {
-                                "name": gCalId 
+                                "name": gCalId  if gCalId in CalNames else "Unknown"
                             },
                         },
                     },
