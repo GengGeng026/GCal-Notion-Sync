@@ -1811,13 +1811,13 @@ for i in range(len(new_notion_start_datetimes)):
                                 'end': None,
                             }
                         },
-                        Current_Calendar_Id_Notion_Name: {
-                            "rich_text": [{
-                                'text': {
-                                    'content': CalIds[CalNames.index(gCalId)]
-                                }
-                            }]
-                        },
+                        # Current_Calendar_Id_Notion_Name: {
+                        #     "rich_text": [{
+                        #         'text': {
+                        #             'content': CalIds[CalNames.index(gCalId)]
+                        #         }
+                        #     }]
+                        # },
                         Calendar_Notion_Name: {
                             'select': {
                                 "name": gCalId 
