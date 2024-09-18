@@ -1698,40 +1698,10 @@ def update_notion_page_with_retry(page_id, updates, max_retries=5):
 CalNames = list(calendarDictionary.keys())
 CalIds = list(calendarDictionary.values())
 
-def get_matching_calendar_id(gCalId, CalIds, CalNames):
-    # 直接匹配
-    if gCalId in CalIds:
-        return gCalId, CalNames[CalIds.index(gCalId)]
-
-    # 嘗試部分匹配
-    matching_ids = [cid for cid in CalIds if gCalId in cid or cid in gCalId]
-    if matching_ids:
-        matched_id = matching_ids[0]
-        if len(matching_ids) > 1:
-            print(f"Warning: Multiple matching calendar IDs found for '{gCalId}'. Using the first match: {matched_id}")
-        return matched_id, CalNames[CalIds.index(matched_id)]
-
-    # 如果沒有匹配，嘗試使用名稱匹配
-    if gCalId in CalNames:
-        index = CalNames.index(gCalId)
-        return CalIds[index], gCalId
-
-    # 如果仍然沒有匹配，返回 None
-    print(f"Error: No matching calendar ID or name found for '{gCalId}'.")
-    print(f"Available calendar IDs: {CalIds}")
-    print(f"Available calendar names: {CalNames}")
-    return None, None
-
 for i in range(len(new_notion_start_datetimes)):
     if new_notion_start_datetimes[i]  != '' and new_notion_end_datetimes[i] != '': #both start and end time need to be updated
         start = new_notion_start_datetimes[i]
         end = new_notion_end_datetimes[i]
-        
-        matching_cal_id, calendar_name = get_matching_calendar_id(gCalId, CalIds, CalNames)
-        if matching_cal_id is None:
-            print(f"Warning: Skipping event due to calendar ID mismatch: {new_notion_titles[i]}")
-            continue
-
  
         if start.hour == 0 and start.minute == 0 and start == end: #you're given 12 am dateTimes so you want to enter them as dates (not datetimes) into Notion
             my_page = update_notion_page_with_retry( #update the notion dashboard with the new datetime and update the last updated time
@@ -1803,7 +1773,7 @@ for i in range(len(new_notion_start_datetimes)):
                         Current_Calendar_Id_Notion_Name: {
                             "rich_text": [{
                                 'text': {
-                                    'content': matching_cal_id
+                                    'content': CalIds[CalNames.index(gCalId)]
                                 }
                             }]
                         },
