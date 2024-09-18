@@ -1704,7 +1704,7 @@ for i in range(len(new_notion_start_datetimes)):
         end = new_notion_end_datetimes[i]
  
         if start.hour == 0 and start.minute == 0 and start == end: #you're given 12 am dateTimes so you want to enter them as dates (not datetimes) into Notion
-            my_page = update_notion_page_with_retry( #update the notion dashboard with the new datetime and update the last updated time
+            my_page = notion.pages.update( #update the notion dashboard with the new datetime and update the last updated time
                 **{
                     "page_id": notion_IDs_List[i], 
                     "properties": {
@@ -1723,24 +1723,12 @@ for i in range(len(new_notion_start_datetimes)):
                                 'end': None,
                             }
                         },
-                        # Current_Calendar_Id_Notion_Name: {
-                        #     "rich_text": [{
-                        #         'text': {
-                        #             'content': CalIds[CalNames.index(gCalId)]
-                        #         }
-                        #     }]
-                        # },
-                        # Calendar_Notion_Name: {
-                        #     'select': {
-                        #         "name": gCalId 
-                        #     },
-                        # },
                         LastUpdatedTime_Notion_Name: {
                             "date":{
-                                'start': notion_time(),
+                                'start': notion_time(), #has to be adjsuted for when daylight savings is different
                                 'end': None,
                             }
-                        },
+                        }
                     },
                 },
             )
