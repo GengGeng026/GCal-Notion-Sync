@@ -1814,7 +1814,7 @@ for i in range(len(new_notion_start_datetimes)):
                         Current_Calendar_Id_Notion_Name: {
                             "rich_text": [{
                                 'text': {
-                                    'content': CalIds[CalNames.index(gCalId)] if gCalId in CalNames else DEFAULT_CALENDAR_ID
+                                    'content': CalIds[CalNames.index(gCalId)]
                                 }
                             }]
                         },
