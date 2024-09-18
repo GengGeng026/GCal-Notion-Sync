@@ -868,7 +868,7 @@ def message(payload):
                 if text in ['ok', 'okay', 'y', 'yes', 'yea', 'ya', 'yup', '是']:  # 用戶確認要執行
                     current_time = time.time()
                     if current_time - last_trigger_time < COOLDOWN_PERIOD:
-                        client.chat_postMessage(channel=channel_id, text=f"Ops，` {COOLDOWN_PERIOD} `s 內只能觸發 1 次喲")
+                        client.chat_postMessage(channel=channel_id, text=f"Ops， ` {COOLDOWN_PERIOD} ` s 內只能觸發 1 次喲")
                         return
                     
                     if not is_syncing:
@@ -904,7 +904,7 @@ def message(payload):
             elif text == keyword or text == alt_keyword:  # 直接處理 sync 關鍵詞
                 current_time = time.time()
                 if current_time - last_trigger_time < COOLDOWN_PERIOD:
-                    client.chat_postMessage(channel=channel_id, text=f"Ops，` {COOLDOWN_PERIOD} `s 內只能觸發 1 次喲")
+                    client.chat_postMessage(channel=channel_id, text=f"Ops， ` {COOLDOWN_PERIOD} ` s 內只能觸發 1 次喲")
                     return
                 
                 if not is_syncing:
