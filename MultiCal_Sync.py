@@ -17,6 +17,7 @@ import time
 import sys
 import threading
 from threading import Lock
+from collections import Counter
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from oauthlib.oauth2 import BackendApplicationClient
@@ -822,6 +823,44 @@ def generate_unique_title(existing_titles, base_title, new_titles, number):
     positions = []
     numbers = []
     
+    # Function to check if a title is relevant to the base_title
+    def is_relevant_title(title, base):
+        return base.lower() in title.lower()
+    
+    # Filter relevant titles
+    relevant_titles = [title for title in all_titles if is_relevant_title(title, base_title)]
+    
+    if not relevant_titles:
+        return base_title  # If no relevant titles found, return the original base_title
+    
+    # Pattern to match ordinal numbers and surrounding text
+    pattern = re.compile(r'(.*?)(\d+)(st|nd|rd|th)\s*(.*?)((?:\s*F\/up|\s*Follow[\s-]up)?)', re.IGNORECASE)
+    
+    matching_titles = []
+    numbers = []
+    
+    for title in relevant_titles:
+        match = pattern.search(title)
+        if match:
+            prefix, num, _, suffix, followup = match.groups()
+            numbers.append(int(num))
+            matching_titles.append((prefix.strip(), suffix.strip(), followup.strip()))
+    
+    if not matching_titles:
+        return base_title  # If no matching structure found in relevant titles
+    
+    # Determine the next number
+    next_number = max(numbers) + 1 if numbers else 1
+    
+    # Find the most common prefix and suffix combination
+    common_parts = Counter(matching_titles).most_common(1)[0][0]
+    
+    # Construct the new title
+    new_title = f"{common_parts[0].strip()} {ordinal(next_number)} {common_parts[1].strip()}"
+    if common_parts[2]:  # If there's a F/up or Follow-up
+        new_title += f"{common_parts[2].strip()}"
+
+
     # 处理 "visit" 类型的标题
     if base_title.lower().startswith("visit"):
         visit_pattern = re.compile(r'(\d+)(st|nd|rd|th)\s*(visit\s*\w*)', re.IGNORECASE)
@@ -897,7 +936,7 @@ def generate_unique_title(existing_titles, base_title, new_titles, number):
         #new_title = f"{base_title} {ordinal(next_number)}" 
         '''決定 Untitled 和 40th visit 以外的標題後綴，是否也要遞增序數詞'''
     
-    return new_title
+    return new_title.strip()
 
 if len(resultList) > 0:
     for i, el in enumerate(resultList):
@@ -2395,6 +2434,70 @@ def generate_unique_title(existing_titles, base_title, new_titles, number):
     positions = []
     numbers = []
     
+    # Function to check if a title is relevant to the base_title
+    def is_relevant_title(title, base):
+        return base.lower() in title.lower()
+    
+    # Filter relevant titles
+    relevant_titles = [title for title in all_titles if is_relevant_title(title, base_title)]
+    
+    if not relevant_titles:
+        return base_title  # If no relevant titles found, return the original base_title
+    
+    # Pattern to match ordinal numbers and surrounding text
+    pattern = re.compile(r'(.*?)(\d+)(st|nd|rd|th)\s*(.*?)((?:\s*F\/up|\s*Follow[\s-]up)?)', re.IGNORECASE)
+    
+    matching_titles = []
+    numbers = []
+    
+    for title in relevant_titles:
+        match = pattern.search(title)
+        if match:
+            prefix, num, _, suffix, followup = match.groups()
+            numbers.append(int(num))
+            matching_titles.append((prefix.strip(), suffix.strip(), followup.strip()))
+    
+    if not matching_titles:
+        return base_title  # If no matching structure found in relevant titles
+    
+    # Determine the next number
+    next_number = max(numbers) + 1 if numbers else 1
+    
+    # Find the most common prefix and suffix combination
+    common_parts = Counter(matching_titles).most_common(1)[0][0]
+    
+    # Construct the new title
+    new_title = f"{common_parts[0].strip()} {ordinal(next_number)} {common_parts[1].strip()}"
+    if common_parts[2]:  # If there's a F/up or Follow-up
+        new_title += f"{common_parts[2].strip()}"
+
+
+    # 处理 "visit" 类型的标题
+    if base_title.lower().startswith("visit"):
+        visit_pattern = re.compile(r'(\d+)(st|nd|rd|th)\s*(visit\s*\w*)', re.IGNORECASE)
+        numbers = []
+        full_visit_titles = []
+        
+        for title in all_titles:
+            match = visit_pattern.search(title)
+            if match:
+                num = int(match.group(1))
+                numbers.append(num)
+                full_visit_titles.append(match.group(3))
+        
+        if numbers:
+            next_number = max(numbers) + 1
+        else:
+            next_number = 1
+        
+        # 使用最常见的完整 "visit" 标题
+        if full_visit_titles:
+            most_common_visit = max(set(full_visit_titles), key=full_visit_titles.count)
+        else:
+            most_common_visit = "visit"
+        
+        return f"{ordinal(next_number)} {most_common_visit}"
+    
     # 特殊处理 "Untitled" 标题
     if base_title == "Untitled":
         untitled_exists = any(title.strip() == "Untitled" for title in all_titles)
@@ -2444,7 +2547,7 @@ def generate_unique_title(existing_titles, base_title, new_titles, number):
         #new_title = f"{base_title} {ordinal(next_number)}" 
         '''決定 Untitled 和 40th visit 以外的標題後綴，是否也要遞增序數詞'''
     
-    return new_title
+    return new_title.strip()
 
 def create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, end=None):
     
