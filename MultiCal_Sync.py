@@ -775,7 +775,7 @@ No_pages_modified = True
 
 
 # 定义一些正确的拼写选项
-correct_terms = ["Physiotherapy", "General Physiotherapy", "Soka", "RUKA", "UMMC", "Sync"]
+correct_terms = ["Untitled", "Physiotherapy", "General Physiotherapy", "Soka", "RUKA", "UMMC", "Sync"]
 protected_terms = ["JC", "Appt.", "【Appt.】", "【Appt】", "Untitled"]  # 这些词不需要校正
 
 # 判断是否为专业术语或保護詞
@@ -791,6 +791,13 @@ def is_special_term(term):
 
 # 进行拼写校正，专有词汇用 fuzzywuzzy，其他词用 TextBlob
 def correct_spelling(term):
+    # 如果是 "Untitled"，直接返回，不進行校正
+    if term.lower().startswith("untitled"):
+        return "Untitled"
+
+    if re.match(r'^\s+$', term):
+        return "Untitled"
+
     # 先检查是否是保護詞或专业术语，直接返回原词
     if is_special_term(term):
         return term
@@ -851,16 +858,42 @@ def extract_number_and_position(title):
         return int(match.group(1)), match.start(), match.end()
     return None, None, None
 
-def generate_unique_title(existing_titles, base_title, new_titles, number):    
+def generate_unique_title(existing_titles, base_title, new_titles, number):
     new_title = base_title  # Initialize new_title with a default value
     all_titles = existing_titles + new_titles
+
+    # 去除空白字符並轉換為小寫
+    base_title_clean = base_title.strip().lower()
 
     # 对基础标题进行拼写校正，先 TextBlob 后 fuzzywuzzy
     base_title = correct_spelling(base_title)
 
     # 继续进行模糊匹配和生成标题的逻辑
     positions = []
-    numbers = []    
+    numbers = []
+
+    # 特殊处理 "Untitled" 标题
+    if base_title == "Untitled":
+        untitled_exists = any(title.strip() == "Untitled" for title in all_titles)
+        untitled_numbers = [0]  # 用于存储 "Untitled" 后的数字，0 表示仅 "Untitled"
+        
+        for title in all_titles:
+            if title.startswith("Untitled"):
+                try:
+                    # 尝试提取序号，忽略无序号的 "Untitled"
+                    num = int(title.split(" ")[-1])
+                    untitled_numbers.append(num)
+                except ValueError:
+                    continue
+        
+        if untitled_exists:
+            next_number = 2  # 如果存在 "Untitled"，从 "Untitled 2" 开始
+            while next_number in untitled_numbers:
+                next_number += 1
+            return f"{base_title} {next_number}"
+        else:
+            return "Untitled"  # 如果不存在 "Untitled"，直接返回
+        
     
     # Function to check if a title is relevant to the base_title
     def is_relevant_title(title, base):
@@ -925,41 +958,6 @@ def generate_unique_title(existing_titles, base_title, new_titles, number):
             most_common_visit = "visit"
         
         return f"{ordinal(next_number)} {most_common_visit}"
-
-    # 特殊处理 "Untitled" 标题
-    if base_title == "Untitled":
-        untitled_exists = any(title.strip() == "Untitled" for title in all_titles)
-        untitled_numbers = [0]  # 用于存储 "Untitled" 后的数字，0 表示仅 "Untitled"
-        
-        for title in all_titles:
-            if title.startswith("Untitled"):
-                try:
-                    # 尝试提取序号，忽略无序号的 "Untitled"
-                    num = int(title.split(" ")[-1])
-                    untitled_numbers.append(num)
-                except ValueError:
-                    continue
-        
-        if untitled_exists:
-            next_number = 2  # 如果存在 "Untitled"，从 "Untitled 2" 开始
-            while next_number in untitled_numbers:
-                next_number += 1
-            return f"{base_title} {next_number}"
-        else:
-            return "Untitled"  # 如果不存在 "Untitled"，直接返回
-    
-    # 处理其他带基础标题的情况
-    for title in all_titles:
-        if base_title in title:
-            number, start_pos, end_pos = extract_number_and_position(title)
-            if number is not None:
-                numbers.append(number)
-                positions.append((start_pos, end_pos))
-    
-    if not numbers:
-        next_number = 1
-    else:
-        next_number = max(numbers) + 1
     
     # 確保 "JC" 標題保持 "visit"
     if base_title.lower() == "jc":
@@ -984,13 +982,30 @@ def generate_unique_title(existing_titles, base_title, new_titles, number):
         pass  # 保留原有逻辑
         #new_title = f"{base_title} {ordinal(next_number)}" 
         '''決定 Untitled 和 40th visit 以外的標題後綴，是否也要遞增序數詞'''
+
+
+    # 处理其他带基础标题的情况
+    for title in all_titles:
+        if base_title in title:
+            number, start_pos, end_pos = extract_number_and_position(title)
+            if number is not None:
+                numbers.append(number)
+                positions.append((start_pos, end_pos))
     
+    if not numbers:
+        next_number = 1
+    else:
+        next_number = max(numbers) + 1
+
     return new_title.strip()
 
 
 animate_text_wave_with_progress(text="Loading", new_text="Checked 1", target_percentage=6, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
 
 clear_line()
+
+# 初始化计数器
+untitled_counter = 1
 
 if len(resultList) > 0:
     for i, el in enumerate(resultList):
@@ -999,7 +1014,14 @@ if len(resultList) > 0:
         if el['properties'][Task_Notion_Name]['title'] and el['properties'][Task_Notion_Name]['title'][0]['text']['content'] != None:
             TaskNames.append(el['properties'][Task_Notion_Name]['title'][0]['text']['content'])
         else:
-            TaskNames.append("random")
+            # 生成唯一的标题
+            while True:
+                new_title = f"Untitled {untitled_counter}"
+                if new_title not in TaskNames:
+                    TaskNames.append(new_title)
+                    untitled_counter += 1  # 如果标题已经存在，递增计数器
+                    break
+                untitled_counter += 1  # 增加计数器
 
         # 解析开始和结束日期
         start_date_str = el['properties'][Date_Notion_Name]['date']['start']
@@ -2444,6 +2466,13 @@ def is_special_term(term):
 
 # 进行拼写校正，专有词汇用 fuzzywuzzy，其他词用 TextBlob
 def correct_spelling(term):
+    # 如果是 "Untitled"，直接返回，不進行校正
+    if term.lower().startswith("untitled"):
+        return "Untitled"
+
+    if re.match(r'^\s+$', term):
+        return "Untitled"
+
     # 先检查是否是保護詞或专业术语，直接返回原词
     if is_special_term(term):
         return term
@@ -2475,28 +2504,6 @@ def get_existing_titles(service, n_months_ago, calendar_id):
         print(f"An error occurred: {e}")
         return []
 
-def get_existing_untitled_task_count(notion_token, database_id):
-    notion = Client(auth=notion_token)
-    query = {
-        "filter": {
-            "or": [
-                {
-                    "property": "Task Name",
-                    "title": {
-                        "contains": "Untitled"
-                    }
-                }
-            ]
-        }
-    }
-    try:        
-        response = notion.databases.query(database_id=database_id, **query)
-        untitled_task_count = len(response.get("results", []))
-        return untitled_task_count
-    except Exception as e:
-        print(f"Failed to query the database: {e}")
-        return 0
-
 def ordinal(n):
     if 10 <= n % 100 <= 20:
         suffix = 'th'
@@ -2510,16 +2517,42 @@ def extract_number_and_position(title):
         return int(match.group(1)), match.start(), match.end()
     return None, None, None
 
-def generate_unique_title(existing_titles, base_title, new_titles, number):    
+def generate_unique_title(existing_titles, base_title, new_titles, number):
     new_title = base_title  # Initialize new_title with a default value
     all_titles = existing_titles + new_titles
+
+    # 去除空白字符並轉換為小寫
+    base_title_clean = base_title.strip().lower()
 
     # 对基础标题进行拼写校正，先 TextBlob 后 fuzzywuzzy
     base_title = correct_spelling(base_title)
 
     # 继续进行模糊匹配和生成标题的逻辑
     positions = []
-    numbers = []    
+    numbers = []
+
+    # 特殊处理 "Untitled" 标题
+    if base_title == "Untitled":
+        untitled_exists = any(title.strip() == "Untitled" for title in all_titles)
+        untitled_numbers = [0]  # 用于存储 "Untitled" 后的数字，0 表示仅 "Untitled"
+        
+        for title in all_titles:
+            if title.startswith("Untitled"):
+                try:
+                    # 尝试提取序号，忽略无序号的 "Untitled"
+                    num = int(title.split(" ")[-1])
+                    untitled_numbers.append(num)
+                except ValueError:
+                    continue
+        
+        if untitled_exists:
+            next_number = 2  # 如果存在 "Untitled"，从 "Untitled 2" 开始
+            while next_number in untitled_numbers:
+                next_number += 1
+            return f"{base_title} {next_number}"
+        else:
+            return "Untitled"  # 如果不存在 "Untitled"，直接返回
+        
     
     # Function to check if a title is relevant to the base_title
     def is_relevant_title(title, base):
@@ -2584,41 +2617,6 @@ def generate_unique_title(existing_titles, base_title, new_titles, number):
             most_common_visit = "visit"
         
         return f"{ordinal(next_number)} {most_common_visit}"
-
-    # 特殊处理 "Untitled" 标题
-    if base_title == "Untitled":
-        untitled_exists = any(title.strip() == "Untitled" for title in all_titles)
-        untitled_numbers = [0]  # 用于存储 "Untitled" 后的数字，0 表示仅 "Untitled"
-        
-        for title in all_titles:
-            if title.startswith("Untitled"):
-                try:
-                    # 尝试提取序号，忽略无序号的 "Untitled"
-                    num = int(title.split(" ")[-1])
-                    untitled_numbers.append(num)
-                except ValueError:
-                    continue
-        
-        if untitled_exists:
-            next_number = 2  # 如果存在 "Untitled"，从 "Untitled 2" 开始
-            while next_number in untitled_numbers:
-                next_number += 1
-            return f"{base_title} {next_number}"
-        else:
-            return "Untitled"  # 如果不存在 "Untitled"，直接返回
-    
-    # 处理其他带基础标题的情况
-    for title in all_titles:
-        if base_title in title:
-            number, start_pos, end_pos = extract_number_and_position(title)
-            if number is not None:
-                numbers.append(number)
-                positions.append((start_pos, end_pos))
-    
-    if not numbers:
-        next_number = 1
-    else:
-        next_number = max(numbers) + 1
     
     # 確保 "JC" 標題保持 "visit"
     if base_title.lower() == "jc":
@@ -2643,7 +2641,21 @@ def generate_unique_title(existing_titles, base_title, new_titles, number):
         pass  # 保留原有逻辑
         #new_title = f"{base_title} {ordinal(next_number)}" 
         '''決定 Untitled 和 40th visit 以外的標題後綴，是否也要遞增序數詞'''
+
+
+    # 处理其他带基础标题的情况
+    for title in all_titles:
+        if base_title in title:
+            number, start_pos, end_pos = extract_number_and_position(title)
+            if number is not None:
+                numbers.append(number)
+                positions.append((start_pos, end_pos))
     
+    if not numbers:
+        next_number = 1
+    else:
+        next_number = max(numbers) + 1
+
     return new_title.strip()
 
 def create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, end=None):
