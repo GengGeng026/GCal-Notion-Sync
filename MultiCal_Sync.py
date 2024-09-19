@@ -2765,7 +2765,9 @@ animate_text_wave_with_progress(text="Loading", new_text="Checked 4", target_per
 clear_line()
 
 ###########################################################################
-##### Part 5: Deletion Sync -- If marked Done in Notion, then it will delete the GCal event (and the Notion event once Python API updates)
+##### Part 5: Deletion Sync -- If marked Done in Notion, 
+##### then it will delete the GCal event 
+##### (and the Notion event once Python API updates)
 ###########################################################################
 
 # Retrieve all pages from the database
@@ -2823,44 +2825,41 @@ if DELETE_OPTION == 0 and len(resultList) > 0: #delete gCal event (and Notion ta
         eventId = el['properties'][GCalEventId_Notion_Name]['rich_text'][0]['text']['content']
         pageId = el['id']
 
-        # 假设 isSuccess 用于标记Google Calendar和Notion任务是否成功删除
-        isSuccess = False  # 默认为False，后续根据实际情况更新
-
-        # 删除Google Calendar事件
+        # 删除 Google Calendar 事件
         try:
             service.events().delete(calendarId=calendarID, eventId=eventId).execute()
-            isSuccess = True  # 假设删除成功，则设置为True
+            # print(f"Google Calendar event {eventId} deleted successfully.")
         except Exception as e:
-            stop_clear_and_print()
-            print("Error deleting GCal event:", e)
-            start_dynamic_counter_indicator()
-            isSuccess = False  # 删除失败
-
-        # 删除Notion任务
-        if isSuccess:  # 如果Google Calendar事件删除成功，尝试删除Notion任务
-            try:
-                my_page = notion.pages.update(
-                    **{
-                        "page_id": pageId, 
-                        "archived": True, 
-                        "properties": {}
-                    },
-                )
-                # 假设Notion任务也删除成功
-            except Exception as e:
+            if e.resp.status == 410:
+                # 事件已經在 GCal 刪除，繼續處理 Notion 事件
+                print(f"Event {eventId} was already deleted on GCal.")
+            else:
                 stop_clear_and_print()
-                print("Error updating Notion task:", e)
+                print("Error deleting GCal event:", e)
                 start_dynamic_counter_indicator()
-                isSuccess = False  # 如果Notion任务更新失败，重置isSuccess
 
-        # 如果删除成功，更新successful_deletions
-        if isSuccess:
+        
+        # 无论 Google Calendar 刪除是否成功，删除 Notion 任务
+        try:
+            my_page = notion.pages.update(
+                **{
+                    "page_id": pageId, 
+                    "archived": True, 
+                    "properties": {}
+                },
+            )
+            # print(f"Notion task {task_title} deleted successfully.")
+            # 在 Notion 刪除成功的情況下，更新 successful_deletions
             if calendar_name not in successful_deletions:
                 successful_deletions[calendar_name] = {}
             if task_title not in successful_deletions[calendar_name]:
                 successful_deletions[calendar_name][task_title] = 1
             else:
                 successful_deletions[calendar_name][task_title] += 1
+        except Exception as e:
+            stop_clear_and_print()
+            print("Error deleting Notion task {task_title}:", e)
+            start_dynamic_counter_indicator()
 
     total_deleted_events = sum(count for tasks in successful_deletions.values() for count in tasks.values())
     
