@@ -776,7 +776,7 @@ No_pages_modified = True
 
 # 定义一些正确的拼写选项
 correct_terms = ["Physiotherapy", "General Physiotherapy", "Soka", "RUKA", "UMMC", "Sync"]
-protected_terms = ["JC", "Appt.", "【Appt.】", "【Appt】"]  # 这些词不需要校正
+protected_terms = ["JC", "Appt.", "【Appt.】", "【Appt】", "Untitled"]  # 这些词不需要校正
 
 # 判断是否为专业术语或保護詞
 def is_special_term(term):
@@ -2431,6 +2431,34 @@ for i in range(len(calIds)):
     if i >= len(delete_notion_flags):
         delete_notion_flags.insert(i, False)
 
+# 判断是否为专业术语或保護詞
+def is_special_term(term):
+    # 如果是保護詞，直接返回 True
+    if term in protected_terms:
+        return True
+    # 检查是否是拼写选项中的专业术语
+    for correct_term in correct_terms:
+        if correct_term.lower().startswith(term.lower()):
+            return True
+    return False
+
+# 进行拼写校正，专有词汇用 fuzzywuzzy，其他词用 TextBlob
+def correct_spelling(term):
+    # 先检查是否是保護詞或专业术语，直接返回原词
+    if is_special_term(term):
+        return term
+    
+    # 如果不是专业术语，则使用 TextBlob 进行拼写校正
+    blob = TextBlob(term)
+    corrected_term = str(blob.correct())
+
+    # 再使用 fuzzywuzzy 对校正后的结果进行模糊匹配
+    best_match = process.extractOne(corrected_term, correct_terms)
+    if best_match[1] > 80:  # 如果 fuzzywuzzy 的相似度较高，选择 fuzzywuzzy 的结果
+        return best_match[0]
+    
+    return corrected_term  # 否则返回 TextBlob 校正的结果
+
 def get_existing_titles(service, n_months_ago, calendar_id):
     # Include time in the start_date in RFC3339 format
     start_date = (datetime.now(pytz.UTC) - timedelta(days=30*n_months_ago)).isoformat()
@@ -2485,8 +2513,13 @@ def extract_number_and_position(title):
 def generate_unique_title(existing_titles, base_title, new_titles, number):    
     new_title = base_title  # Initialize new_title with a default value
     all_titles = existing_titles + new_titles
+
+    # 对基础标题进行拼写校正，先 TextBlob 后 fuzzywuzzy
+    base_title = correct_spelling(base_title)
+
+    # 继续进行模糊匹配和生成标题的逻辑
     positions = []
-    numbers = []
+    numbers = []    
     
     # Function to check if a title is relevant to the base_title
     def is_relevant_title(title, base):
@@ -2551,7 +2584,7 @@ def generate_unique_title(existing_titles, base_title, new_titles, number):
             most_common_visit = "visit"
         
         return f"{ordinal(next_number)} {most_common_visit}"
-    
+
     # 特殊处理 "Untitled" 标题
     if base_title == "Untitled":
         untitled_exists = any(title.strip() == "Untitled" for title in all_titles)
@@ -2586,6 +2619,16 @@ def generate_unique_title(existing_titles, base_title, new_titles, number):
         next_number = 1
     else:
         next_number = max(numbers) + 1
+    
+    # 確保 "JC" 標題保持 "visit"
+    if base_title.lower() == "jc":
+        visit_pattern = re.compile(r'(\d+)(st|nd|rd|th)\s*(visit\s*\w*)', re.IGNORECASE)
+        visit_titles = [title for title in all_titles if visit_pattern.search(title)]
+        
+        if visit_titles:
+            numbers = [int(visit_pattern.search(title).group(1)) for title in visit_titles]
+            next_number = max(numbers) + 1 if numbers else 1
+            return f"{ordinal(next_number)} visit {base_title}"
     
     # 保留原有逻辑处理其他带序数词的标题
     if positions:
