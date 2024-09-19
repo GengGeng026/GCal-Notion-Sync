@@ -1,4 +1,5 @@
 import os
+import re
 from dotenv import load_dotenv
 import httpx
 from notion_client import Client
@@ -769,6 +770,126 @@ no_new_updated = True
 no_new_added = True
 No_pages_modified = True
 
+
+def get_existing_titles_from_gcal(service, calendar_id, time_min):
+    # 确保 time_min 是 UTC 时间，并且格式正确
+    if isinstance(time_min, str):
+        time_min = datetime.strptime(time_min, "%Y-%m-%dT%H:%M:%S.%f")
+    
+    # 将时间转换为 UTC
+    time_min = time_min.astimezone(pytz.UTC)
+    
+    # 格式化时间为 RFC3339 格式
+    time_min_str = time_min.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
+    try:
+        events_result = service.events().list(
+            calendarId=calendar_id, 
+            timeMin=time_min_str, 
+            singleEvents=True, 
+            orderBy='startTime',
+            maxResults=2500  # 限制结果数量，避免请求过大
+        ).execute()
+        events = events_result.get('items', [])
+        return [event['summary'] for event in events if 'summary' in event]
+    
+    except HttpError as error:
+        print(f"An error occurred: {error}")
+        return []
+
+# 獲取過去 2 個月的事件
+n_months_ago = datetime.now(pytz.UTC) - timedelta(days=61)
+existing_titles = {}
+for calendar_id in calendarDictionary.values():
+    existing_titles[calendar_id] = get_existing_titles_from_gcal(service, calendar_id, n_months_ago)
+
+def ordinal(n):
+    if 10 <= n % 100 <= 20:
+        suffix = 'th'
+    else:
+        suffix = {1: 'st', 2: 'nd', 3: 'rd'}.get(n % 10, 'th')
+    return f"{n}{suffix}"
+
+def extract_number_and_position(title):
+    matches = re.finditer(r'\b(\d+)(st|nd|rd|th)\b', title)
+    for match in matches:
+        return int(match.group(1)), match.start(), match.end()
+    return None, None, None
+
+def generate_unique_title(existing_titles, base_title, new_titles, number):    
+    new_title = base_title  # Initialize new_title with a default value
+    all_titles = existing_titles + new_titles
+    positions = []
+    numbers = []
+    
+    # 处理 "visit JC" 类型的标题
+    if base_title.lower().startswith("visit"):
+        numbers = []
+        for title in all_titles:
+            if base_title.lower() in title.lower():
+                num, _, _ = extract_number_and_position(title)
+                if num is not None:
+                    numbers.append(num)
+        
+        if numbers:
+            next_number = max(numbers) + 1
+        else:
+            next_number = 1
+        
+        return f"{ordinal(next_number)} {base_title}"
+    
+    
+    # 特殊处理 "Untitled" 标题
+    if base_title == "Untitled":
+        untitled_exists = any(title.strip() == "Untitled" for title in all_titles)
+        untitled_numbers = [0]  # 用于存储 "Untitled" 后的数字，0 表示仅 "Untitled"
+        
+        for title in all_titles:
+            if title.startswith("Untitled"):
+                try:
+                    # 尝试提取序号，忽略无序号的 "Untitled"
+                    num = int(title.split(" ")[-1])
+                    untitled_numbers.append(num)
+                except ValueError:
+                    continue
+        
+        if untitled_exists:
+            next_number = 2  # 如果存在 "Untitled"，从 "Untitled 2" 开始
+            while next_number in untitled_numbers:
+                next_number += 1
+            return f"{base_title} {next_number}"
+        else:
+            return "Untitled"  # 如果不存在 "Untitled"，直接返回
+    
+    # 处理其他带基础标题的情况
+    for title in all_titles:
+        if base_title in title:
+            number, start_pos, end_pos = extract_number_and_position(title)
+            if number is not None:
+                numbers.append(number)
+                positions.append((start_pos, end_pos))
+    
+    if not numbers:
+        next_number = 1
+    else:
+        next_number = max(numbers) + 1
+    
+    # 保留原有逻辑处理其他带序数词的标题
+    if positions:
+        start_pos, end_pos = positions[0]
+        if start_pos == 0:
+            new_title = f"{ordinal(next_number)} {base_title}"
+        elif end_pos == len(existing_titles[0]):
+            pass  # 保留原有逻辑
+        else:
+            pass  # 保留原有逻辑
+    else:
+        pass  # 保留原有逻辑
+        #new_title = f"{base_title} {ordinal(next_number)}" 
+        '''決定 Untitled 和 40th visit 以外的標題後綴，是否也要遞增序數詞'''
+    
+    return new_title
+
 if len(resultList) > 0:
     for i, el in enumerate(resultList):
         
@@ -880,10 +1001,17 @@ if len(resultList) > 0:
                 # Handle other date formats or log error
                 pass
 
-        # 2 Cases: Start and End are  both either date or date+time #Have restriction that the calendar events don't cross days
+        # 2 Cases: Start and End are  both either date or date+time 
+        # #Have restriction that the calendar events don't cross days
         # 在尝试访问列表元素之前，检查索引 i 是否在所有相关列表的长度范围内
         if i < len(TaskNames) and i < len(start_Dates) and i < len(end_Times) and i < len(URL_list) and i < len(CalendarList):
             try:
+                
+                calendar_id = CalendarList[i]
+                unique_title = generate_unique_title(existing_titles[calendar_id], TaskNames[i], [], 1)
+                TaskNames[i] = unique_title
+                existing_titles[calendar_id].append(unique_title)
+
                 # Check if start_Dates has only date (no time) and end_Times is the same or not provided
                 if 'T' not in start_Dates[i] and (start_Dates[i] == end_Times[i] or not end_Times[i]):
                     # Use the improved function for date processing
@@ -895,29 +1023,64 @@ if len(resultList) > 0:
                 else:
                     #start and end are both dates
                     calEventId = makeCalEvent(TaskNames[i], makeEventDescription(Initiatives[i], ExtraInfo[i]), datetime.strptime(start_Dates[i], '%Y-%m-%d'), URL_list[i], datetime.strptime(end_Times[i], '%Y-%m-%d') + timedelta(days=1), CalendarList[i], all_day=True)
+
+                # 更新 Notion 页面的标题
+                notion.pages.update(
+                    **{
+                        "page_id": pageId,
+                        "properties": {
+                            Task_Notion_Name: {
+                                "title": [{
+                                    "text": {
+                                        "content": unique_title
+                                    }
+                                }]
+                            }
+                        },
+                    }
+                )
+
+            except Exception as e:
+                print(f"Error processing event {TaskNames[i]}: {e}")
             except:
                 try:
                     #start and end are both date+time
                     calEventId = makeCalEvent(TaskNames[i], makeEventDescription(Initiatives[i], ExtraInfo[i]), datetime.strptime(start_Dates[i][:-6], "%Y-%m-%dT%H:%M:%S.000"), URL_list[i],  datetime.strptime(end_Times[i][:-6], "%Y-%m-%dT%H:%M:%S.000"), CalendarList[i])
                 except:
                     calEventId = makeCalEvent(TaskNames[i], makeEventDescription(Initiatives[i], ExtraInfo[i]), datetime.strptime(start_Dates[i][:-6], "%Y-%m-%dT%H:%M:%S.%f"), URL_list[i],  datetime.strptime(end_Times[i][:-6], "%Y-%m-%dT%H:%M:%S.%f"), CalendarList[i])
+
+                notion.pages.update(
+                    **{
+                        "page_id": pageId,
+                        "properties": {
+                            Task_Notion_Name: {
+                                "title": [{
+                                    "text": {
+                                        "content": unique_title
+                                    }
+                                }]
+                            }
+                            # ... (其他需要更新的属性)
+                        },
+                    }
+                )
         else:
             # 如果索引超出范围，可以在这里记录错误或进行其他处理
             print(f"索引 {i} 超出范围。")
             
         no_new_added = False
 
-        # 检查任务名称是否为 "Untitled"
+        # 检查任务名称是否为 "random"
         if TaskNames[i] == "random":
             # 更新 Notion 页面的标题属性
             notion.pages.update(
                 **{
                     "page_id": pageId,
                     "properties": {
-                        Task_Notion_Name: {  # 假设这是 Notion 中任务标题的属性名称
+                        Task_Notion_Name: {
                             "title": [{
                                 "text": {
-                                    "content": TaskNames[i]  # 将标题设置为 "Untitled"
+                                    "content": TaskNames[i]  # 将标题设置为 "random"
                                 }
                             }]
                         }
@@ -2212,7 +2375,6 @@ def ordinal(n):
     return f"{n}{suffix}"
 
 def extract_number_and_position(title):
-    import re
     matches = re.finditer(r'\b(\d+)(st|nd|rd|th)\b', title)
     for match in matches:
         return int(match.group(1)), match.start(), match.end()
