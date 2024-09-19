@@ -822,22 +822,31 @@ def generate_unique_title(existing_titles, base_title, new_titles, number):
     positions = []
     numbers = []
     
-    # 处理 "visit JC" 类型的标题
+    # 处理 "visit" 类型的标题
     if base_title.lower().startswith("visit"):
+        visit_pattern = re.compile(r'(\d+)(st|nd|rd|th)\s*(visit\s*\w*)', re.IGNORECASE)
         numbers = []
+        full_visit_titles = []
+        
         for title in all_titles:
-            if base_title.lower() in title.lower():
-                num, _, _ = extract_number_and_position(title)
-                if num is not None:
-                    numbers.append(num)
+            match = visit_pattern.search(title)
+            if match:
+                num = int(match.group(1))
+                numbers.append(num)
+                full_visit_titles.append(match.group(3))
         
         if numbers:
             next_number = max(numbers) + 1
         else:
             next_number = 1
         
-        return f"{ordinal(next_number)} {base_title}"
-    
+        # 使用最常见的完整 "visit" 标题
+        if full_visit_titles:
+            most_common_visit = max(set(full_visit_titles), key=full_visit_titles.count)
+        else:
+            most_common_visit = "visit"
+        
+        return f"{ordinal(next_number)} {most_common_visit}"
     
     # 特殊处理 "Untitled" 标题
     if base_title == "Untitled":
