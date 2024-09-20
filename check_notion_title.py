@@ -129,18 +129,185 @@ LastUpdatedTime_Notion_Name  = 'Last Updated Time'
 Calendar_Notion_Name = 'Calendar'
 Current_Calendar_Id_Notion_Name = 'Current Calendar Id'
 Delete_Notion_Name = 'Delete from GCal?'
+#######################################################################################
+###               No additional user editing beyond this point is needed            ###
+#######################################################################################
 
-# 查詢 Notion 事件
-def check_event_title():
-    response = notion.databases.query(database_id=database_id)
+# Set up logging
+# 在正式部署前，將日誌級別設置為 INFO 或更高，這樣可以減少細節的輸出
+logging.basicConfig(filename='app.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
-    for result in response['results']:
-        title = result['properties']['Name']['title'][0]['text']['content']
-        if title == "" or title.isspace():
-            return True
-    return False
+# Create a lock
+token_lock = threading.Lock()
 
-if check_event_title():
-    print("true")
-else:
-    print("false")
+# Constants
+CREDENTIALS_LOCATION = os.getenv("GOOGLE_CALENDAR_CREDENTIALS_LOCATION")
+CLIENT_SECRET_FILE = os.getenv("GOOGLE_CALENDAR_CLI_SECRET_FILE")
+SCOPES = ['https://www.googleapis.com/auth/calendar.readonly', 'https://www.googleapis.com/auth/calendar.events']
+DEFAULT_CALENDAR_ID = 'primary'  # Replace with your Calendar ID
+
+def event_exists(service, calendar_id, event_id):
+    try:
+        service.events().get(calendarId=calendar_id, eventId=event_id).execute()
+        return True
+    except googleapiclient.errors.HttpError:
+        return False
+
+# Function to refresh token
+def refresh_token():
+    credentials = None
+    stop_event = threading.Event()  # Define stop_event at the beginning
+    thread = threading.Thread()  # Initialize thread variable
+    if os.path.exists(CREDENTIALS_LOCATION):
+        with open(CREDENTIALS_LOCATION, 'rb') as token:
+            credentials = pickle.load(token)
+    if not credentials or not credentials.valid:
+        if credentials and credentials.expired and credentials.refresh_token:
+            try:
+                credentials.refresh(Request())
+            except RefreshError:
+                os.remove(CREDENTIALS_LOCATION)
+                return refresh_token()
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRET_FILE, SCOPES)
+            credentials = flow.run_local_server(port=0)
+        with open(CREDENTIALS_LOCATION, 'wb') as token:
+            pickle.dump(credentials, token)
+        print(f"\nsuccessful Authentication / Refresh Token\n")
+    return credentials
+
+# Function to obtain calendar
+def obtain_calendar(service):
+    try:
+        calendar = service.calendars().get(calendarId=DEFAULT_CALENDAR_ID).execute()
+    except Exception as e:
+        # 僅捕獲和記錄必要的錯誤信息
+        logging.error('Error obtaining calendar: %s', e)
+        # 在發生錯誤時，重新授權並重新初始化服務
+        credentials = refresh_token()
+        service = build("calendar", "v3", credentials=credentials)
+        try:
+            calendar = service.calendars().get(calendarId=DEFAULT_CALENDAR_ID).execute()
+        except Exception as e:
+            # 如果仍然無法獲取日曆，則記錄錯誤並返回 None
+            logging.error('Error obtaining calendar after refreshing credentials: %s', e)
+            calendar = None
+    return calendar
+
+
+###########################################################################
+##### The Methods that we will use in this scipt are below
+###########################################################################
+
+# Main code
+credentials = refresh_token()
+service = build("calendar", "v3", credentials=credentials)
+calendar = obtain_calendar(service)
+
+###########################################################################
+##### Part 1: Take Notion Events not on GCal and move them over to GCal
+###########################################################################
+
+
+## Note that we are only querying for events that are today or in the next week so the code can be efficient. 
+## If you just want all Notion events to be on GCal, then you'll have to edit the query so it is only checking the 'On GCal?' property
+# Get today's date
+today = datetime.today()
+
+# Calculate the first day of this month
+this_month = datetime(today.year, today.month, 1)
+
+# Format the date to match the format used in your code
+this_month_str = this_month.strftime("%Y-%m-%dT%H:%M:%S.%f")
+
+my_page = notion.databases.query(  #this query will return a dictionary that we will parse for information that we want
+    **{
+        "database_id": database_id, 
+        "filter": {
+            "and": [
+                {
+                    "property": On_GCal_Notion_Name, 
+                    "checkbox":  {
+                        "equals": False
+                    }
+                }, 
+                {
+                    "property": Date_Notion_Name, 
+                    "date": {
+                        "on_or_after": this_month_str
+                    }
+                },
+                {
+                    "property": Delete_Notion_Name, 
+                    "checkbox":  {
+                        "equals": False
+                    }
+                },
+                {
+                    "property": Delete_Notion_Name, 
+                    "checkbox":  {
+                        "equals": False
+                    }
+                }
+            ]
+        },
+    }
+)
+resultList = my_page['results']
+
+TaskNames = []
+start_Dates = []
+end_Times = []
+Initiatives = []
+ExtraInfo = []
+URL_list = []
+calEventIdList = []
+CalendarList = []
+
+no_new_updated = True
+no_new_added = True
+No_pages_modified = True
+
+def get_existing_titles_from_gcal(service, calendar_id, time_min):
+    # 确保 time_min 是 UTC 时间，并且格式正确
+    if isinstance(time_min, str):
+        time_min = datetime.strptime(time_min, "%Y-%m-%dT%H:%M:%S.%f")
+    
+    # 将时间转换为 UTC
+    time_min = time_min.astimezone(pytz.UTC)
+    
+    # 格式化时间为 RFC3339 格式
+    time_min_str = time_min.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
+    try:
+        events_result = service.events().list(
+            calendarId=calendar_id, 
+            timeMin=time_min_str, 
+            singleEvents=True, 
+            orderBy='startTime',
+            maxResults=2500  # 限制结果数量，避免请求过大
+        ).execute()
+        events = events_result.get('items', [])
+        return [event['summary'] for event in events if 'summary' in event]
+    
+    except HttpError as error:
+        print(f"An error occurred: {error}")
+        return []
+
+# 獲取過去 2 個月的事件
+n_months_ago = datetime.now(pytz.UTC) - timedelta(days=61)
+existing_titles = {}
+for calendar_id in calendarDictionary.values():
+    existing_titles[calendar_id] = get_existing_titles_from_gcal(service, calendar_id, n_months_ago)
+
+if len(resultList) > 0:
+    for i, el in enumerate(resultList):
+        
+        # 检查标题列表是否为空
+        title = el['properties'][Task_Notion_Name]['title'][0]['text']['content']
+        if  title == None or title.isspace():
+            TaskNames.append(el['properties'][Task_Notion_Name]['title'][0]['text']['content'])
+            print("true")
+        else:
+            print("false")
+            
