@@ -789,7 +789,7 @@ def message(payload):
             elif Done_checking is True:
                 # # client.chat_postMessage(channel=channel_id, text="確認完畢 ✅✅")
                 updated_tasks.append((channel_id, text))  # 添加到列表中
-                print("Updated tasks added:", len(updated_tasks))
+                # print("Updated tasks added:", len(updated_tasks))
                 # print("Previous Start:", notion_info['previous_start'])
                 # print("Previous End:", notion_info['previous_end'])
                 # print("\n")
@@ -903,7 +903,7 @@ def process_buffer():
         notion_messages = [msg for msg in message_buffer if is_message_from_notion(msg['user_id'])]
 
         # 累积更新任务
-        print(f"累計更新 {len(updated_tasks)} 件\n")
+        # print(f"累計更新 {len(updated_tasks)} 件\n")
 
         current_buffer = message_buffer.copy()
         message_buffer.clear()
