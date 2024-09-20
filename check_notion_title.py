@@ -315,5 +315,5 @@ if len(resultList) > 0:
                 print("false")
         else:
             # 如果 title 列表为空
-            print("false: title 列表为空")
+            print("true")
             

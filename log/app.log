@@ -35775,3 +35775,19 @@ UnboundLocalError: cannot access local variable 'Done_checking' where it is not 
 2024-09-20 12:14:32,877 - werkzeug - INFO - 127.0.0.1 - - [20/Sep/2024 12:14:32] "POST /slack/events HTTP/1.0" 200 -
 2024-09-20 12:15:12,276 - INFO - 127.0.0.1 - - [20/Sep/2024 12:15:12] "POST /slack/events HTTP/1.0" 200 -
 2024-09-20 12:15:12,276 - werkzeug - INFO - 127.0.0.1 - - [20/Sep/2024 12:15:12] "POST /slack/events HTTP/1.0" 200 -
+2024-09-20 12:18:31,483 - INFO - This is an info message.
+2024-09-20 12:18:31,483 - root - INFO - This is an info message.
+2024-09-20 12:18:31,483 - ERROR - This is an error message.
+2024-09-20 12:18:31,483 - root - ERROR - This is an error message.
+2024-09-20 12:18:31,834 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-09-20 12:18:31,834 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-09-20 12:18:31,834 - INFO - [33mPress CTRL+C to quit[0m
+2024-09-20 12:18:31,834 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-09-20 12:18:49,291 - INFO - 127.0.0.1 - - [20/Sep/2024 12:18:49] "POST /slack/events HTTP/1.0" 200 -
+2024-09-20 12:18:49,291 - werkzeug - INFO - 127.0.0.1 - - [20/Sep/2024 12:18:49] "POST /slack/events HTTP/1.0" 200 -
+2024-09-20 12:18:51,176 - INFO - 127.0.0.1 - - [20/Sep/2024 12:18:51] "POST /slack/events HTTP/1.0" 200 -
+2024-09-20 12:18:51,176 - werkzeug - INFO - 127.0.0.1 - - [20/Sep/2024 12:18:51] "POST /slack/events HTTP/1.0" 200 -
+2024-09-20 12:19:12,842 - INFO - 127.0.0.1 - - [20/Sep/2024 12:19:12] "POST /slack/events HTTP/1.0" 200 -
+2024-09-20 12:19:12,842 - werkzeug - INFO - 127.0.0.1 - - [20/Sep/2024 12:19:12] "POST /slack/events HTTP/1.0" 200 -

@@ -588,6 +588,10 @@ def trigger_and_notify(channel_id):
                 confirmation_message_sent = True
                 no_change_notified = True
                 break
+            elif result == 'FAILURE':
+                confirmation_message_sent = True
+                no_change_notified = True
+                break
     
     finally:
         is_syncing = False
