@@ -422,6 +422,8 @@ def check_last_line_status(text):
 
 
 modified_pages_count = 0
+added_pages_count = 0
+deleted_pages_count = 0
 
 def extract_number(text):
     pattern = r"Total\s+Pages\s+Modified\s*:\s*(\d+)"
@@ -435,7 +437,7 @@ def extract_number(text):
         return None
 
 def check_pipeline_status(jenkins_url, username, password, job_name):
-    global modified_pages_count
+    global modified_pages_count, added_pages_count, deleted_pages_count
     pipeline_url = f'{jenkins_url}/job/{job_name}/lastBuild/consoleText'
     response = requests.get(pipeline_url, auth=(username, password))
     
@@ -448,26 +450,45 @@ def check_pipeline_status(jenkins_url, username, password, job_name):
         status = 'Unknown'
         no_changes = False
         modified_pages_count = None
+        added_pages_count = None
+        deleted_pages_count = None
         
         for line in lines:
             # print(f"處理行: {line}")
-            if 'No Condition is Met' in line or 'No Operation is Performed' in line or 'No Page is Modified' in line:
-                no_changes = True
-                # print("發現 'Total Pages Modified : 0'")
-            elif line.startswith('Finished: SUCCESS') or 'Total Pages' in line:
-                status = 'SUCCESS'
-                # print("設置 status 為 'SUCCESS'")
+            if 'Total Deleted Page' in line:
+                print(f"發現 'Total Deleted Page'，原始行內容: '{line}'")
+                parts = line.split(':')
+                if len(parts) == 2:
+                    # try:
+                        deleted_pages_count = int(parts[1].strip())
+                        print(f"提取的數字: {deleted_pages_count}")
+                        status = 'SUCCESS'
+            # elif line.startswith('Finished: SUCCESS') or 'Total Pages' in line:
+            #     status = 'SUCCESS'
+            #     print("設置 status 為 'SUCCESS'")
             if 'Total Pages Modified' in line:
-                # print(f"發現 'Total Pages Modified'，原始行內容: '{line}'")
+                print(f"發現 'Total Pages Modified'，原始行內容: '{line}'")
                 parts = line.split(':')
                 if len(parts) == 2:
                     # try:
                         modified_pages_count = int(parts[1].strip())
-                #         print(f"提取的數字: {modified_pages_count}")
+                        print(f"提取的數字: {modified_pages_count}")
+                        status = 'SUCCESS'
                 #     except ValueError:
                 #         print(f"無法將 '{parts[1].strip()}' 轉換為整數")
                 # else:
                 #     print(f"無法分割行: '{line}'")
+            if 'Total Added New N.Event' in line:
+                print(f"發現 'Total Added New N.Event'，原始行內容: '{line}'")
+                parts = line.split(':')
+                if len(parts) == 2:
+                    # try:
+                        added_pages_count = int(parts[1].strip())
+                        print(f"提取的數字: {added_pages_count}")
+                        status = 'SUCCESS'
+            if 'No Condition is Met' in line or 'No Operation is Performed' in line or 'No Page is Modified' in line:
+                no_changes = True
+                print("發現 'Total Pages Modified : 0'")
             elif line.startswith('Finished: FAILURE'):
                 status = 'FAILURE'
                 # print("設置 status 為 'FAILURE'")
@@ -475,7 +496,7 @@ def check_pipeline_status(jenkins_url, username, password, job_name):
         # print(f"最終的 modified_pages_count : {modified_pages_count}")
         
         if status == 'SUCCESS' and no_changes:
-            return 'No Change'
+            return 'SUCCESS'
         else:
             return status
     else:
@@ -578,7 +599,7 @@ processed_messages = set()
 #     return True
 
 def trigger_and_notify(channel_id):
-    global no_change_notified, is_syncing, confirmation_message_sent, modified_pages_count
+    global no_change_notified, is_syncing, confirmation_message_sent, modified_pages_count, added_pages_count, deleted_pages_count
     
     try:
         # 觸發 Jenkins 作業
@@ -589,20 +610,36 @@ def trigger_and_notify(channel_id):
             current_build_number = f" ` {build_number} ` "
         
         triggered_jobs = trigger_jenkins_job()
-        message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs is not None else f"✦  TimeLinker {current_build_number}\n檢查中 · · ·"
+        message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs is not None else f"✦  TimeLinkr™ {current_build_number}\n檢查中 · · ·"
         client.chat_postMessage(channel=channel_id, text=message)
         
         # 等待 Jenkins 作業完成
         while True:
             time.sleep(10)
             result = check_pipeline_status(jenkins_url, username, password, job_name)
+            print(f"Jenkins 狀態: {result}")
             if result == 'SUCCESS':
                 if modified_pages_count is not None:
-                    client.chat_postMessage(channel=channel_id, text=f"#` {modified_pages_count} `件同步完成")
+                    client.chat_postMessage(channel=channel_id, text=f"⟠` {modified_pages_count} `件同步完成")
+                    confirmation_message_sent = True
+                    no_change_notified = True
+                    break
+                if added_pages_count is not None:
+                    client.chat_postMessage(channel=channel_id, text=f"+` {added_pages_count} `頁新增完成")
+                    confirmation_message_sent = True
+                    no_change_notified = True
+                    break
+                if deleted_pages_count is not None:
+                    client.chat_postMessage(channel=channel_id, text=f"-` {deleted_pages_count} `頁刪除完成")
                     confirmation_message_sent = True
                     no_change_notified = True
                     break
             elif result == 'No Change':
+                client.chat_postMessage(channel=channel_id, text="Notion 暫無變更 🥕")
+                confirmation_message_sent = True
+                no_change_notified = True
+                break
+            elif result == 'Unknown':
                 client.chat_postMessage(channel=channel_id, text="Notion 暫無變更 🥕")
                 confirmation_message_sent = True
                 no_change_notified = True
@@ -621,7 +658,7 @@ def trigger_and_notify(channel_id):
 #         build_number = build_info['lastBuild']['number'] + 1
 #         current_build_number = f" `{build_number}` "
 #     triggered_jobs = trigger_jenkins_job()
-#     message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs is not None else f"✦ TimeLinker {current_build_number}\n檢查中 · · ·"
+#     message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs is not None else f"✦ TimeLinkr™ {current_build_number}\n檢查中 · · ·"
 #     client.chat_postMessage(channel=channel_id, text=message)
 #     threading.Timer(BUFFER_TIME, check_and_confirm, [channel_id]).start()
 #     try:
@@ -829,7 +866,7 @@ def message(payload):
                     build_number = build_info['lastBuild']['number'] + 1
                     current_build_number = f" ` {build_number} ` "
                 triggered_jobs = trigger_jenkins_job()
-                message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs is not None else f" ✦  TimeLinker {current_build_number}  \n檢查中 · · ·"
+                message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs is not None else f" ✦  TimeLinkr™ {current_build_number}  \n檢查中 · · ·"
                 client.chat_postMessage(channel=channel_id, text=message)
                 last_message.append(message)
                 # print("Previous Start:", notion_info['previous_start'])
@@ -952,7 +989,7 @@ def process_buffer():
         notion_messages = [msg for msg in message_buffer if is_message_from_notion(msg['user_id'])]
 
         # 累积更新任务
-        print(f"累計更新 {len(updated_tasks)} 件")
+        print(f"累計更新 {len(updated_tasks)} 件\n")
 
         current_buffer = message_buffer.copy()
         message_buffer.clear()
