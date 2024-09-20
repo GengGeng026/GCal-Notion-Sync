@@ -302,12 +302,18 @@ for calendar_id in calendarDictionary.values():
 
 if len(resultList) > 0:
     for i, el in enumerate(resultList):
-        
         # 检查标题列表是否为空
-        title = el['properties'][Task_Notion_Name]['title'][0]['text']['content']
-        if  title == None or title.isspace():
-            TaskNames.append(el['properties'][Task_Notion_Name]['title'][0]['text']['content'])
-            print("true")
+        title_list = el['properties'][Task_Notion_Name]['title']
+        
+        # 先判断 title 列表是否为空
+        if len(title_list) > 0:
+            title = title_list[0]['text']['content']
+            if title is None or title.isspace():
+                TaskNames.append(title)
+                print("true")
+            else:
+                print("false")
         else:
-            print("false")
+            # 如果 title 列表为空
+            print("false: title 列表为空")
             
