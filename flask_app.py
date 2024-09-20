@@ -390,7 +390,7 @@ def is_message_from_slack_user(user_id):
 jenkins_url = 'http://localhost:8081'
 username = 'admin'
 password = 'admin'
-job_name = 'TimeLinker'
+job_name = 'TimeLinkr'
 api_url = f'{jenkins_url}/job/{job_name}/api/json'
 pipeline_url = f'{jenkins_url}/job/{job_name}/lastBuild/consoleText'
 
@@ -449,12 +449,23 @@ def check_pipeline_status(jenkins_url, username, password, job_name):
         lines = response.text.split('\n')
         status = 'Unknown'
         no_changes = False
+        all_finished = False
         modified_pages_count = None
         added_pages_count = None
         deleted_pages_count = None
         
         for line in lines:
             # print(f"處理行: {line}")
+            if 'No Condition is Met' in line or \
+                'No Operation is Performed' in line or \
+                'No Page is Modified' in line :
+                no_changes = True
+            if 'All finished' in line:
+                all_finished = True
+                # print("發現 'Total Pages Modified : 0'")
+            elif line.startswith('Finished: FAILURE'):
+                status = 'FAILURE'
+                # print("設置 status 為 'FAILURE'")
             if 'Total Deleted Page' in line:
                 print(f"發現 'Total Deleted Page'，原始行內容: '{line}'")
                 parts = line.split(':')
@@ -486,17 +497,14 @@ def check_pipeline_status(jenkins_url, username, password, job_name):
                         added_pages_count = int(parts[1].strip())
                         print(f"提取的數字: {added_pages_count}")
                         status = 'SUCCESS'
-            if 'No Condition is Met' in line or 'No Operation is Performed' in line or 'No Page is Modified' in line:
-                no_changes = True
-                print("發現 'Total Pages Modified : 0'")
-            elif line.startswith('Finished: FAILURE'):
-                status = 'FAILURE'
-                # print("設置 status 為 'FAILURE'")
         
         # print(f"最終的 modified_pages_count : {modified_pages_count}")
         
         if status == 'SUCCESS' and no_changes:
             return 'SUCCESS'
+        elif no_changes:
+            if all_finished:
+                return 'No Change'
         else:
             return status
     else:
@@ -539,65 +547,6 @@ is_syncing = False
 trigger_lock = threading.Lock()
 processed_messages = set()
 
-
-# def check_for_updates():
-#     global message_buffer, updated_tasks
-#     if not message_buffer:
-#         return
-#     channel_id = message_buffer[0]['channel']
-#     try:
-#         # 获取数据库中最近更新的页面
-#         response = notion.databases.query(
-#             database_id=NOTION_DATABASE_ID,
-#             sorts=[
-#                 {
-#                     "property": Task_Notion_Name,
-#                     "direction": "descending"
-#                 },
-#                 {
-#                     "property": LastEditedTime_Notion_Name,
-#                     "direction": "descending"
-#                 }]
-#             # 移除page_size=1以获取所有结果
-#         )
-
-#         for result in response["results"]:
-#             task_Name = result["properties"][Task_Notion_Name]["title"][0]["text"]["content"]
-#             last_edited_time = result["last_edited_time"]
-#             last_edited_datetime = datetime.fromisoformat(last_edited_time.replace("Z", "+00:00"))
-#             now = last_edited_datetime <= datetime.now()
-                        
-#             # 获取当前时间的上一分钟
-#             current_time = datetime.datetime.now()
-#             previous_minute = current_time - datetime.timedelta(minutes=1)
-#             start_time = previous_minute - datetime.timedelta(minutes=5)
-
-#              # 在过去5分钟内
-#             if (datetime.now(last_edited_datetime.tzinfo) - last_edited_datetime < timedelta(minutes=5)) or now:
-#             # if (start_time <= last_edited_datetime < previous_minute:
-#                 updated_tasks.append((task_Name, last_edited_time))  # 添加到列表中
-
-#         if updated_tasks:
-#             print("\r\033[K" + f"Found recent update in Notion", end="")
-#             for task, time in updated_tasks:
-#                 print(f"{task}")
-#             return True, updated_tasks
-#         else:
-#             print("\r\033[K" + f"No recent updates found in Notion", end="")
-#             no_change_notified = True
-#             return False, [], no_change_notified
-#         pass
-#     except KeyError as e:
-#         print(f"Error checking for updates in Notion: {e}")
-#         # 设置一个错误标志，而不是直接发送消息
-#         return False
-#     except Exception as e:
-#         # 处理其他可能的错误
-#         print(f"Unexpected error: {e}")
-#         return False
-#     # 如果一切正常，返回 True 表示检查更新成功
-#     return True
-
 def trigger_and_notify(channel_id):
     global no_change_notified, is_syncing, confirmation_message_sent, modified_pages_count, added_pages_count, deleted_pages_count
     
@@ -620,17 +569,17 @@ def trigger_and_notify(channel_id):
             print(f"Jenkins 狀態: {result}")
             if result == 'SUCCESS':
                 if modified_pages_count is not None:
-                    client.chat_postMessage(channel=channel_id, text=f"⟠` {modified_pages_count} `件同步完成")
+                    client.chat_postMessage(channel=channel_id, text=f"#` {modified_pages_count} `件同步完成")
                     confirmation_message_sent = True
                     no_change_notified = True
                     break
                 if added_pages_count is not None:
-                    client.chat_postMessage(channel=channel_id, text=f"+` {added_pages_count} `頁新增完成")
+                    client.chat_postMessage(channel=channel_id, text=f"＋ ` {added_pages_count} `頁新增完成")
                     confirmation_message_sent = True
                     no_change_notified = True
                     break
                 if deleted_pages_count is not None:
-                    client.chat_postMessage(channel=channel_id, text=f"-` {deleted_pages_count} `頁刪除完成")
+                    client.chat_postMessage(channel=channel_id, text=f"－ ` {deleted_pages_count} `頁刪除完成")
                     confirmation_message_sent = True
                     no_change_notified = True
                     break
@@ -639,49 +588,10 @@ def trigger_and_notify(channel_id):
                 confirmation_message_sent = True
                 no_change_notified = True
                 break
-            elif result == 'Unknown':
-                client.chat_postMessage(channel=channel_id, text="Notion 暫無變更 🥕")
-                confirmation_message_sent = True
-                no_change_notified = True
-                break
     
     finally:
         is_syncing = False
         return no_change_notified, confirmation_message_sent
-
-
-# def trigger_and_notify(channel_id):
-#     global no_change_notified, is_syncing, confirmation_message_sent
-#     response = requests.get(api_url, auth=(username, password))
-#     if response.status_code == 200:
-#         build_info = response.json()
-#         build_number = build_info['lastBuild']['number'] + 1
-#         current_build_number = f" `{build_number}` "
-#     triggered_jobs = trigger_jenkins_job()
-#     message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs is not None else f"✦ TimeLinkr™ {current_build_number}\n檢查中 · · ·"
-#     client.chat_postMessage(channel=channel_id, text=message)
-#     threading.Timer(BUFFER_TIME, check_and_confirm, [channel_id]).start()
-#     try:
-#         while True:
-#             result = check_pipeline_status(jenkins_url, username, password, job_name)
-#             time.sleep(20)
-#             if result == 'No Change':
-#                 check_for_updates()
-#                 if not updated_tasks:
-#                     client.chat_postMessage(channel=channel_id, text="Notion 暫無變更 🥕")
-#                     no_change_notified = True
-#                     confirmation_message_sent = True
-#                 break
-#             elif result == 'SUCCESS':
-#                 check_for_updates()
-#                 if updated_tasks:
-#                     updates_count = len(updated_tasks)  # 计算已修改的 Notion 事件总数
-#                     client.chat_postMessage(channel=channel_id, text=f" `{updates_count}`  件同步完成 ✅")
-#                     confirmation_message_sent = True
-#                     break
-#     finally:
-#         is_syncing = False
-#         return no_change_notified, confirmation_message_sent
 
 def extract_text_from_blocks(blocks):
     all_text = []
