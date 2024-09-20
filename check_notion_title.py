@@ -301,19 +301,24 @@ for calendar_id in calendarDictionary.values():
     existing_titles[calendar_id] = get_existing_titles_from_gcal(service, calendar_id, n_months_ago)
 
 if len(resultList) > 0:
+    # print(len(resultList))
     for i, el in enumerate(resultList):
         # 检查标题列表是否为空
         title_list = el['properties'][Task_Notion_Name]['title']
+        # print(title_list)  # 打印 title_list，查看其內容
         
-        # 先判断 title 列表是否为空
-        if len(title_list) > 0:
-            title = title_list[0]['text']['content']
-            if title is None or title.isspace():
-                TaskNames.append(title)
-                print("true")
-            else:
-                print("false")
-        else:
-            # 如果 title 列表为空
+        # 处理 title_list 是空列表的情况
+        if not title_list:
+            # 如果 title_list 是空的，返回 true
+            TaskNames.append("空標題")
             print("true")
-            
+            break 
+
+        # 处理 title 列表有内容的情况
+        title = title_list[0]['text']['content']
+        # print(title)
+        if title is None or title.isspace():
+            TaskNames.append(title)
+            print("true")
+        else:
+            print("false")
