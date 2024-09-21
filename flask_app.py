@@ -577,7 +577,7 @@ def trigger_and_notify(channel_id):
                     client.chat_postMessage(channel=channel_id, text=f"＋ ` {added_pages_count} `新頁")
                     confirmation_message_sent = True
                     no_change_notified = True
-                    
+                    break
                 if deleted_pages_count is not None:
                     client.chat_postMessage(channel=channel_id, text=f"－ ` {deleted_pages_count} `舊頁")
                     confirmation_message_sent = True
