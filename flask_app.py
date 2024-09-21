@@ -548,7 +548,13 @@ trigger_lock = threading.Lock()
 processed_messages = set()
 
 def trigger_and_notify(channel_id):
-    global no_change_notified, is_syncing, confirmation_message_sent, modified_pages_count, added_pages_count, deleted_pages_count
+    global no_change_notified, is_syncing, confirmation_message_sent
+    global modified_pages_count, added_pages_count, deleted_pages_count
+    
+    # 重置計數器
+    modified_pages_count = None
+    added_pages_count = None
+    deleted_pages_count = None
     
     try:
         # 觸發 Jenkins 作業
@@ -566,28 +572,41 @@ def trigger_and_notify(channel_id):
         while True:
             time.sleep(10)
             result = check_pipeline_status(jenkins_url, username, password, job_name)
-            # print(f"Jenkins 狀態: {result}")
             if result == 'SUCCESS':
+                # 檢查每個條件，避免過早的 `break`
                 if modified_pages_count is not None:
                     client.chat_postMessage(channel=channel_id, text=f"〓 ` {modified_pages_count} `件同步完成")
                     confirmation_message_sent = True
                     no_change_notified = True
-                    break
+                    # 日誌：顯示修改頁面數量
+                    # print(f"已同步修改頁面數量: {modified_pages_count}")
+                    continue  # 改為繼續檢查其餘條件
+
                 if added_pages_count is not None:
                     client.chat_postMessage(channel=channel_id, text=f"＋ ` {added_pages_count} `新頁")
                     confirmation_message_sent = True
                     no_change_notified = True
-                    break
+                    # 日誌：顯示添加頁面數量
+                    # print(f"已添加頁面數量: {added_pages_count}")
+                    continue
+
                 if deleted_pages_count is not None:
                     client.chat_postMessage(channel=channel_id, text=f"－ ` {deleted_pages_count} `舊頁")
                     confirmation_message_sent = True
                     no_change_notified = True
-                    break
+                    # 日誌：顯示刪除頁面數量
+                    # print(f"已刪除頁面數量: {deleted_pages_count}")
+                    continue
+                break  # 在所有條件檢查完後才結束
+            
             elif result == 'No Change':
                 client.chat_postMessage(channel=channel_id, text="🪺 無新頁")
                 confirmation_message_sent = True
                 no_change_notified = True
+                # 日誌：無變更
+                # print("無變更頁面")
                 break
+            
             elif result == 'FAILURE':
                 confirmation_message_sent = True
                 no_change_notified = True
@@ -596,6 +615,7 @@ def trigger_and_notify(channel_id):
     finally:
         is_syncing = False
         return no_change_notified, confirmation_message_sent
+
 
 def extract_text_from_blocks(blocks):
     all_text = []

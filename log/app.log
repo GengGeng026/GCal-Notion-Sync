@@ -36723,3 +36723,165 @@ UnboundLocalError: cannot access local variable 'Done_checking' where it is not 
 2024-09-21 12:22:26,171 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:22:26] "POST /slack/events HTTP/1.0" 200 -
 2024-09-21 12:22:36,571 - INFO - 127.0.0.1 - - [21/Sep/2024 12:22:36] "POST /slack/events HTTP/1.0" 200 -
 2024-09-21 12:22:36,571 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:22:36] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:22:47,263 - INFO - 127.0.0.1 - - [21/Sep/2024 12:22:47] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:22:47,263 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:22:47] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:22:57,592 - INFO - 127.0.0.1 - - [21/Sep/2024 12:22:57] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:22:57,592 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:22:57] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:23:37,562 - INFO - 127.0.0.1 - - [21/Sep/2024 12:23:37] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:23:37,562 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:23:37] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:23:50,660 - INFO - 127.0.0.1 - - [21/Sep/2024 12:23:50] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:23:50,660 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:23:50] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:23:53,013 - INFO - 127.0.0.1 - - [21/Sep/2024 12:23:53] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:23:53,013 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:23:53] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:24:43,918 - INFO - 127.0.0.1 - - [21/Sep/2024 12:24:43] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:24:43,918 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:24:43] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:25:05,082 - INFO - 127.0.0.1 - - [21/Sep/2024 12:25:05] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:25:05,082 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:25:05] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:25:07,545 - INFO - 127.0.0.1 - - [21/Sep/2024 12:25:07] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:25:07,545 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:25:07] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:25:57,493 - INFO - 127.0.0.1 - - [21/Sep/2024 12:25:57] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:25:57,493 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:25:57] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:26:39,425 - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 776, in message
+    if Done_checking is False:
+       ^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'Done_checking' where it is not associated with a value
+2024-09-21 12:26:39,425 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 776, in message
+    if Done_checking is False:
+       ^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'Done_checking' where it is not associated with a value
+2024-09-21 12:26:39,428 - INFO - 127.0.0.1 - - [21/Sep/2024 12:26:39] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-09-21 12:26:39,428 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:26:39] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-09-21 12:26:53,059 - INFO - 127.0.0.1 - - [21/Sep/2024 12:26:53] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:26:53,059 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:26:53] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:26:55,235 - INFO - 127.0.0.1 - - [21/Sep/2024 12:26:55] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:26:55,235 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:26:55] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:26:58,259 - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 776, in message
+    if Done_checking is False:
+       ^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'Done_checking' where it is not associated with a value
+2024-09-21 12:26:58,259 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 776, in message
+    if Done_checking is False:
+       ^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'Done_checking' where it is not associated with a value
+2024-09-21 12:26:58,260 - INFO - 127.0.0.1 - - [21/Sep/2024 12:26:58] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-09-21 12:26:58,260 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:26:58] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-09-21 12:27:24,996 - INFO - 127.0.0.1 - - [21/Sep/2024 12:27:24] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:27:24,996 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:27:24] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:28:14,420 - INFO - 127.0.0.1 - - [21/Sep/2024 12:28:14] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:28:14,420 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:28:14] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:28:18,391 - INFO - 127.0.0.1 - - [21/Sep/2024 12:28:18] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:28:18,391 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:28:18] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:28:20,543 - INFO - 127.0.0.1 - - [21/Sep/2024 12:28:20] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:28:20,543 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:28:20] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:28:50,907 - INFO - 127.0.0.1 - - [21/Sep/2024 12:28:50] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:28:50,907 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:28:50] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:29:17,540 - INFO - 127.0.0.1 - - [21/Sep/2024 12:29:17] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:29:17,540 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:29:17] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:29:49,799 - INFO - 127.0.0.1 - - [21/Sep/2024 12:29:49] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:29:49,799 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:29:49] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:30:07,691 - INFO - 127.0.0.1 - - [21/Sep/2024 12:30:07] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:30:07,691 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:30:07] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:30:39,558 - INFO - 127.0.0.1 - - [21/Sep/2024 12:30:39] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:30:39,558 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:30:39] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:32:05,072 - INFO - 127.0.0.1 - - [21/Sep/2024 12:32:05] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:32:05,072 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:32:05] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:32:07,073 - INFO - 127.0.0.1 - - [21/Sep/2024 12:32:07] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:32:07,073 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:32:07] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:32:38,112 - INFO - 127.0.0.1 - - [21/Sep/2024 12:32:38] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:32:38,112 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:32:38] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:33:59,703 - INFO - 127.0.0.1 - - [21/Sep/2024 12:33:59] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:33:59,703 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:33:59] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:34:32,171 - INFO - 127.0.0.1 - - [21/Sep/2024 12:34:32] "POST /slack/events HTTP/1.0" 200 -
+2024-09-21 12:34:32,171 - werkzeug - INFO - 127.0.0.1 - - [21/Sep/2024 12:34:32] "POST /slack/events HTTP/1.0" 200 -
