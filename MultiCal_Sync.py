@@ -2910,6 +2910,28 @@ for el in resultList:
 animate_text_wave_with_progress(text="Loading", new_text="Checked 4.5", target_percentage=94, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
 clear_line()
 
+# 添加重试机制的辅助函数
+def delete_notion_task(notion, page_id, task_title, max_retries=3):
+    retries = 0
+    while retries < max_retries:
+        try:
+            response = notion.pages.update(
+                **{
+                    "page_id": page_id,
+                    "archived": True,  # 将任务存档而非物理删除
+                    "properties": {}
+                },
+            )
+            # print(f"Notion task '{task_title}' archived successfully.")
+            return response
+        except Exception as e:
+            retries += 1
+            print(f"Error deleting Notion task '{task_title}' (attempt {retries}/{max_retries}): {e}")
+            if retries >= max_retries:
+                print(f"Failed to delete Notion task '{task_title}' after {max_retries} attempts.")
+                return None
+            time.sleep(2)  # 重试前等待2秒
+
 if DELETE_OPTION == 0 and len(resultList) > 0: #delete gCal event (and Notion task once the Python API is updated)
     stop_clear_and_print()
     print("\n")
@@ -2947,34 +2969,22 @@ if DELETE_OPTION == 0 and len(resultList) > 0: #delete gCal event (and Notion ta
                 print("Error deleting GCal event:", e)
                 start_dynamic_counter_indicator()
 
+        # 无论 Google Calendar 刪除是否成功，删除 Notion 任务（带重试机制）
+        response = delete_notion_task(notion, pageId, task_title)
         
-        # 无论 Google Calendar 刪除是否成功，删除 Notion 任务
-        try:
-            my_page = notion.pages.update(
-                **{
-                    "page_id": pageId, 
-                    "archived": True, 
-                    "properties": {}
-                },
-            )
-            # print(f"Notion task {task_title} deleted successfully.")
-            # 在 Notion 刪除成功的情況下，更新 successful_deletions
+        # 如果删除成功，记录删除状态
+        if response:
             if calendar_name not in successful_deletions:
                 successful_deletions[calendar_name] = {}
             if task_title not in successful_deletions[calendar_name]:
                 successful_deletions[calendar_name][task_title] = 1
             else:
                 successful_deletions[calendar_name][task_title] += 1
-        except Exception as e:
-            stop_clear_and_print()
-            print("Error deleting Notion task {task_title}:", e)
-            start_dynamic_counter_indicator()
 
     total_deleted_events = sum(count for tasks in successful_deletions.values() for count in tasks.values())
     
     task_counter = 1  # 初始化任务计数器
 
-    
     # 所有删除操作完成后，根据successful_deletions打印成功删除的事件
     for calendar_name, tasks in successful_deletions.items():
         stop_clear_and_print()
@@ -2993,7 +3003,6 @@ if DELETE_OPTION == 0 and len(resultList) > 0: #delete gCal event (and Notion ta
                 start_dynamic_counter_indicator()
             task_counter += 1  # 更新任务计数器
 
-    
     ps_word = format_string("(s)", bold=True)
     page_word = "Page" if total_deleted_events == 1 else "Page" + ps_word
     stop_clear_and_print()
@@ -3001,7 +3010,6 @@ if DELETE_OPTION == 0 and len(resultList) > 0: #delete gCal event (and Notion ta
     start_dynamic_counter_indicator()
     no_new_updated = False
     No_pages_modified = False
-
 
 stop_clear_and_print()
 animate_text_wave("FINAL checked", repeat=1)
