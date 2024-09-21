@@ -474,7 +474,7 @@ def check_pipeline_status(jenkins_url, username, password, job_name):
                     status = 'SUCCESS'
         
         if status == 'SUCCESS' and no_changes:
-            return 'SUCCESS'
+            return 'SUCCESS', 'All finished'
         elif no_changes and all_finished:
             return 'No Change'
         else:
@@ -490,6 +490,10 @@ received_previous_end = False
 last_message_was_related = False  # 用於跟踪上一次消息是否與關鍵字相關
 waiting_for_confirmation = False  # 用於標記是否正在等待用戶確認
 confirmation_message_sent = False  # 用於標記是否已經發送確認消息
+messages_sent = False
+modification_message_sent = False
+addition_message_sent = False
+deletion_message_sent = False
 last_triggered_keyword = None  # 用於跟踪最後一次觸發的關鍵字
 last_message = None
 
@@ -505,7 +509,7 @@ def trigger_jenkins_job():
             response_data = response.json()
             jobs = response_data.get('jobs', {})
             end_time = time.time()
-            return f" ✦  {', '.join(jobs.keys())}" + f"{current_build_number}"
+            return f" ✦  {', '.join(jobs.keys())}™" + f"{current_build_number}"
         else:
             logging.error(f"Failed to trigger Jenkins job. Status code: {response.status_code}")
     except requests.exceptions.RequestException as e:
@@ -521,7 +525,7 @@ trigger_lock = threading.Lock()
 processed_messages = set()
 
 def trigger_and_notify(channel_id):
-    global no_change_notified, is_syncing, confirmation_message_sent
+    global no_change_notified, is_syncing, confirmation_message_sent, modification_message_sent, addition_message_sent, deletion_message_sent, messages_sent
     global modified_pages_count, added_pages_count, deleted_pages_count
     
     # 重置計數器
@@ -540,29 +544,51 @@ def trigger_and_notify(channel_id):
         triggered_jobs = trigger_jenkins_job()
         message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs is not None else f"✦  TimeLinkr™ {current_build_number}\n檢查中 · · ·"
         client.chat_postMessage(channel=channel_id, text=message)
+    
+        max_attempts = 3
+        attempt = 0
         
         # 等待 Jenkins 作業完成
         while True:
             time.sleep(10)
             result = check_pipeline_status(jenkins_url, username, password, job_name)
-            if result == 'SUCCESS':
-                # 檢查每個條件，避免過早的 `break`
-                if modified_pages_count is not None:
-                    client.chat_postMessage(channel=channel_id, text=f"〓 ` {modified_pages_count} `件同步完成")
-                    confirmation_message_sent = True
-                    no_change_notified = True
-
-                if added_pages_count is not None:
-                    client.chat_postMessage(channel=channel_id, text=f"＋ ` {added_pages_count} `新頁")
-                    confirmation_message_sent = True
-                    no_change_notified = True
-
-                if deleted_pages_count is not None:
-                    client.chat_postMessage(channel=channel_id, text=f"－ ` {deleted_pages_count} `舊頁")
-                    confirmation_message_sent = True
-                    no_change_notified = True
+            
+            messages_sent = False  # 假設所有消息都將發送成功
+            
+            print(f"BEFORE: attempt: {attempt}")
+            print(f"result: {result}")
+            if result == 'SUCCESS' and messages_sent is False:
+                # 檢查每個條件，避免過早的 break
                 
-                break  # 在所有條件檢查完後才結束
+                
+                print(f"modified_pages_count: {modified_pages_count}")
+                if modified_pages_count is not None and modification_message_sent is False:
+                    client.chat_postMessage(channel=channel_id, text=f"〓 ` {modified_pages_count} `件同步完成")
+                    modification_message_sent = True
+                    confirmation_message_sent = True
+                    no_change_notified = True
+
+                print(f"added_pages_count: {added_pages_count}")
+                if added_pages_count is not None and addition_message_sent is False:
+                    client.chat_postMessage(channel=channel_id, text=f"＋ ` {added_pages_count} `新頁")
+                    addition_message_sent = True
+                    confirmation_message_sent = True
+                    no_change_notified = True
+
+                print(f"deleted_pages_count: {deleted_pages_count}")
+                if deleted_pages_count is not None and deletion_message_sent is False:
+                    client.chat_postMessage(channel=channel_id, text=f"－ ` {deleted_pages_count} `舊頁")
+                    deletion_message_sent = True
+                    confirmation_message_sent = True
+                    no_change_notified = True
+
+                attempt += 1
+                
+                # 檢查是否所有消息都已發送
+                print(f"AFTER: attempt: {attempt}")
+                if attempt >= max_attempts:
+                    messages_sent = True
+                    break  # 所有消息已發送，退出循環
             
             elif result == 'No Change':
                 client.chat_postMessage(channel=channel_id, text="🪺 無新頁")
@@ -571,13 +597,14 @@ def trigger_and_notify(channel_id):
                 break
             
             elif result == 'FAILURE':
+                client.chat_postMessage(channel=channel_id, text="⚠️ Jenkins 任務失敗")
                 confirmation_message_sent = True
                 no_change_notified = True
                 break
     
     finally:
         is_syncing = False
-        return no_change_notified, confirmation_message_sent
+        return no_change_notified, confirmation_message_sent, modification_message_sent, addition_message_sent, deletion_message_sent, messages_sent
 
 
 def extract_text_from_blocks(blocks):
@@ -645,7 +672,7 @@ def parse_notion_message(blocks):
 message_buffer = []
 buffer_lock = threading.Lock()
 buffer_timer = None
-BUFFER_TIME = 30
+BUFFER_TIME = 22
 previous_messages = []
 other_messages = []
 last_updated_tasks_count = 0
