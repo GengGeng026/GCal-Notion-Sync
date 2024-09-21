@@ -555,27 +555,27 @@ def trigger_and_notify(channel_id):
             
             messages_sent = False  # 假設所有消息都將發送成功
             
-            # print(f"BEFORE: attempt: {attempt}")
-            # print(f"result: {result}")
+            print(f"BEFORE: attempt: {attempt}")
+            print(f"result: {result}")
             if result == 'SUCCESS' and messages_sent is False:
                 # 檢查每個條件，避免過早的 break
                 
                 
-                # print(f"modified_pages_count: {modified_pages_count}")
+                print(f"modified_pages_count: {modified_pages_count}")
                 if modified_pages_count is not None and modification_message_sent is False:
                     client.chat_postMessage(channel=channel_id, text=f"〓 ` {modified_pages_count} `件同步完成")
                     modification_message_sent = True
                     confirmation_message_sent = True
                     no_change_notified = True
 
-                # print(f"added_pages_count: {added_pages_count}")
+                print(f"added_pages_count: {added_pages_count}")
                 if added_pages_count is not None and addition_message_sent is False:
                     client.chat_postMessage(channel=channel_id, text=f"＋ ` {added_pages_count} `新頁")
                     addition_message_sent = True
                     confirmation_message_sent = True
                     no_change_notified = True
 
-                # print(f"deleted_pages_count: {deleted_pages_count}")
+                print(f"deleted_pages_count: {deleted_pages_count}")
                 if deleted_pages_count is not None and deletion_message_sent is False:
                     client.chat_postMessage(channel=channel_id, text=f"－ ` {deleted_pages_count} `舊頁")
                     deletion_message_sent = True
@@ -585,7 +585,7 @@ def trigger_and_notify(channel_id):
                 attempt += 1
                 
                 # 檢查是否所有消息都已發送
-                # print(f"AFTER: attempt: {attempt}")
+                print(f"AFTER: attempt: {attempt}")
                 if attempt >= max_attempts:
                     messages_sent = True
                     break  # 所有消息已發送，退出循環
