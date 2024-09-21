@@ -440,12 +440,8 @@ def check_pipeline_status(jenkins_url, username, password, job_name):
     global modified_pages_count, added_pages_count, deleted_pages_count
     pipeline_url = f'{jenkins_url}/job/{job_name}/lastBuild/consoleText'
     response = requests.get(pipeline_url, auth=(username, password))
-    
-    if response.status_code == 200:
-        # print("完整的 response.text:")
-        # print(response.text)
-        # print("------------------------")
 
+    if response.status_code == 200:
         lines = response.text.split('\n')
         status = 'Unknown'
         no_changes = False
@@ -455,61 +451,38 @@ def check_pipeline_status(jenkins_url, username, password, job_name):
         deleted_pages_count = None
         
         for line in lines:
-            # print(f"處理行: {line}")
-            if 'No Condition is Met' in line or \
-                'No Operation is Performed' in line or \
-                'No Page is Modified' in line :
+            if 'No Condition is Met' in line or 'No Operation is Performed' in line or 'No Page is Modified' in line:
                 no_changes = True
             if 'All finished' in line:
                 all_finished = True
-                # print("發現 'Total Pages Modified : 0'")
-            elif line.startswith('Finished: FAILURE'):
+            elif 'Finished: FAILURE' in line:
                 status = 'FAILURE'
-                # print("設置 status 為 'FAILURE'")
             if 'Total Deleted Page' in line:
-                # print(f"發現 'Total Deleted Page'，原始行內容: '{line}'")
                 parts = line.split(':')
                 if len(parts) == 2:
-                    # try:
-                        deleted_pages_count = int(parts[1].strip())
-                        # print(f"提取的數字: {deleted_pages_count}")
-                        status = 'SUCCESS'
-            # elif line.startswith('Finished: SUCCESS') or 'Total Pages' in line:
-            #     status = 'SUCCESS'
-            #     print("設置 status 為 'SUCCESS'")
-            if 'Total Pages Modified' in line:
-                # print(f"發現 'Total Pages Modified'，原始行內容: '{line}'")
-                parts = line.split(':')
-                if len(parts) == 2:
-                    # try:
-                        modified_pages_count = int(parts[1].strip())
-                        # print(f"提取的數字: {modified_pages_count}")
-                        status = 'SUCCESS'
-                #     except ValueError:
-                #         print(f"無法將 '{parts[1].strip()}' 轉換為整數")
-                # else:
-                #     print(f"無法分割行: '{line}'")
+                    deleted_pages_count = int(parts[1].strip())  # 確保賦值正確
+                    status = 'SUCCESS'
             if 'Total Added New N.Event' in line:
-                # print(f"發現 'Total Added New N.Event'，原始行內容: '{line}'")
                 parts = line.split(':')
                 if len(parts) == 2:
-                    # try:
-                        added_pages_count = int(parts[1].strip())
-                        # print(f"提取的數字: {added_pages_count}")
-                        status = 'SUCCESS'
-        
-        # print(f"最終的 modified_pages_count : {modified_pages_count}")
+                    added_pages_count = int(parts[1].strip())  # 確保賦值正確
+                    status = 'SUCCESS'
+            if 'Total Pages Modified' in line:
+                parts = line.split(':')
+                if len(parts) == 2:
+                    modified_pages_count = int(parts[1].strip())  # 確保賦值正確
+                    status = 'SUCCESS'
         
         if status == 'SUCCESS' and no_changes:
             return 'SUCCESS'
-        elif no_changes:
-            if all_finished:
-                return 'No Change'
+        elif no_changes and all_finished:
+            return 'No Change'
         else:
             return status
     else:
         print(f'無法獲取管道狀態: {response.status_code}')
         return 'Unknown', None
+
 
 updated_tasks = []  # 用于存储在过去5分钟内更新的任务
 received_previous_start = False
@@ -578,33 +551,23 @@ def trigger_and_notify(channel_id):
                     client.chat_postMessage(channel=channel_id, text=f"〓 ` {modified_pages_count} `件同步完成")
                     confirmation_message_sent = True
                     no_change_notified = True
-                    # 日誌：顯示修改頁面數量
-                    # print(f"已同步修改頁面數量: {modified_pages_count}")
-                    continue  # 改為繼續檢查其餘條件
 
                 if added_pages_count is not None:
                     client.chat_postMessage(channel=channel_id, text=f"＋ ` {added_pages_count} `新頁")
                     confirmation_message_sent = True
                     no_change_notified = True
-                    # 日誌：顯示添加頁面數量
-                    # print(f"已添加頁面數量: {added_pages_count}")
-                    continue
 
                 if deleted_pages_count is not None:
                     client.chat_postMessage(channel=channel_id, text=f"－ ` {deleted_pages_count} `舊頁")
                     confirmation_message_sent = True
                     no_change_notified = True
-                    # 日誌：顯示刪除頁面數量
-                    # print(f"已刪除頁面數量: {deleted_pages_count}")
-                    continue
+                
                 break  # 在所有條件檢查完後才結束
             
             elif result == 'No Change':
                 client.chat_postMessage(channel=channel_id, text="🪺 無新頁")
                 confirmation_message_sent = True
                 no_change_notified = True
-                # 日誌：無變更
-                # print("無變更頁面")
                 break
             
             elif result == 'FAILURE':
