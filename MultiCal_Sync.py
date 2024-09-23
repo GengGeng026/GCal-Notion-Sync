@@ -2177,9 +2177,11 @@ for i in range(len(new_notion_start_datetimes)):
                 },
             )
         else: #update Notin using datetime format 
+            # print("calendarDictionary:", calendarDictionary)
+            # print("gCalId:", gCalId)
             my_page = update_notion_page_with_retry( #update the notion dashboard with the new datetime and update the last updated time
-                **{
-                    "page_id": notion_IDs_List[i],
+                page_id=notion_IDs_List[i],
+                updates={
                     "properties": {
                         "title": {
                             "title": [
@@ -2205,7 +2207,7 @@ for i in range(len(new_notion_start_datetimes)):
                         Current_Calendar_Id_Notion_Name: {
                             "rich_text": [{
                                 'text': {
-                                    'content': CalIds[CalNames.index(gCalId)]
+                                    'content': gCalId
                                 }
                             }]
                         },
