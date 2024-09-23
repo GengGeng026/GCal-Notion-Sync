@@ -2383,7 +2383,11 @@ clear_line()
 ##Get the GCal Ids and other Event Info from Google Calendar 
 events = []
 for el in calendarDictionary.keys(): #get all the events from all calendars of interest
-    x = service.events().list(calendarId = calendarDictionary[el], maxResults = 2000, timeMin = googleQuery() ).execute()    
+    x = service.events().list(calendarId=calendarDictionary[el],
+                            maxResults=2000,
+                            timeMin=googleQuery(),
+                            singleEvents=True,
+                            orderBy='startTime').execute()    
     events.extend(x['items'])
 
 # calItems = events['items']
@@ -2690,6 +2694,7 @@ def create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gC
     start_date_str = start_date.isoformat() if isinstance(start_date, datetime) else start_date.strftime('%Y-%m-%d')
     end_date_str = None if end_date is None else (end_date.isoformat() if isinstance(end_date, datetime) else end_date.strftime('%Y-%m-%d'))
 
+    unique_id = f"{calIds[i]}_{calStartDates[i].isoformat()}"
     page = notion.pages.create(
         **{
             "parent": {
@@ -2733,7 +2738,7 @@ def create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gC
                     "type": "rich_text", 
                     "rich_text": [{
                         'text': {
-                            'content': calIds[i]
+                            'content': unique_id
                         }
                     }]
                 }, 
@@ -2775,7 +2780,8 @@ new_titles = []
 
 # 使用enumerate()改进循环
 for i, calId in enumerate(calIds):
-    if calId not in ALL_notion_gCal_Ids and not delete_notion_flags[i]:
+    unique_id = f"{calId}_{calStartDates[i].isoformat()}"
+    if unique_id not in ALL_notion_gCal_Ids and not delete_notion_flags[i]:
         if i < len(calName):
             title = calName[i].strip() if calName[i] else None
             if not title:

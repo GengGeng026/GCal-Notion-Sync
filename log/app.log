@@ -40097,3 +40097,255 @@ UnboundLocalError: cannot access local variable 'Done_checking' where it is not 
 2024-09-23 16:08:05,096 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 16:08:05] "POST /slack/events HTTP/1.0" 200 -
 2024-09-23 16:08:07,894 - INFO - 127.0.0.1 - - [23/Sep/2024 16:08:07] "POST /slack/events HTTP/1.0" 200 -
 2024-09-23 16:08:07,894 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 16:08:07] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 16:24:26,404 - INFO - 127.0.0.1 - - [23/Sep/2024 16:24:26] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 16:24:26,404 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 16:24:26] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 16:24:38,232 - INFO - 127.0.0.1 - - [23/Sep/2024 16:24:38] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 16:24:38,232 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 16:24:38] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 16:25:26,095 - INFO - 127.0.0.1 - - [23/Sep/2024 16:25:26] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 16:25:26,095 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 16:25:26] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 16:25:27,259 - INFO - 127.0.0.1 - - [23/Sep/2024 16:25:27] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 16:25:27,259 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 16:25:27] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 16:25:30,457 - INFO - 127.0.0.1 - - [23/Sep/2024 16:25:30] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 16:25:30,457 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 16:25:30] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 16:25:53,860 - INFO - 127.0.0.1 - - [23/Sep/2024 16:25:53] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 16:25:53,860 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 16:25:53] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:21:43,188 - INFO - This is an info message.
+2024-09-23 17:21:43,188 - root - INFO - This is an info message.
+2024-09-23 17:21:43,189 - ERROR - This is an error message.
+2024-09-23 17:21:43,189 - root - ERROR - This is an error message.
+2024-09-23 17:21:43,636 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-09-23 17:21:43,636 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-09-23 17:21:43,636 - INFO - [33mPress CTRL+C to quit[0m
+2024-09-23 17:21:43,636 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-09-23 17:46:38,832 - INFO - 127.0.0.1 - - [23/Sep/2024 17:46:38] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:46:38,832 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 17:46:38] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:46:39,044 - ERROR - Error triggering Jenkins job: HTTPSConnectionPool(host='balanced-poorly-shiner.ngrok-free.app', port=443): Read timed out. (read timeout=0.05)
+2024-09-23 17:46:39,044 - root - ERROR - Error triggering Jenkins job: HTTPSConnectionPool(host='balanced-poorly-shiner.ngrok-free.app', port=443): Read timed out. (read timeout=0.05)
+2024-09-23 17:46:40,568 - INFO - 127.0.0.1 - - [23/Sep/2024 17:46:40] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:46:40,568 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 17:46:40] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:47:31,245 - INFO - 127.0.0.1 - - [23/Sep/2024 17:47:31] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:47:31,245 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 17:47:31] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:49:22,879 - INFO - 127.0.0.1 - - [23/Sep/2024 17:49:22] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:49:22,879 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 17:49:22] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:49:24,961 - INFO - 127.0.0.1 - - [23/Sep/2024 17:49:24] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:49:24,961 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 17:49:24] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:50:16,228 - INFO - 127.0.0.1 - - [23/Sep/2024 17:50:16] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:50:16,228 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 17:50:16] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:52:46,501 - INFO - 127.0.0.1 - - [23/Sep/2024 17:52:46] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:52:46,501 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 17:52:46] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:52:48,912 - INFO - 127.0.0.1 - - [23/Sep/2024 17:52:48] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:52:48,912 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 17:52:48] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:53:39,301 - INFO - 127.0.0.1 - - [23/Sep/2024 17:53:39] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:53:39,301 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 17:53:39] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:54:15,855 - INFO - 127.0.0.1 - - [23/Sep/2024 17:54:15] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:54:15,855 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 17:54:15] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:54:17,670 - INFO - 127.0.0.1 - - [23/Sep/2024 17:54:17] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:54:17,670 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 17:54:17] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:55:08,695 - INFO - 127.0.0.1 - - [23/Sep/2024 17:55:08] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:55:08,695 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 17:55:08] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:55:23,647 - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 785, in message
+    if Done_checking is False:
+       ^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'Done_checking' where it is not associated with a value
+2024-09-23 17:55:23,647 - flask_app - ERROR - Exception on /slack/events [POST]
+Traceback (most recent call last):
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 2190, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1486, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1484, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/flask/app.py", line 1469, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/slackeventsapi/server.py", line 118, in event
+    self.emitter.emit(event_type, event_data)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 208, in emit
+    handled = self._call_handlers(event, args, kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 184, in _call_handlers
+    self._emit_run(f, args, kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/env/lib/python3.12/site-packages/pyee/base.py", line 160, in _emit_run
+    f(*args, **kwargs)
+  File "/Users/mac/Desktop/GCal-Notion-Sync/flask_app.py", line 785, in message
+    if Done_checking is False:
+       ^^^^^^^^^^^^^
+UnboundLocalError: cannot access local variable 'Done_checking' where it is not associated with a value
+2024-09-23 17:55:23,701 - INFO - 127.0.0.1 - - [23/Sep/2024 17:55:23] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-09-23 17:55:23,701 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 17:55:23] "[35m[1mPOST /slack/events HTTP/1.0[0m" 500 -
+2024-09-23 17:57:18,850 - INFO - 127.0.0.1 - - [23/Sep/2024 17:57:18] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:57:18,850 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 17:57:18] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:57:20,794 - INFO - 127.0.0.1 - - [23/Sep/2024 17:57:20] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:57:20,794 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 17:57:20] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:59:52,486 - INFO - 127.0.0.1 - - [23/Sep/2024 17:59:52] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 17:59:52,486 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 17:59:52] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:00:16,616 - INFO - 127.0.0.1 - - [23/Sep/2024 18:00:16] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:00:16,616 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:00:16] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:00:29,278 - INFO - This is an info message.
+2024-09-23 18:00:29,278 - root - INFO - This is an info message.
+2024-09-23 18:00:29,278 - ERROR - This is an error message.
+2024-09-23 18:00:29,278 - root - ERROR - This is an error message.
+2024-09-23 18:00:29,631 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-09-23 18:00:29,631 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-09-23 18:00:29,631 - INFO - [33mPress CTRL+C to quit[0m
+2024-09-23 18:00:29,631 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-09-23 18:00:45,098 - INFO - 127.0.0.1 - - [23/Sep/2024 18:00:45] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:00:45,098 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:00:45] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:00:45,278 - ERROR - Error triggering Jenkins job: HTTPSConnectionPool(host='balanced-poorly-shiner.ngrok-free.app', port=443): Read timed out. (read timeout=0.05)
+2024-09-23 18:00:45,278 - root - ERROR - Error triggering Jenkins job: HTTPSConnectionPool(host='balanced-poorly-shiner.ngrok-free.app', port=443): Read timed out. (read timeout=0.05)
+2024-09-23 18:00:46,830 - INFO - 127.0.0.1 - - [23/Sep/2024 18:00:46] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:00:46,830 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:00:46] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:00:58,197 - INFO - 127.0.0.1 - - [23/Sep/2024 18:00:58] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:00:58,197 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:00:58] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:01:47,740 - INFO - 127.0.0.1 - - [23/Sep/2024 18:01:47] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:01:47,740 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:01:47] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:01:49,489 - INFO - 127.0.0.1 - - [23/Sep/2024 18:01:49] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:01:49,489 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:01:49] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:02:39,990 - INFO - 127.0.0.1 - - [23/Sep/2024 18:02:39] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:02:39,990 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:02:39] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:03:31,701 - INFO - 127.0.0.1 - - [23/Sep/2024 18:03:31] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:03:31,701 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:03:31] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:03:34,159 - INFO - 127.0.0.1 - - [23/Sep/2024 18:03:34] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:03:34,159 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:03:34] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:04:18,607 - INFO - 127.0.0.1 - - [23/Sep/2024 18:04:18] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:04:18,607 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:04:18] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:04:42,327 - INFO - 127.0.0.1 - - [23/Sep/2024 18:04:42] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:04:42,327 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:04:42] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:05:05,184 - INFO - This is an info message.
+2024-09-23 18:05:05,184 - root - INFO - This is an info message.
+2024-09-23 18:05:05,184 - ERROR - This is an error message.
+2024-09-23 18:05:05,184 - root - ERROR - This is an error message.
+2024-09-23 18:05:05,525 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-09-23 18:05:05,525 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-09-23 18:05:05,526 - INFO - [33mPress CTRL+C to quit[0m
+2024-09-23 18:05:05,526 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-09-23 18:05:20,688 - INFO - 127.0.0.1 - - [23/Sep/2024 18:05:20] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:05:20,688 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:05:20] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:05:22,705 - INFO - 127.0.0.1 - - [23/Sep/2024 18:05:22] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:05:22,705 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:05:22] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:06:12,971 - INFO - 127.0.0.1 - - [23/Sep/2024 18:06:12] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:06:12,971 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:06:12] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:07:55,906 - INFO - 127.0.0.1 - - [23/Sep/2024 18:07:55] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:07:55,906 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:07:55] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:08:19,866 - INFO - 127.0.0.1 - - [23/Sep/2024 18:08:19] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:08:19,866 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:08:19] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:10:33,342 - INFO - 127.0.0.1 - - [23/Sep/2024 18:10:33] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:10:33,342 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:10:33] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:10:35,247 - INFO - 127.0.0.1 - - [23/Sep/2024 18:10:35] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:10:35,247 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:10:35] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:11:14,770 - INFO - 127.0.0.1 - - [23/Sep/2024 18:11:14] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:11:14,770 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:11:14] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:11:38,323 - INFO - 127.0.0.1 - - [23/Sep/2024 18:11:38] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:11:38,323 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:11:38] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:13:45,791 - INFO - This is an info message.
+2024-09-23 18:13:45,791 - root - INFO - This is an info message.
+2024-09-23 18:13:45,793 - ERROR - This is an error message.
+2024-09-23 18:13:45,793 - root - ERROR - This is an error message.
+2024-09-23 18:13:46,148 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-09-23 18:13:46,148 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-09-23 18:13:46,148 - INFO - [33mPress CTRL+C to quit[0m
+2024-09-23 18:13:46,148 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-09-23 18:14:26,573 - INFO - 127.0.0.1 - - [23/Sep/2024 18:14:26] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:14:26,573 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:14:26] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:14:50,641 - INFO - 127.0.0.1 - - [23/Sep/2024 18:14:50] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:14:50,641 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:14:50] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:15:04,771 - INFO - 127.0.0.1 - - [23/Sep/2024 18:15:04] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:15:04,771 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:15:04] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:15:04,970 - ERROR - Error triggering Jenkins job: HTTPSConnectionPool(host='balanced-poorly-shiner.ngrok-free.app', port=443): Read timed out. (read timeout=0.05)
+2024-09-23 18:15:04,970 - root - ERROR - Error triggering Jenkins job: HTTPSConnectionPool(host='balanced-poorly-shiner.ngrok-free.app', port=443): Read timed out. (read timeout=0.05)
+2024-09-23 18:15:06,436 - INFO - 127.0.0.1 - - [23/Sep/2024 18:15:06] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:15:06,436 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:15:06] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:15:56,568 - INFO - 127.0.0.1 - - [23/Sep/2024 18:15:56] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:15:56,568 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:15:56] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:17:41,295 - INFO - 127.0.0.1 - - [23/Sep/2024 18:17:41] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:17:41,295 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:17:41] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:18:05,448 - INFO - 127.0.0.1 - - [23/Sep/2024 18:18:05] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:18:05,448 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:18:05] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:23:30,361 - INFO - 127.0.0.1 - - [23/Sep/2024 18:23:30] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:23:30,361 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:23:30] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:23:30,502 - ERROR - Error triggering Jenkins job: HTTPSConnectionPool(host='balanced-poorly-shiner.ngrok-free.app', port=443): Read timed out. (read timeout=0.05)
+2024-09-23 18:23:30,502 - root - ERROR - Error triggering Jenkins job: HTTPSConnectionPool(host='balanced-poorly-shiner.ngrok-free.app', port=443): Read timed out. (read timeout=0.05)
+2024-09-23 18:23:32,191 - INFO - 127.0.0.1 - - [23/Sep/2024 18:23:32] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:23:32,191 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:23:32] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:25:29,283 - INFO - 127.0.0.1 - - [23/Sep/2024 18:25:29] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:25:29,283 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:25:29] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:25:53,104 - INFO - 127.0.0.1 - - [23/Sep/2024 18:25:53] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:25:53,104 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:25:53] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:28:13,742 - INFO - 127.0.0.1 - - [23/Sep/2024 18:28:13] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:28:13,742 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:28:13] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:28:37,343 - INFO - 127.0.0.1 - - [23/Sep/2024 18:28:37] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:28:37,343 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:28:37] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:59:18,894 - INFO - This is an info message.
+2024-09-23 18:59:18,894 - root - INFO - This is an info message.
+2024-09-23 18:59:18,894 - ERROR - This is an error message.
+2024-09-23 18:59:18,894 - root - ERROR - This is an error message.
+2024-09-23 18:59:19,262 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-09-23 18:59:19,262 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-09-23 18:59:19,262 - INFO - [33mPress CTRL+C to quit[0m
+2024-09-23 18:59:19,262 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2024-09-23 18:59:34,776 - INFO - 127.0.0.1 - - [23/Sep/2024 18:59:34] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:59:34,776 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:59:34] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:59:34,931 - ERROR - Error triggering Jenkins job: HTTPSConnectionPool(host='balanced-poorly-shiner.ngrok-free.app', port=443): Read timed out. (read timeout=0.05)
+2024-09-23 18:59:34,931 - root - ERROR - Error triggering Jenkins job: HTTPSConnectionPool(host='balanced-poorly-shiner.ngrok-free.app', port=443): Read timed out. (read timeout=0.05)
+2024-09-23 18:59:37,451 - INFO - 127.0.0.1 - - [23/Sep/2024 18:59:37] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 18:59:37,451 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 18:59:37] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 19:00:26,902 - INFO - 127.0.0.1 - - [23/Sep/2024 19:00:26] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 19:00:26,902 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 19:00:26] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 19:01:26,398 - INFO - 127.0.0.1 - - [23/Sep/2024 19:01:26] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 19:01:26,398 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 19:01:26] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 19:01:28,343 - INFO - 127.0.0.1 - - [23/Sep/2024 19:01:28] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 19:01:28,343 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 19:01:28] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 19:02:18,928 - INFO - 127.0.0.1 - - [23/Sep/2024 19:02:18] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 19:02:18,928 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 19:02:18] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 19:03:12,283 - INFO - 127.0.0.1 - - [23/Sep/2024 19:03:12] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 19:03:12,283 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 19:03:12] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 19:03:14,120 - INFO - 127.0.0.1 - - [23/Sep/2024 19:03:14] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 19:03:14,120 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 19:03:14] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 19:04:05,262 - INFO - 127.0.0.1 - - [23/Sep/2024 19:04:05] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 19:04:05,262 - werkzeug - INFO - 127.0.0.1 - - [23/Sep/2024 19:04:05] "POST /slack/events HTTP/1.0" 200 -
+2024-09-23 20:19:59,371 - INFO - This is an info message.
+2024-09-23 20:19:59,371 - root - INFO - This is an info message.
+2024-09-23 20:19:59,372 - ERROR - This is an error message.
+2024-09-23 20:19:59,372 - root - ERROR - This is an error message.
+2024-09-23 20:19:59,856 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-09-23 20:19:59,856 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:8080
+2024-09-23 20:19:59,857 - INFO - [33mPress CTRL+C to quit[0m
+2024-09-23 20:19:59,857 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
