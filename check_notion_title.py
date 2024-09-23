@@ -38,6 +38,18 @@ import pprint
 import shutil
 import functools
 
+
+###########################################################################
+##### Print Tool Section. Will be used throughoout entire script. 
+###########################################################################
+
+# 模擬終端寬度，如果在非交互式環境（如 Jenkins）中運行
+if 'JENKINS_HOME' in os.environ:
+    terminal_width = 80  # 或者使用任何你認為合適的預設值
+else:
+    terminal_width = os.get_terminal_size().columns
+# print('\n' + '-' * terminal_width + '\n')
+
 ###########################################################################
 ##### The Set-Up Section. Please follow the comments to understand the code. 
 ###########################################################################
@@ -322,3 +334,7 @@ if len(resultList) > 0:
             print("true")
         else:
             print("false")
+else:
+    print("false")
+
+print('-' * terminal_width + "\n" + "End of Script".center(terminal_width) + "\n" + '-' * terminal_width)
