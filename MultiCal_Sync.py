@@ -339,6 +339,7 @@ calendarDictionary = {
     'Life' : os.getenv("GOOGLE_PRIVATE_CALENDAR_ID"),  #just typed some random ids but put the one for your calendars here
     'Soka': os.getenv("GOOGLE_SOKA_CALENDAR_ID"),
     'Work': os.getenv("GOOGLE_WORK_CALENDAR_ID"),
+    'Ideal': os.getenv("GOOGLE_IDEAL_CALENDAR_ID")
 }
 
 ## doesn't delete the Notion task (yet), I'm waiting for the Python API to be updated to allow deleting tasks
