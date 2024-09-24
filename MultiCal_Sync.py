@@ -1577,22 +1577,6 @@ my_page = notion.databases.query(
                         "on_or_after": this_month_str
                     }
                 },
-                # {
-                #     "or": [
-                #     {
-                #         "property": Date_Notion_Name, 
-                #         "date": {
-                #             "equals": todayDate
-                #         }
-                #     }, 
-                #     {
-                #         "property": Date_Notion_Name, 
-                #         "date": {
-                #             "next_week": {}
-                #         }
-                #     }
-                # ]   
-                # },
                 {
                     "property": Delete_Notion_Name, 
                     "checkbox":  {
@@ -1658,26 +1642,28 @@ animate_text_wave_with_progress(text="Loading", new_text="Checked 2.2", target_p
 clear_line()
 
 #the reason we take off the last 6 characters is so we can focus in on just the date and time instead of any extra info
-for  i in range(len(notion_start_datetimes)):    
-    try:
-        notion_start_datetimes[i] = datetime.strptime(notion_start_datetimes[i], "%Y-%m-%d")
-    except:
+# Convert datetime strings to datetime objects
+def convert_to_datetime(date_str):
+    # 嘗試不同的格式以解析日期字符串
+    formats = [
+        "%Y-%m-%dT%H:%M:%S.%f%z",  # 包含微秒和時區
+        "%Y-%m-%dT%H:%M:%S%z",      # 包含時區但不含微秒
+        "%Y-%m-%dT%H:%M:%S",         # 不包含時區
+        "%Y-%m-%d",                   # 僅日期
+    ]
+    for fmt in formats:
         try:
-            notion_start_datetimes[i] = datetime.strptime(notion_start_datetimes[i][:-6], "%Y-%m-%dT%H:%M:%S.000")
-        except:
-            notion_start_datetimes[i] = datetime.strptime(notion_start_datetimes[i][:-6], "%Y-%m-%dT%H:%M:%S.%f")
+            return datetime.strptime(date_str, fmt)
+        except ValueError:
+            continue  # 繼續嘗試下一個格式
+    raise ValueError(f"Cannot parse date string: {date_str}")
 
-for  i in range(len(notion_end_datetimes)):    
-    if notion_end_datetimes[i] != None:
-        try:
-            notion_end_datetimes[i] = datetime.strptime(notion_end_datetimes[i], "%Y-%m-%d")
-        except:
-            try:
-                notion_end_datetimes[i] = datetime.strptime(notion_end_datetimes[i][:-6], "%Y-%m-%dT%H:%M:%S.000")
-            except:
-                notion_end_datetimes[i] = datetime.strptime(notion_end_datetimes[i][:-6], "%Y-%m-%dT%H:%M:%S.%f")
+for i in range(len(notion_start_datetimes)):
+    notion_start_datetimes[i] = convert_to_datetime(notion_start_datetimes[i])
+    if notion_end_datetimes[i]:
+        notion_end_datetimes[i] = convert_to_datetime(notion_end_datetimes[i])
     else:
-        notion_end_datetimes[i] = notion_start_datetimes[i] #the reason we're doing this weird ass thing is because when we put the end time into the update or make GCal event, it'll be representative of the date
+        notion_end_datetimes[i] = notion_start_datetimes[i]  # Default end to start if None #the reason we're doing this weird ass thing is because when we put the end time into the update or make GCal event, it'll be representative of the date
 
 
 animate_text_wave_with_progress(text="Loading", new_text="Checked 2.3", target_percentage=40, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
@@ -1687,32 +1673,56 @@ clear_line()
 ##We use the gCalId from the Notion dashboard to get retrieve the start Time from the gCal event
 value =''
 exitVar = ''
-for gCalId in notion_gCal_IDs:  
-    
-    for calendarID in calendarDictionary.keys(): #just check all of the calendars of interest for info about the event
+
+def safe_get_date(event, key):
+    if key in event:
+        return event[key].get('dateTime', event[key].get('date'))
+    return None  # 如果都不存在，返回 None
+
+# 在抓取 GCal 事件的迴圈中使用這個安全的提取函數
+for gCalId in notion_gCal_IDs:
+    found_event = False
+    for calendarID in calendarDictionary.keys():
         try:
-            x = service.events().get(calendarId=calendarDictionary[calendarID], eventId = gCalId).execute()
-        except:
-            x = {'status': 'unconfirmed'}
-        if x['status'] == 'confirmed':
-            value = x     
-            gCal_titles.append(value['summary'])
-            gCal_CalIds.append(calendarID)   
-        else:
-            continue
-        
-    try:
-        gCal_start_datetimes.append(datetime.strptime(value['start']['dateTime'][:-6], "%Y-%m-%dT%H:%M:%S"))
-    except:
-        date = datetime.strptime(value['start']['date'], "%Y-%m-%d")
-        x = datetime(date.year, date.month, date.day, 0, 0, 0)
-        gCal_start_datetimes.append(x)
-    try:
-        gCal_end_datetimes.append(datetime.strptime(value['end']['dateTime'][:-6], "%Y-%m-%dT%H:%M:%S"))
-    except:
-        date = datetime.strptime(value['end']['date'], "%Y-%m-%d")
-        x = datetime(date.year, date.month, date.day, 0, 0, 0) - timedelta(days=1)
-        gCal_end_datetimes.append(x)
+            # print(f"Fetching event with ID: {gCalId} from calendar: {calendarDictionary[calendarID]}")
+            event = service.events().get(calendarId=calendarDictionary[calendarID], eventId=gCalId).execute()
+            found_event = True
+            if event['status'] == 'confirmed':
+                gCal_titles.append(event['summary'])
+                start_time = safe_get_date(event, 'start')
+                end_time = safe_get_date(event, 'end')
+
+                # 將開始和結束時間轉換為 datetime 對象
+                if start_time:
+                    gCal_start_datetimes.append(convert_to_datetime(start_time))
+                else:
+                    print(f"Warning: No start time found for event ID: {gCalId}")
+
+                if end_time:
+                    gCal_end_datetimes.append(convert_to_datetime(end_time))
+                else:
+                    print(f"Warning: No end time found for event ID: {gCalId}")
+
+                break  # Exit once found
+        except HttpError as e:
+            if e.resp.status == 404:
+                print(f"Event {gCalId} not found in calendar {calendarDictionary[calendarID]}.")
+            else:
+                print(f"An error occurred: {e}")
+            continue  # Continue to next gCalId
+    if not found_event:
+        print(f"No event found for GCal ID: {gCalId}")
+
+# # Compare and update events
+# for i in range(len(notion_start_datetimes)):
+#     if i < len(gCal_start_datetimes):  # Avoid index error
+#         if notion_start_datetimes[i] != gCal_start_datetimes[i] or notion_end_datetimes[i] != gCal_end_datetimes[i]:
+#             # Update Notion event logic here, e.g., using Notion API to update the event
+#             print(f"Updating Notion event {notion_titles[i]} to match GCal event.")
+
+# Ensure that any remaining titles in notion_titles are handled if notion_titles is longer than gCal_titles
+for i in range(len(gCal_titles), len(notion_titles)):
+    print(f"No corresponding GCal event for Notion title: {notion_titles[i]}. Keeping original.")
 
 
 animate_text_wave_with_progress(text="Loading", new_text="Checked 2.4", target_percentage=45, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
@@ -1987,7 +1997,20 @@ def update_notion_page_with_retry(page_id, updates, max_retries=5):
 CalNames = list(calendarDictionary.keys())
 CalIds = list(calendarDictionary.values())
 
+# print("CalNames:", CalNames)
+# print("gCalId:", gCalId)
+
+# 反转calendarDictionary字典
+id_to_calendar_name = {v: k for k, v in calendarDictionary.items()}
+
 for i in range(len(new_notion_start_datetimes)):
+    # 提取日曆 ID，假設 gCalId 格式為 "calendar_id_timestamp"
+    calendar_id = gCalId.split('_')[0]  
+    
+    if calendar_id not in id_to_calendar_name:
+        # print(f"Warning: Calendar ID '{calendar_id}' not found in ID to Name mapping. Skipping...")
+        continue  # 如果 calendar_id 不在映射中則跳過
+    
     if new_notion_start_datetimes[i]  != '' and new_notion_end_datetimes[i] != '': #both start and end time need to be updated
         start = new_notion_start_datetimes[i]
         end = new_notion_end_datetimes[i]
@@ -2695,7 +2718,7 @@ def create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gC
     start_date_str = start_date.isoformat() if isinstance(start_date, datetime) else start_date.strftime('%Y-%m-%d')
     end_date_str = None if end_date is None else (end_date.isoformat() if isinstance(end_date, datetime) else end_date.strftime('%Y-%m-%d'))
 
-    unique_id = f"{calIds[i]}_{calStartDates[i].isoformat()}"
+    unique_id = f"{calIds[i]}"
     page = notion.pages.create(
         **{
             "parent": {
@@ -2781,7 +2804,7 @@ new_titles = []
 
 # 使用enumerate()改进循环
 for i, calId in enumerate(calIds):
-    unique_id = f"{calId}_{calStartDates[i].isoformat()}"
+    unique_id = f"{calIds[i]}"
     if unique_id not in ALL_notion_gCal_Ids and not delete_notion_flags[i]:
         if i < len(calName):
             title = calName[i].strip() if calName[i] else None
