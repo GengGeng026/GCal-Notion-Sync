@@ -1,3 +1,4 @@
+from configparser import NoOptionError
 import os
 import re
 from dotenv import load_dotenv
@@ -1672,10 +1673,12 @@ clear_line()
 value =''
 exitVar = ''
 for gCalId in notion_gCal_IDs:  
+    event_found = False
     for calendarID in calendarDictionary.keys():
         try:
             # print(f"Fetching event with ID: {gCalId} from calendar: {calendarDictionary[calendarID]}")
             x = service.events().get(calendarId=calendarDictionary[calendarID], eventId=gCalId).execute()
+            print(x['status'])
         except HttpError as e:
             # if e.resp.status == 404:
             #     print(f"Event {gCalId} not found in calendar {calendarDictionary[calendarID]}.")
@@ -1683,10 +1686,35 @@ for gCalId in notion_gCal_IDs:
             #     print(f"An error occurred: {e}")
             continue  # 繼續處理下一個 gCalId
         
+        event_found = True
+        
         if x['status'] == 'confirmed':
             value = x
+            currentCalId = notion_gCal_CalNames[notion_gCal_IDs.index(gCalId)]
+            newCalId = calendarID
             gCal_titles.append(value['summary'])
             gCal_CalIds.append(calendarID)
+
+            if currentCalId != newCalId:
+                print(f"Event has moved from {currentCalId} to {newCalId}. Syncing to Notion.")
+                eventName = x['summary']
+                
+                stop_clear_and_print()
+                print(format_string(eventName, bold=True))  # 打印事件标题
+                # Ensure currentCalName is passed through format_string with less_visible=True
+                formattedCurrentCalName = format_string(currentCalId, less_visible=True)
+                formattedCalName = format_string(newCalId, italic=True, light_color=True)
+                print(f'{formattedCurrentCalName} {formatted_right_arrow} {formattedCalName}\n')
+                start_dynamic_counter_indicator()
+
+                        
+                try:
+                    notion.update(page_id=notion_gCal_IDs[notion_gCal_IDs.index(gCalId)], properties={Calendar_Notion_Name: {'select': {'name': newCalId}}})
+                    
+                except NoOptionError as e:
+                    print(f"An error occurred: {e}")
+            
+            # return x['id']
             
             # 確保 value 是一個字典並且有需要的鍵
             if isinstance(value, dict) and 'start' in value:
