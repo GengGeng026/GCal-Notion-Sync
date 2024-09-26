@@ -1,3 +1,1 @@
-
-    except googleapiclient.errors.HttpError:
-        return False
+right_arrow
