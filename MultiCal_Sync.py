@@ -580,7 +580,7 @@ def makeCalEvent(eventName, eventDescription, eventStartTime, sourceURL, eventEn
 ######################################################################
 #METHOD TO UPDATE A CALENDAR EVENT
 
-def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, eventId, eventEndTime, currentCalId, CalId, thread):
+def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, eventId, eventEndTime, currentCalId, CalId, thread, recurrence_info=None):
 
     if eventStartTime.hour == 0 and eventStartTime.minute == 0 and eventEndTime == eventStartTime:  #you're given a single date
         stop_clear_and_print()
@@ -703,18 +703,38 @@ def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, event
 
     try:
         if currentCalId == CalId:
-            # print(f"Attempting to update event. Calendar ID: {CalId}, Event ID: {eventId}, Event Body: {event}")
+            print(f"Attempting to update event. Calendar ID: {CalId}, Event ID: {eventId}, Event Body: {event}")
             x = service.events().update(calendarId=CalId, eventId=eventId, body=event).execute()
         else:
             stop_clear_and_print()
             animate_text_wave("movin", repeat=1)
             start_dynamic_counter_indicator()
+            print(f"Moving event with ID: {eventId} from calendar: {currentCalId} to {CalId}")
             x = service.events().move(calendarId=currentCalId, eventId=eventId, destination=CalId).execute()
-            # print(f"Attempting to update event. Calendar ID: {CalId}, Event ID: {eventId}, Event Body: {event}")
+            print("Event moved successfully.")
             x = service.events().update(calendarId=CalId, eventId=eventId, body=event).execute()
+            print("Event updated after moving.")
+
     except googleapiclient.errors.HttpError as e:
-        # print(f"Error occurred: {e}")
-        return None  # 或者根據需要返回一個其他值
+        if e.resp.status == 400 and 'cannotChangeOrganizer' in str(e):
+            # 創建新事件
+            new_event = {
+                'summary': event['summary'],
+                'description': event['description'],
+                'start': event['start'],
+                'end': event['end'],
+                # 添加其他必要的屬性
+            }
+            new_event_response = service.events().insert(calendarId=CalId, body=new_event).execute()
+
+            # 刪除舊事件
+            service.events().delete(calendarId=currentCalId, eventId=eventId).execute()
+            print("Old event deleted, new event created.")
+        else:
+            print(f"Error occurred: {e}")
+            print(f"Status code: {e.resp.status}, Reason: {e.content}")
+            return None  # 或者根據需要返回其他值
+
         
     else: #When we have to move the event to a new calendar. We must move the event over to the new calendar and then update the information on the event
         stop_clear_and_print()
@@ -1497,6 +1517,51 @@ animate_text_wave_with_progress(text="Loading", new_text="Checked 1.5", target_p
 
 clear_line()
 
+def parse_recurrence(recurrence_list):
+    if not recurrence_list:
+        return None
+    
+    # 提取 RRULE
+    for rule in recurrence_list:
+        if rule.startswith('RRULE:'):
+            params = rule[len('RRULE:'):].split(';')
+            frequency = next((param.split('=')[1] for param in params if param.startswith('FREQ=')), None)
+            interval = next((param.split('=')[1] for param in params if param.startswith('INTERVAL=')), '1')
+            
+            if frequency == 'DAILY':
+                return 'Daily' if interval == '1' else f'Every {interval} days'
+            elif frequency == 'WEEKLY':
+                return 'Weekly' if interval == '1' else f'Every {interval} weeks'
+            elif frequency == 'MONTHLY':
+                return 'Monthly' if interval == '1' else f'Every {interval} months'
+            elif frequency == 'YEARLY':
+                return 'Yearly' if interval == '1' else f'Every {interval} years'
+    
+    return None
+
+def extract_recurrence_info(service, calendar_id, event):
+
+    # Check if the event has recurrence information
+    if 'recurrence' in event and event['recurrence']:
+        print("Recurrence found:", event['recurrence'])
+        return parse_recurrence(event['recurrence'])  # Parse the recurrence information
+
+    # Check if the event is part of a recurring series (recurringEventId exists)
+    if 'recurringEventId' in event:
+        try:
+            # Fetch the original event by recurringEventId
+            original_event = service.events().get(calendarId=calendar_id, eventId=event['recurringEventId']).execute()
+            print("Original event found:", original_event)
+
+            # Return parsed recurrence info from the original event
+            return parse_recurrence(original_event.get('recurrence', []))
+        except Exception as e:
+            print(f"Error fetching original event: {e}")
+    
+    # No recurrence information found
+    print("No recurrence information available for event.")
+    return None
+
 updatingNotionPageIds = []
 updatingCalEventIds = []
 
@@ -1520,7 +1585,7 @@ CurrentCalList = []
 tasks_by_calendar = {}
 
 if len(resultList) > 0:
-    
+
     for i, el in enumerate(resultList):
             
         calendar_name = el['properties'][Calendar_Notion_Name]['select']['name']
@@ -1565,23 +1630,55 @@ if len(resultList) > 0:
             continue
 
         pageId = el['id']
-
-        #depending on the format of the dates, we'll update the gCal event as necessary
+        
+        task_name = TaskNames[i]  # 確保這裡有賦值
+        
+        # 先从 Google Calendar 中获取事件对象
         try:
-            calEventId = upDateCalEvent(task_name, makeEventDescription(Initiatives[i], ExtraInfo[i]), parse_date(start_Dates[i]), URL_list[i], updatingCalEventIds[i],  parse_date(end_Times[i]), CurrentCalList[i], CalendarList[i], thread)
-            No_pages_modified = False
-            no_new_updated = False
-        except:
-            try:
-                calEventId = upDateCalEvent(task_name, makeEventDescription(Initiatives[i], ExtraInfo[i]), parse_date(start_Dates[i]), URL_list[i], updatingCalEventIds[i],  parse_date(end_Times[i]), CurrentCalList[i], CalendarList[i], thread)
-                No_pages_modified = False
-                no_new_updated = False
-            except:
-                calEventId = upDateCalEvent(TaskNames[i], makeEventDescription(Initiatives[i], ExtraInfo[i]), parse_date(start_Dates[i]), URL_list[i], updatingCalEventIds[i],  parse_date(end_Times[i]), CurrentCalList[i], CalendarList[i], thread)
+            event = service.events().get(calendarId=calendar_id, eventId=updatingCalEventIds[i]).execute()
+            print(event['organizer'])  # 檢查事件的組織者
+        except Exception as e:
+            print(f"Error fetching event from Google Calendar: {e}")
+            continue  # 跳过当前事件，继续处理下一个
+        
+        # 提取重复规则
+        # 现在可以传递这个 event 对象给 extract_recurrence_info
+        recurrence_info = event.get('recurrence')
+
+        try:
+            if recurrence_info:
+                # 更新重複事件
+                calEventId = updatingCalEventIds[i]  # 使用主事件 ID
+                # 更新事件的相關信息
+                updated_event = {
+                    'summary': task_name,
+                    'description': makeEventDescription(Initiatives[i], ExtraInfo[i]),
+                    'start': {
+                        'dateTime': parse_date(start_Dates[i]).isoformat(),
+                    },
+                    'end': {
+                        'dateTime': parse_date(end_Times[i]).isoformat(),
+                    },
+                    'recurrence': recurrence_info,  # 保留原始的重複規則
+                }
+                try:
+                    service.events().update(calendarId=CalendarList[i], eventId=calEventId, body=updated_event).execute()
+                except HttpError as e:
+                    if e.resp.status == 403:
+                        print(f"Forbidden: You do not have permission to update this event: {calEventId}")
+                        # 可能需要進行一些重試或報告錯誤
+                    else:
+                        print(f"Error updating event: {e}")
+            else:
+                # 更新非重複事件
+                calEventId = upDateCalEvent(task_name, makeEventDescription(Initiatives[i], ExtraInfo[i]), parse_date(start_Dates[i]), URL_list[i], updatingCalEventIds[i], parse_date(end_Times[i]), CurrentCalList[i], CalendarList[i], thread)
+        except Exception as e:
+                print(f"Error updating event: {e}")
                 No_pages_modified = False     
                 no_new_updated = False
         
-
+        
+        print("Updating page", TaskNames[i])
         my_page = notion.pages.update( ##### This updates the last time that the page in Notion was updated by the code
             **{
                 "page_id": pageId, 
@@ -1729,99 +1826,6 @@ for  i in range(len(notion_end_datetimes)):
 animate_text_wave_with_progress(text="Loading", new_text="Checked 2.3", target_percentage=40, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
 
 clear_line()
-
-
-def parse_recurrence(recurrence_list):
-    if not recurrence_list:
-        return None
-    
-    # 提取 RRULE
-    for rule in recurrence_list:
-        if rule.startswith('RRULE:'):
-            params = rule[len('RRULE:'):].split(';')
-            frequency = next((param.split('=')[1] for param in params if param.startswith('FREQ=')), None)
-            interval = next((param.split('=')[1] for param in params if param.startswith('INTERVAL=')), '1')
-            
-            if frequency == 'DAILY':
-                return 'Daily' if interval == '1' else f'Every {interval} days'
-            elif frequency == 'WEEKLY':
-                return 'Weekly' if interval == '1' else f'Every {interval} weeks'
-            elif frequency == 'MONTHLY':
-                return 'Monthly' if interval == '1' else f'Every {interval} months'
-            elif frequency == 'YEARLY':
-                return 'Yearly' if interval == '1' else f'Every {interval} years'
-    
-    return None
-
-def extract_recurrence_info(service, calendar_id, event):
-
-    # Check if the event has recurrence information
-    if 'recurrence' in event and event['recurrence']:
-        print("Recurrence found:", event['recurrence'])
-        return parse_recurrence(event['recurrence'])  # Parse the recurrence information
-
-    # Check if the event is part of a recurring series (recurringEventId exists)
-    if 'recurringEventId' in event:
-        try:
-            # Fetch the original event by recurringEventId
-            original_event = service.events().get(calendarId=calendar_id, eventId=event['recurringEventId']).execute()
-            print("Original event found:", original_event)
-
-            # Return parsed recurrence info from the original event
-            return parse_recurrence(original_event.get('recurrence', []))
-        except Exception as e:
-            print(f"Error fetching original event: {e}")
-    
-    # No recurrence information found
-    print("No recurrence information available for event.")
-    return None
-
-# def parse_recurrence(recurrence_list):
-#     """
-#     Parses the recurrence rule from the Google Calendar API and converts it into an English-readable format.
-#     """
-#     if not recurrence_list:
-#         return None
-    
-#     # Extract and parse the RRULE
-#     for rule in recurrence_list:
-#         if rule.startswith('RRULE:'):
-#             params = rule[len('RRULE:'):].split(';')
-#             frequency = next((param.split('=')[1] for param in params if param.startswith('FREQ=')), None)
-#             interval = next((param.split('=')[1] for param in params if param.startswith('INTERVAL=')), '1')
-            
-#             if frequency == 'DAILY':
-#                 return 'Daily' if interval == '1' else f'Every {interval} days'
-#             elif frequency == 'WEEKLY':
-#                 return 'Weekly' if interval == '1' else f'Every {interval} weeks'
-#             elif frequency == 'MONTHLY':
-#                 return 'Monthly' if interval == '1' else f'Every {interval} months'
-#             elif frequency == 'YEARLY':
-#                 return 'Yearly' if interval == '1' else f'Every {interval} years'
-    
-#     return None
-
-# def extract_recurrence_info(service, calendar_id, event):
-#     """
-#     Extract recurrence information from an event, checking first for the recurrence field.
-#     If the event is an instance of a recurring event, fetch the original event.
-#     """
-#     # print("Event details:", event)  # Debug information
-
-#     # Check if the event has recurrence information
-#     if 'recurrence' in event and event['recurrence']:
-#         # print("Recurrence found:", event['recurrence'])  # Debug information
-#         return parse_recurrence(event['recurrence'])  # Parse the recurrence information
-
-#     # Check if the event is part of a recurring series
-#     if 'recurringEventId' in event:
-#         # print(f"Fetching original event for recurringEventId: {event['recurringEventId']}")
-#         original_event = service.events().get(calendarId=calendar_id, eventId=event['recurringEventId']).execute()
-#         # print("Original event found:", original_event)  # Debug information
-#         return parse_recurrence(original_event.get('recurrence', []))  # Parse the recurrence of the original event
-
-#     # print("No recurrence information found")  # Debug information
-#     return None
 
 # 更新 Notion 中的事件
 def update_notion_event_with_recurrence(notion_event, recurrence_info):
