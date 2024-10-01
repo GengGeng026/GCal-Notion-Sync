@@ -1730,30 +1730,12 @@ animate_text_wave_with_progress(text="Loading", new_text="Checked 2.3", target_p
 
 clear_line()
 
-# def extract_recurrence_info(service, calendar_id, event):
-#     # 檢查事件是否有 recurrence 信息
-#     if 'recurrence' in event and event['recurrence']:
-#         print("event.recurrence: ", event['recurrence'])
-#         return event['recurrence']
-
-#     # 檢查是否是重複事件的實例
-#     if 'recurringEventId' in event:
-#         # 獲取原始事件
-#         original_event = service.events().get(calendarId=calendar_id, eventId=event['recurringEventId']).execute()
-#         if original_event and 'recurrence' in original_event:
-#             print("original_event.recurrence: ", original_event['recurrence'])
-#             return original_event['recurrence']
-
-#     return None
 
 def parse_recurrence(recurrence_list):
-    """
-    Parses the recurrence rule from the Google Calendar API and converts it into an English-readable format.
-    """
     if not recurrence_list:
         return None
     
-    # Extract and parse the RRULE
+    # 提取 RRULE
     for rule in recurrence_list:
         if rule.startswith('RRULE:'):
             params = rule[len('RRULE:'):].split(';')
@@ -1772,27 +1754,74 @@ def parse_recurrence(recurrence_list):
     return None
 
 def extract_recurrence_info(service, calendar_id, event):
-    """
-    Extract recurrence information from an event, checking first for the recurrence field.
-    If the event is an instance of a recurring event, fetch the original event.
-    """
-    # print("Event details:", event)  # Debug information
 
     # Check if the event has recurrence information
     if 'recurrence' in event and event['recurrence']:
-        # print("Recurrence found:", event['recurrence'])  # Debug information
+        print("Recurrence found:", event['recurrence'])
         return parse_recurrence(event['recurrence'])  # Parse the recurrence information
 
-    # Check if the event is part of a recurring series
+    # Check if the event is part of a recurring series (recurringEventId exists)
     if 'recurringEventId' in event:
-        # print(f"Fetching original event for recurringEventId: {event['recurringEventId']}")
-        original_event = service.events().get(calendarId=calendar_id, eventId=event['recurringEventId']).execute()
-        # print("Original event found:", original_event)  # Debug information
-        return parse_recurrence(original_event.get('recurrence', []))  # Parse the recurrence of the original event
+        try:
+            # Fetch the original event by recurringEventId
+            original_event = service.events().get(calendarId=calendar_id, eventId=event['recurringEventId']).execute()
+            print("Original event found:", original_event)
 
-    # print("No recurrence information found")  # Debug information
+            # Return parsed recurrence info from the original event
+            return parse_recurrence(original_event.get('recurrence', []))
+        except Exception as e:
+            print(f"Error fetching original event: {e}")
+    
+    # No recurrence information found
+    print("No recurrence information available for event.")
     return None
 
+# def parse_recurrence(recurrence_list):
+#     """
+#     Parses the recurrence rule from the Google Calendar API and converts it into an English-readable format.
+#     """
+#     if not recurrence_list:
+#         return None
+    
+#     # Extract and parse the RRULE
+#     for rule in recurrence_list:
+#         if rule.startswith('RRULE:'):
+#             params = rule[len('RRULE:'):].split(';')
+#             frequency = next((param.split('=')[1] for param in params if param.startswith('FREQ=')), None)
+#             interval = next((param.split('=')[1] for param in params if param.startswith('INTERVAL=')), '1')
+            
+#             if frequency == 'DAILY':
+#                 return 'Daily' if interval == '1' else f'Every {interval} days'
+#             elif frequency == 'WEEKLY':
+#                 return 'Weekly' if interval == '1' else f'Every {interval} weeks'
+#             elif frequency == 'MONTHLY':
+#                 return 'Monthly' if interval == '1' else f'Every {interval} months'
+#             elif frequency == 'YEARLY':
+#                 return 'Yearly' if interval == '1' else f'Every {interval} years'
+    
+#     return None
+
+# def extract_recurrence_info(service, calendar_id, event):
+#     """
+#     Extract recurrence information from an event, checking first for the recurrence field.
+#     If the event is an instance of a recurring event, fetch the original event.
+#     """
+#     # print("Event details:", event)  # Debug information
+
+#     # Check if the event has recurrence information
+#     if 'recurrence' in event and event['recurrence']:
+#         # print("Recurrence found:", event['recurrence'])  # Debug information
+#         return parse_recurrence(event['recurrence'])  # Parse the recurrence information
+
+#     # Check if the event is part of a recurring series
+#     if 'recurringEventId' in event:
+#         # print(f"Fetching original event for recurringEventId: {event['recurringEventId']}")
+#         original_event = service.events().get(calendarId=calendar_id, eventId=event['recurringEventId']).execute()
+#         # print("Original event found:", original_event)  # Debug information
+#         return parse_recurrence(original_event.get('recurrence', []))  # Parse the recurrence of the original event
+
+#     # print("No recurrence information found")  # Debug information
+#     return None
 
 # 更新 Notion 中的事件
 def update_notion_event_with_recurrence(notion_event, recurrence_info):
@@ -1825,25 +1854,12 @@ def is_valid_uuid(uuid_to_test, version=4):
 value =''
 exitVar = ''
 for i, gCalId in enumerate(notion_gCal_IDs):
-    # print(f"\nProcessing gCalId: {gCalId} (Index: {i})")
+    print(f"\nProcessing gCalId: {gCalId} (Index: {i})")
     try:
         # 檢查 gCalId 是否有效
         if not is_valid_uuid(gCalId):
             # print(f"Invalid gCalId detected: {gCalId}. Trying to find a valid page_id.")
             valid_page_id = None
-            continue
-
-        for calendarID in calendarDictionary.keys():
-            # 確保 gCalId 是有效的
-            if gCalId:
-                if event_exists(calendarDictionary[calendarID], gCalId):
-                    # 繼續處理事件
-                    print(f"Event {gCalId} found in calendar {calendarID}.")
-                else:
-                    print(f"Event {gCalId} not found in calendar {calendarID}.")
-            else:
-                print("gCalId is not valid.")
-            
             
             # 嘗試從 resultList 中找到對應的有效 page_id
             for result in resultList:
@@ -1887,23 +1903,16 @@ for i, gCalId in enumerate(notion_gCal_IDs):
         # 繼續處理有效的 gCalId
         event_found = False
         for calendarID in calendarDictionary.keys():
-            if gCalId:  # 確保 gCalId 是有效的
-                if event_exists(calendarDictionary[calendarID], gCalId):
-                    # print(f"Checking calendar ID: {calendarID} for event ID: {gCalId}")
-                    try:
-                        x = service.events().get(calendarId=calendarDictionary[calendarID], eventId=gCalId).execute()
-                        # print(f"Event retrieved: {x}")
-                    except HttpError as e:
-                        # if e.resp.status == 404:
-                        #     print(f"Event with ID {gCalId} not found in calendar {calendarDictionary[calendarID]}.")
-                        # else:
-                        #     print(f"Error occurred for event ID {gCalId} in calendar {calendarDictionary[calendarID]}: {e}")
-                        continue
-                else:
-                    print(f"Event {gCalId} not found in calendar {calendarID}.")
-            else:
-                print("gCalId is not valid.")
-            
+            print(f"Checking calendar ID: {calendarID} for event ID: {gCalId}")
+            try:
+                x = service.events().get(calendarId=calendarDictionary[calendarID], eventId=gCalId).execute()
+                print(f"Event retrieved: {x}")
+            except HttpError as e:
+                # if e.resp.status == 404:
+                #     print(f"Event with ID {gCalId} not found in calendar {calendarDictionary[calendarID]}.")
+                # else:
+                #     print(f"Error occurred for event ID {gCalId} in calendar {calendarDictionary[calendarID]}: {e}")
+                continue
             
             event_found = True
             
@@ -1919,8 +1928,8 @@ for i, gCalId in enumerate(notion_gCal_IDs):
                 # 提取重複事件信息
                 recurrence_info = extract_recurrence_info(gc, calendarID, x)
 
-                # if recurrence_info:
-                #     print(f"Recurrence info extracted: {recurrence_info}")
+                if recurrence_info:
+                    print(f"Recurrence info extracted: {recurrence_info}")
 
                 if currentCalId != newCalId:
                     # print(f"Event has moved from {currentCalId} to {newCalId}. Syncing to Notion.")
@@ -2969,79 +2978,92 @@ def create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gC
     # Format dates for Notion
     start_date_str = start_date.isoformat() if isinstance(start_date, datetime) else start_date.strftime('%Y-%m-%d')
     end_date_str = None if end_date is None else (end_date.isoformat() if isinstance(end_date, datetime) else end_date.strftime('%Y-%m-%d'))
-    
-    # print("Creating page with title:", calName[i])
 
+    # 提取重複事件信息
+    event = calItems[i]
+    recurrence_info = extract_recurrence_info(service, gCal_calendarId[i], event)
+
+    # Create a page in Notion
+    # print("Creating page with title:", calName[i])
     unique_id = f"{calIds[i]}"
+    properties = {
+        Task_Notion_Name: {
+            "type": 'title',
+            "title": [
+                {
+                    "type": 'text',
+                    "text": {
+                        "content": calName[i],
+                    },
+                },
+            ],
+        },
+        Date_Notion_Name: {
+            "type": 'date',
+            'date': {
+                'start': start_date_str,
+                'end': end_date_str,
+            }
+        },
+        LastUpdatedTime_Notion_Name: {
+            "type": 'date',
+            'date': {
+                'start': notion_time(),
+                'end': None,
+            }
+        },
+        ExtraInfo_Notion_Name:  {
+            "type": 'rich_text',
+            "rich_text": [{
+                'text': {
+                    'content': calDescriptions[i]
+                }
+            }]
+        },
+        GCalEventId_Notion_Name: {
+            "type": "rich_text",
+            "rich_text": [{
+                'text': {
+                    'content': unique_id
+                }
+            }]
+        },
+        On_GCal_Notion_Name: {
+            "type": "checkbox",
+            "checkbox": True
+        },
+        Current_Calendar_Id_Notion_Name: {
+            "rich_text": [{
+                'text': {
+                    'content': gCal_calendarId[i]
+                }
+            }]
+        },
+        Calendar_Notion_Name: {
+            'select': {
+                "name": gCal_calendarName[i]
+            },
+        }
+    }
+
+    # Only update Initiative_Notion_Name if recurrence_info is valid
+    if recurrence_info:
+        properties[Initiative_Notion_Name] = {
+            "select": {
+                "name": recurrence_info  # Only update if valid
+            }
+        }
+    else:
+        # Log or print a message if no recurrence info is available (optional)
+        print(f"No recurrence info available for event {calIds[i]}, skipping update for Initiative_Notion_Name.")
+
+    # Create the page in Notion
     page = notion.pages.create(
         **{
             "parent": {
                 "database_id": database_id,
             },
-            "properties": {
-                Task_Notion_Name: {
-                    "type": 'title',
-                    "title": [
-                    {
-                        "type": 'text',
-                        "text": {
-                        "content": calName[i],
-                        },
-                    },
-                    ],
-                },
-                Date_Notion_Name: {
-                    "type": 'date',
-                    'date': {
-                        'start': start_date_str,
-                        'end': end_date_str, 
-                    }
-                },
-                LastUpdatedTime_Notion_Name: {
-                    "type": 'date',
-                    'date': {
-                        'start': notion_time(),
-                        'end': None,
-                    }
-                },
-                ExtraInfo_Notion_Name:  {
-                    "type": 'rich_text', 
-                    "rich_text": [{
-                        'text': {
-                            'content': calDescriptions[i]
-                        }
-                    }]
-                },
-                GCalEventId_Notion_Name: {
-                    "type": "rich_text", 
-                    "rich_text": [{
-                        'text': {
-                            'content': unique_id
-                        }
-                    }]
-                }, 
-                On_GCal_Notion_Name: {
-                    "type": "checkbox", 
-                    "checkbox": True
-                },
-                Current_Calendar_Id_Notion_Name: {
-                    "rich_text": [{
-                        'text': {
-                            'content': gCal_calendarId[i]
-                        }
-                    }]
-                },
-                Calendar_Notion_Name:  { 
-                    'select': {
-                        "name": gCal_calendarName[i]
-                    },
-                },
-                Initiative_Notion_Name: {
-                    "select": {
-                        "name": extract_recurrence_info(service, gCal_calendarId[i], event)
-                    }
-                }
-            },
+            "properties": properties,  # Dynamically updated properties
         },
     )
     
