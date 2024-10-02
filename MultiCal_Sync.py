@@ -364,6 +364,15 @@ Date_Notion_Name = 'StartEnd'
 Start_Notion_Name = 'Start'
 End_Notion_Name = 'End'
 Frequency_Notion_Name = 'Frequency'
+First_Day_of_Week_Notion_Name = 'First Day of Week'
+Recur_Until_Notion_Name = 'Recur Until'
+Recur_Count_Notion_Name = 'Recur Count'
+Recur_Interval_Notion_Name = 'Recur Interval'
+Days_Notion_Name = 'Days'
+Days_of_Month_Notion_Name = 'Days of Month'
+Days_of_Year_Notion_Name = 'Days of Year'
+Week_Numbers_of_Year_Notion_Name = 'Week Numbers of Year'
+Months_Notion_Name = 'Months'
 ExtraInfo_Notion_Name = 'Notes'
 On_GCal_Notion_Name = 'On GCal?'
 to_Auto_Sync_Notion_Name = 'to Auto-Sync'
@@ -580,17 +589,25 @@ def makeCalEvent(eventName, eventDescription, eventStartTime, sourceURL, eventEn
 ######################################################################
 #METHOD TO UPDATE A CALENDAR EVENT
 
-def parse_recurrence(recurrence_list):
+def parse_recurrence(recurrence_list): 
     if not recurrence_list:
         return None
     
-    # 提取 RRULE
     for rule in recurrence_list:
         if rule.startswith('RRULE:'):
             params = rule[len('RRULE:'):].split(';')
-            frequency = next((param.split('=')[1] for param in params if param.startswith('FREQ=')), None)
-            interval = next((param.split('=')[1] for param in params if param.startswith('INTERVAL=')), '1')
-            
+            recurrence_info = {}
+
+            # 解析每個參數
+            for param in params:
+                key, value = param.split('=')
+                recurrence_info[key] = value
+
+            # 基本頻率和間隔
+            frequency = recurrence_info.get('FREQ', None)
+            interval = recurrence_info.get('INTERVAL', '1')
+
+            # 處理各種頻率
             if frequency == 'DAILY':
                 return 'DAILY' if interval == '1' else f'Every {interval} days'
             elif frequency == 'WEEKLY':
@@ -599,7 +616,22 @@ def parse_recurrence(recurrence_list):
                 return 'MONTHLY' if interval == '1' else f'Every {interval} months'
             elif frequency == 'YEARLY':
                 return 'YEARLY' if interval == '1' else f'Every {interval} years'
-    
+            
+            # 處理其他規則，例如 BYDAY, UNTIL, COUNT
+            until = recurrence_info.get('UNTIL', None)
+            count = recurrence_info.get('COUNT', None)
+            byday = recurrence_info.get('BYDAY', None)
+
+            additional_info = []
+            if until:
+                additional_info.append(f"until {until}")
+            if count:
+                additional_info.append(f"for {count} occurrences")
+            if byday:
+                additional_info.append(f"on {byday}")
+
+            return f"{frequency} {' '.join(additional_info)}"
+
     return None
 
 def extract_recurrence_info(service, calendar_id, event, el):
@@ -611,42 +643,54 @@ def extract_recurrence_info(service, calendar_id, event, el):
     # 打印整个事件对象以调试
     print("Full event object:", event)
 
-    # 初始化 Frequency_name
+    # 初始化 recurrence 信息
     Frequency_name = ""
+    interval = '1'  # 默认为 1，如果 Notion 中存在 interval，则更新
+    until = None
+    count = None
+    byday = None
 
     # 確認 el 不是 None 並且包含正確的結構
     try:
         if el is not None and isinstance(el, dict) and 'properties' in el:
             properties = el['properties']
+            
+            # 获取 Frequency 名称
             if Frequency_Notion_Name in properties and properties[Frequency_Notion_Name]:
                 select_field = properties[Frequency_Notion_Name].get('select')
                 if select_field and isinstance(select_field, dict):
                     Frequency_name = select_field.get('name', "")
-                    if Frequency_name:
-                        print("Notion recurrence found:", Frequency_name)
-                        if Frequency_name == "DAILY":
-                            return ['RRULE:FREQ=DAILY;INTERVAL=1']
-                        elif Frequency_name == "WEEKLY":
-                            return ['RRULE:FREQ=WEEKLY;INTERVAL=1']
-                        elif Frequency_name == "MONTHLY":
-                            return ['RRULE:FREQ=MONTHLY;INTERVAL=1']
-                        elif Frequency_name == "YEARLY":
-                            return ['RRULE:FREQ=YEARLY;INTERVAL=1']
-                    else:
-                        print("No recurrence information found in Notion.")
+                    print("Notion recurrence found:", Frequency_name)
                 else:
-                    print("select_field is None or not a dictionary.")
-            else:
-                print(f"{Frequency_Notion_Name} does not exist in the properties or is empty.")
+                    print(f"No valid frequency found in Notion property: {Frequency_Notion_Name}")
+            
+            # 获取其他字段信息
+            interval = properties.get(Recur_Interval_Notion_Name, {}).get('number', '1')
+            until = properties.get(Recur_Until_Notion_Name, {}).get('date', {}).get('start', None)
+            count = properties.get(Recur_Count_Notion_Name, {}).get('number', None)
+            byday = properties.get(Days_Notion_Name, {}).get('multi_select', [])
+            
+            # 如果 Frequency_name 存在，则根据频率生成 RRULE
+            if Frequency_name:
+                rrule = f"RRULE:FREQ={Frequency_name.upper()};INTERVAL={interval}"
+                
+                if until:
+                    rrule += f";UNTIL={until}"
+                if count:
+                    rrule += f";COUNT={count}"
+                if byday:
+                    days = ','.join([day['name'] for day in byday])
+                    rrule += f";BYDAY={days}"
+                
+                return [rrule]
+
+            print(f"{Frequency_Notion_Name} does not exist in the properties or is empty.")
         else:
             print("el is None, not a dict, or does not have 'properties'.")
     except KeyError as e:
         print(f"KeyError: {e}")
-        Frequency_name = ""
 
     print(f"Attempting to fetch event with recurringEventId: {event.get('recurringEventId')}")
-    events_result = service.events().list(calendarId=calendar_id).execute()
-    events = events_result.get('items', [])
 
     # Check if the event is part of a recurring series (recurringEventId exists)
     if 'recurringEventId' in event:

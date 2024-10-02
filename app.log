@@ -4,6 +4,8 @@ httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce6
 httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
 httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
 httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
+root - ERROR - Failed to fetch original event: <HttpError 404 when requesting https://www.googleapis.com/calendar/v3/calendars/Ideal/events/084aace146204dcb92ea1f65826b97d6?alt=json returned "Not Found". Details: "[{'domain': 'global', 'reason': 'notFound', 'message': 'Not Found'}]">
+root - ERROR - Failed to fetch original event: <HttpError 404 when requesting https://www.googleapis.com/calendar/v3/calendars/Ideal/events/084aace146204dcb92ea1f65826b97d6?alt=json returned "Not Found". Details: "[{'domain': 'global', 'reason': 'notFound', 'message': 'Not Found'}]">
 httpx - INFO - HTTP Request: POST https://api.notion.com/v1/databases/d99f99fce67946de99657100c833a4c7/query "HTTP/1.1 200 OK"
 httpx - INFO - HTTP Request: POST https://api.notion.com/v1/pages "HTTP/1.1 200 OK"
 httpx - INFO - HTTP Request: POST https://api.notion.com/v1/pages "HTTP/1.1 200 OK"
