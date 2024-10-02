@@ -363,7 +363,7 @@ Task_Notion_Name = 'Task Name'
 Date_Notion_Name = 'StartEnd'
 Start_Notion_Name = 'Start'
 End_Notion_Name = 'End'
-Initiative_Notion_Name = 'Initiative'
+Frequency_Notion_Name = 'Frequency'
 ExtraInfo_Notion_Name = 'Notes'
 On_GCal_Notion_Name = 'On GCal?'
 to_Auto_Sync_Notion_Name = 'to Auto-Sync'
@@ -507,15 +507,15 @@ def format_date_time(start, end):
 #This method can be edited as wanted. Whatever is returned from this method will be in the GCal event description 
 #Whatever you change up, be sure to return a string 
 
-def makeEventDescription(initiative, info):
-    if initiative == '' and info == '':
+def makeEventDescription(Frequency, info):
+    if Frequency == '' and info == '':
         return ''
     elif info == "":
-        return initiative
-    elif initiative == '':
+        return Frequency
+    elif Frequency == '':
         return info
     else:
-        return f'Initiative: {initiative} \n{info}'
+        return f'Frequency: {Frequency} \n{info}'
 
 
 ######################################################################
@@ -611,38 +611,38 @@ def extract_recurrence_info(service, calendar_id, event, el):
     # 打印整个事件对象以调试
     print("Full event object:", event)
 
-    # 初始化 initiative_name
-    initiative_name = ""
+    # 初始化 Frequency_name
+    Frequency_name = ""
 
     # 確認 el 不是 None 並且包含正確的結構
     try:
         if el is not None and isinstance(el, dict) and 'properties' in el:
             properties = el['properties']
-            if Initiative_Notion_Name in properties and properties[Initiative_Notion_Name]:
-                select_field = properties[Initiative_Notion_Name].get('select')
+            if Frequency_Notion_Name in properties and properties[Frequency_Notion_Name]:
+                select_field = properties[Frequency_Notion_Name].get('select')
                 if select_field and isinstance(select_field, dict):
-                    initiative_name = select_field.get('name', "")
-                    if initiative_name:
-                        print("Notion recurrence found:", initiative_name)
-                        if initiative_name == "DAILY":
+                    Frequency_name = select_field.get('name', "")
+                    if Frequency_name:
+                        print("Notion recurrence found:", Frequency_name)
+                        if Frequency_name == "DAILY":
                             return ['RRULE:FREQ=DAILY;INTERVAL=1']
-                        elif initiative_name == "WEEKLY":
+                        elif Frequency_name == "WEEKLY":
                             return ['RRULE:FREQ=WEEKLY;INTERVAL=1']
-                        elif initiative_name == "MONTHLY":
+                        elif Frequency_name == "MONTHLY":
                             return ['RRULE:FREQ=MONTHLY;INTERVAL=1']
-                        elif initiative_name == "YEARLY":
+                        elif Frequency_name == "YEARLY":
                             return ['RRULE:FREQ=YEARLY;INTERVAL=1']
                     else:
                         print("No recurrence information found in Notion.")
                 else:
                     print("select_field is None or not a dictionary.")
             else:
-                print(f"{Initiative_Notion_Name} does not exist in the properties or is empty.")
+                print(f"{Frequency_Notion_Name} does not exist in the properties or is empty.")
         else:
             print("el is None, not a dict, or does not have 'properties'.")
     except KeyError as e:
         print(f"KeyError: {e}")
-        initiative_name = ""
+        Frequency_name = ""
 
     print(f"Attempting to fetch event with recurringEventId: {event.get('recurringEventId')}")
     events_result = service.events().list(calendarId=calendar_id).execute()
@@ -935,7 +935,7 @@ clear_line()
 TaskNames = []
 start_Dates = []
 end_Times = []
-Initiatives = []
+Frequencies = []
 ExtraInfo = []
 URL_list = []
 calEventIdList = []
@@ -1267,9 +1267,9 @@ if len(resultList) > 0:
             continue
 
         try:
-            Initiatives.append(el['properties'][Initiative_Notion_Name]['select']['name'])
+            Frequencies.append(el['properties'][Frequency_Notion_Name]['select']['name'])
         except:
-            Initiatives.append("")
+            Frequencies.append("")
         
         try: 
             ExtraInfo.append(el['properties'][ExtraInfo_Notion_Name]['rich_text'][0]['text']['content'])
@@ -1325,10 +1325,10 @@ if len(resultList) > 0:
                     # 对于全天事件，结束日期应增加一天
                     end_date_processed = (process_date(end_Times[i]) + timedelta(days=1)) if end_Times[i] else start_date_processed + timedelta(days=1)
                     # Create an all-day event with adjusted end date
-                    calEventId = makeCalEvent(TaskNames[i], makeEventDescription(Initiatives[i], ExtraInfo[i]), start_date_processed, URL_list[i], end_date_processed, CalendarList[i], all_day=True)
+                    calEventId = makeCalEvent(TaskNames[i], makeEventDescription(Frequencies[i], ExtraInfo[i]), start_date_processed, URL_list[i], end_date_processed, CalendarList[i], all_day=True)
                 else:
                     #start and end are both dates
-                    calEventId = makeCalEvent(TaskNames[i], makeEventDescription(Initiatives[i], ExtraInfo[i]), datetime.strptime(start_Dates[i], '%Y-%m-%d'), URL_list[i], datetime.strptime(end_Times[i], '%Y-%m-%d') + timedelta(days=1), CalendarList[i], all_day=True)
+                    calEventId = makeCalEvent(TaskNames[i], makeEventDescription(Frequencies[i], ExtraInfo[i]), datetime.strptime(start_Dates[i], '%Y-%m-%d'), URL_list[i], datetime.strptime(end_Times[i], '%Y-%m-%d') + timedelta(days=1), CalendarList[i], all_day=True)
 
                 # 更新 Notion 页面的标题
                 notion.pages.update(
@@ -1351,9 +1351,9 @@ if len(resultList) > 0:
             except:
                 try:
                     #start and end are both date+time
-                    calEventId = makeCalEvent(TaskNames[i], makeEventDescription(Initiatives[i], ExtraInfo[i]), datetime.strptime(start_Dates[i][:-6], "%Y-%m-%dT%H:%M:%S.000"), URL_list[i],  datetime.strptime(end_Times[i][:-6], "%Y-%m-%dT%H:%M:%S.000"), CalendarList[i])
+                    calEventId = makeCalEvent(TaskNames[i], makeEventDescription(Frequencies[i], ExtraInfo[i]), datetime.strptime(start_Dates[i][:-6], "%Y-%m-%dT%H:%M:%S.000"), URL_list[i],  datetime.strptime(end_Times[i][:-6], "%Y-%m-%dT%H:%M:%S.000"), CalendarList[i])
                 except:
-                    calEventId = makeCalEvent(TaskNames[i], makeEventDescription(Initiatives[i], ExtraInfo[i]), datetime.strptime(start_Dates[i][:-6], "%Y-%m-%dT%H:%M:%S.%f"), URL_list[i],  datetime.strptime(end_Times[i][:-6], "%Y-%m-%dT%H:%M:%S.%f"), CalendarList[i])
+                    calEventId = makeCalEvent(TaskNames[i], makeEventDescription(Frequencies[i], ExtraInfo[i]), datetime.strptime(start_Dates[i][:-6], "%Y-%m-%dT%H:%M:%S.%f"), URL_list[i],  datetime.strptime(end_Times[i][:-6], "%Y-%m-%dT%H:%M:%S.%f"), CalendarList[i])
 
                 notion.pages.update(
                     **{
@@ -1631,7 +1631,7 @@ for result in resultList:
 TaskNames = []
 start_Dates = []
 end_Times = []
-Initiatives = []
+Frequencies = []
 ExtraInfo = []
 URL_list = []
 CalendarList = []
@@ -1662,9 +1662,9 @@ if len(resultList) > 0:
 
         
         try:
-            Initiatives.append(el['properties'][Initiative_Notion_Name]['select']['name'])
+            Frequencies.append(el['properties'][Frequency_Notion_Name]['select']['name'])
         except:
-            Initiatives.append("")
+            Frequencies.append("")
         
         try: 
             ExtraInfo.append(el['properties'][ExtraInfo_Notion_Name]['rich_text'][0]['text']['content'])
@@ -1687,16 +1687,16 @@ if len(resultList) > 0:
 
         #depending on the format of the dates, we'll update the gCal event as necessary
         try:
-            calEventId = upDateCalEvent(task_name, makeEventDescription(Initiatives[i], ExtraInfo[i]), parse_date(start_Dates[i]), URL_list[i], updatingCalEventIds[i],  parse_date(end_Times[i]), CurrentCalList[i], CalendarList[i], thread)
+            calEventId = upDateCalEvent(task_name, makeEventDescription(Frequencies[i], ExtraInfo[i]), parse_date(start_Dates[i]), URL_list[i], updatingCalEventIds[i],  parse_date(end_Times[i]), CurrentCalList[i], CalendarList[i], thread)
             No_pages_modified = False
             no_new_updated = False
         except:
             try:
-                calEventId = upDateCalEvent(task_name, makeEventDescription(Initiatives[i], ExtraInfo[i]), parse_date(start_Dates[i]), URL_list[i], updatingCalEventIds[i],  parse_date(end_Times[i]), CurrentCalList[i], CalendarList[i], thread)
+                calEventId = upDateCalEvent(task_name, makeEventDescription(Frequencies[i], ExtraInfo[i]), parse_date(start_Dates[i]), URL_list[i], updatingCalEventIds[i],  parse_date(end_Times[i]), CurrentCalList[i], CalendarList[i], thread)
                 No_pages_modified = False
                 no_new_updated = False
             except:
-                calEventId = upDateCalEvent(TaskNames[i], makeEventDescription(Initiatives[i], ExtraInfo[i]), parse_date(start_Dates[i]), URL_list[i], updatingCalEventIds[i],  parse_date(end_Times[i]), CurrentCalList[i], CalendarList[i], thread)
+                calEventId = upDateCalEvent(TaskNames[i], makeEventDescription(Frequencies[i], ExtraInfo[i]), parse_date(start_Dates[i]), URL_list[i], updatingCalEventIds[i],  parse_date(end_Times[i]), CurrentCalList[i], CalendarList[i], thread)
                 No_pages_modified = False     
                 no_new_updated = False
         
@@ -1861,7 +1861,7 @@ def update_notion_event_with_recurrence(notion_event, recurrence_info):
     notion.pages.update(
         page_id=notion_event['id'],
         properties={
-            Initiative_Notion_Name: {
+            Frequency_Notion_Name: {
                 'select': {
                     'name': recurrence_info  # 將重複信息存儲到 Initiative_Notion_Name
                 }
@@ -3074,16 +3074,16 @@ def create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gC
         }
     }
 
-    # Only update Initiative_Notion_Name if recurrence_info is valid
+    # Only update Frequency_Notion_Name if recurrence_info is valid
     if recurrence_info:
-        properties[Initiative_Notion_Name] = {
+        properties[Frequency_Notion_Name] = {
             "select": {
                 "name": recurrence_info  # Only update if valid
             }
         }
     else:
         # Log or print a message if no recurrence info is available (optional)
-        print(f"No recurrence info available for event {calIds[i]}, skipping update for Initiative_Notion_Name.")
+        print(f"No recurrence info available for event {calIds[i]}, skipping update for Frequency_Notion_Name.")
 
     # Create the page in Notion
     page = notion.pages.create(
