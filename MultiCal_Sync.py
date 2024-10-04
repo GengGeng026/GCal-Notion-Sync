@@ -1006,7 +1006,7 @@ No_pages_modified = True
 
 # 定义一些正确的拼写选项
 correct_terms = ["Untitled", "Physiotherapy", "General Physiotherapy", "Soka", "RUKA", "UMMC", "Sync"]
-protected_terms = ["Daily", "Weekly", "Monthly", "Yearly", "JC", "Appt.", "【Appt.】", "【Appt】", "Untitled"]  # 这些词不需要校正
+protected_terms = ["Daily", "Weekly", "Monthly", "Yearly", "JC", "Appt.", "【Appt.】", "【Appt】", "Untitled", "JOKER", "Folie À Deux", "Movie", "Yeux", "Police"]  # 这些词不需要校正
 
 # 判断是否为专业术语或保護詞
 def is_special_term(term):
@@ -1022,7 +1022,7 @@ def is_special_term(term):
 # 判断拼写是否接近正确
 def is_spelling_close_enough(term, correct_terms):
     best_match = process.extractOne(term, correct_terms)
-    return best_match[1] > 90  # 如果相似度高于90，就认为拼写接近
+    return best_match[1] > 60  # 如果相似度高于90，就认为拼写接近
 
 def correct_spelling(term):
     # 如果是 "Untitled"，直接返回，不進行校正
@@ -1047,7 +1047,7 @@ def correct_spelling(term):
 
     # 再使用 fuzzywuzzy 对校正后的结果进行模糊匹配
     best_match = process.extractOne(corrected_term, correct_terms)
-    if best_match[1] > 95:  # 如果 fuzzywuzzy 的相似度较高，选择 fuzzywuzzy 的结果
+    if best_match[1] > 60:  # 如果 fuzzywuzzy 的相似度较高，选择 fuzzywuzzy 的结果
         return best_match[0]
     
     return corrected_term  # 否则返回 TextBlob 校正的结果
@@ -2836,8 +2836,8 @@ for i in range(len(calIds)):
 
 # 判断是否为专业术语或保護詞
 def is_special_term(term):
-    # 如果是保護詞，直接返回 True
-    if term in protected_terms:
+    # 保護大小写和词形的保護词匹配
+    if term in protected_terms or term.lower() in [t.lower() for t in protected_terms]:
         return True
     # 检查是否是拼写选项中的专业术语
     for correct_term in correct_terms:
@@ -2845,29 +2845,40 @@ def is_special_term(term):
             return True
     return False
 
-# 进行拼写校正，专有词汇用 fuzzywuzzy，其他词用 TextBlob
+
+# 判断是否为常见的拼写错误（如重复字母、少字母等）
+def is_simple_typo(term):
+    # 常见拼写错误的简单规则，比如单词太短不作校正或只有一个字母不同
+    if len(term) < 6:
+        return True  # 字符太少，可能是普通拼写错误
+    # 检查是否有明显的错字，如重复字符、漏字等
+    return False  # 复杂的词汇，认为不是简单的拼写错误
+
+# 进行拼写校正
 def correct_spelling(term):
-    # 如果是 "Untitled"，直接返回，不進行校正
-    if term.lower().startswith("untitled"):
+    # 如果是 "Untitled" 或者空格，直接返回，不進行校正
+    if term.lower().startswith("untitled") or re.match(r'^\s+$', term):
         return "Untitled"
-
-    if re.match(r'^\s+$', term):
-        return "Untitled"
-
-    # 先检查是否是保護詞或专业术语，直接返回原词
-    if is_special_term(term):
+    
+    # 如果是保护词汇，跳过拼写校正
+    if protected_terms and term.lower() in [t.lower() for t in protected_terms]:
         return term
-    
-    # 如果不是专业术语，则使用 TextBlob 进行拼写校正
-    blob = TextBlob(term)
-    corrected_term = str(blob.correct())
 
-    # 再使用 fuzzywuzzy 对校正后的结果进行模糊匹配
-    best_match = process.extractOne(corrected_term, correct_terms)
-    if best_match[1] > 80:  # 如果 fuzzywuzzy 的相似度较高，选择 fuzzywuzzy 的结果
-        return best_match[0]
+    # 仅对可能的常见拼写错误进行校正
+    if is_simple_typo(term):
+        # 使用 TextBlob 进行拼写校正
+        blob = TextBlob(term)
+        corrected_term = str(blob.correct())
+
+        # 使用 fuzzywuzzy 模糊匹配进一步校正
+        best_match = process.extractOne(corrected_term, correct_terms)
+        if best_match and best_match[1] > 60:  # 如果 fuzzywuzzy 相似度较高
+            return best_match[0]
+        
+        return corrected_term  # 否则返回 TextBlob 校正结果
     
-    return corrected_term  # 否则返回 TextBlob 校正的结果
+    # 如果不是简单拼写错误，直接返回原词
+    return term
 
 def get_existing_titles(service, n_months_ago, calendar_id):
     # Include time in the start_date in RFC3339 format
