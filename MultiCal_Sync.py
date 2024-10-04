@@ -598,50 +598,35 @@ def parse_recurrence(recurrence_list):
             params = rule[len('RRULE:'):].split(';')
             recurrence_info = {}
 
-            # 解析每個參數
+            # 解析每个参数
             for param in params:
                 key, value = param.split('=')
                 recurrence_info[key] = value
 
-            # 基本頻率和間隔
+            # 将频率信息单独提取出来，并添加到 recurrence_info
             frequency = recurrence_info.get('FREQ', None)
             interval = recurrence_info.get('INTERVAL', '1')
-
-            # 處理各種頻率
-            if frequency == 'DAILY':
-                return 'DAILY' if interval == '1' else f'Every {interval} days'
-            elif frequency == 'WEEKLY':
-                return 'WEEKLY' if interval == '1' else f'Every {interval} weeks'
-            elif frequency == 'MONTHLY':
-                return 'MONTHLY' if interval == '1' else f'Every {interval} months'
-            elif frequency == 'YEARLY':
-                return 'YEARLY' if interval == '1' else f'Every {interval} years'
-            
-            # 處理其他規則，例如 BYDAY, UNTIL, COUNT
             until = recurrence_info.get('UNTIL', None)
             count = recurrence_info.get('COUNT', None)
             byday = recurrence_info.get('BYDAY', None)
 
-            additional_info = []
-            if until:
-                additional_info.append(f"until {until}")
-            if count:
-                additional_info.append(f"for {count} occurrences")
-            if byday:
-                additional_info.append(f"on {byday}")
-
-            return f"{frequency} {' '.join(additional_info)}"
+            # 返回一个包含所有解析结果的字典
+            return {
+                'frequency': frequency,
+                'interval': interval,
+                'until': until,
+                'count': count,
+                'byday': byday
+            }
 
     return None
 
 def extract_recurrence_info(service, calendar_id, event, el):
     # 检查事件是否有重複信息
+    recurring_event_id = event.get('recurringEventId')
     if 'recurrence' in event and event['recurrence']:
         print("Recurrence found:", event['recurrence'])
         return parse_recurrence(event['recurrence'])  # 解析重複信息
-
-    # 打印整个事件对象以调试
-    print("Full event object:", event)
 
     # 初始化 recurrence 信息
     Frequency_name = ""
@@ -660,7 +645,7 @@ def extract_recurrence_info(service, calendar_id, event, el):
                 select_field = properties[Frequency_Notion_Name].get('select')
                 if select_field and isinstance(select_field, dict):
                     Frequency_name = select_field.get('name', "")
-                    print("Notion recurrence found:", Frequency_name)
+                    # print("Notion recurrence found:", Frequency_name)
                 else:
                     print(f"No valid frequency found in Notion property: {Frequency_Notion_Name}")
             
@@ -684,29 +669,31 @@ def extract_recurrence_info(service, calendar_id, event, el):
                 
                 return [rrule]
 
-            print(f"{Frequency_Notion_Name} does not exist in the properties or is empty.")
-        else:
-            print("el is None, not a dict, or does not have 'properties'.")
+        #     print(f"{Frequency_Notion_Name} does not exist in the properties or is empty.")
+        # else:
+        #     print("el is None, not a dict, or does not have 'properties'.")
     except KeyError as e:
         print(f"KeyError: {e}")
 
-    print(f"Attempting to fetch event with recurringEventId: {event.get('recurringEventId')}")
+    # print(f"Attempting to fetch event with recurringEventId: {event.get('recurringEventId')}")
 
     # Check if the event is part of a recurring series (recurringEventId exists)
     if 'recurringEventId' in event:
+        # print(f"recurringEventId found: {event['recurringEventId']}")
         try:
             # Fetch original event
-            original_event = service.events().get(calendarId=calendar_id, eventId=event['recurringEventId']).execute()
-            print("Original event found:", original_event)
+            original_event = service.events().get(calendarId=calendar_id, eventId=recurring_event_id).execute()
+            return parse_recurrence(original_event.get('recurrence', [])), recurring_event_id  # 返回解析信息和 recurringEventId
+            # print("Original event found:", original_event)
             return parse_recurrence(original_event.get('recurrence', []))
         except googleapiclient.errors.HttpError as e:
             logging.error(f"Failed to fetch original event: {e}")
-        except Exception as e:
-            logging.error(f"Unexpected error: {e}")
+        # except Exception as e:
+        #     logging.error(f"Unexpected error: {e}")
 
     # No recurrence information found
-    print("No recurrence information available for event.")
-    return None
+    # print("No recurrence information available for event.")
+    return None, None  # 如果没有找到任何重複信息和 recurringEventId
 
 def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, eventId, eventEndTime, currentCalId, CalId, thread, recurrence_info=None):
 
@@ -812,31 +799,31 @@ def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, event
 
     recurrence_info = extract_recurrence_info(service, CalId, event, el)
     if recurrence_info:
-        logging.debug("Recurrence info extracted and added to the event.")
+        # logging.debug("Recurrence info extracted and added to the event.")
         event['recurrence'] = recurrence_info
     
     try:
         if currentCalId == CalId:
-            logging.info(f"Updating event {eventId} in calendar {CalId}.")
+            # logging.info(f"Updating event {eventId} in calendar {CalId}.")
             x = service.events().update(calendarId=CalId, eventId=eventId, body=event).execute()
         else:
             stop_clear_and_print()
             animate_text_wave("movin", repeat=1)
             start_dynamic_counter_indicator()
-            print(f"Moving event with ID: {eventId} from calendar: {currentCalId} to {CalId}")
+            # print(f"Moving event with ID: {eventId} from calendar: {currentCalId} to {CalId}")
             
             # 移動事件
             x = service.events().move(calendarId=currentCalId, eventId=eventId, destination=CalId).execute()
             
             if x is not None:
-                logging.info(f"Event moved successfully, response: {x}.")
+                # logging.info(f"Event moved successfully, response: {x}.")
                 
                 # 獲取移動後的事件ID
                 moved_event_id = x.get('id', eventId)  # 如果移動後返回的ID不存在，則保持原ID
                 
                 # 更新事件的屬性
                 x = service.events().update(calendarId=CalId, eventId=moved_event_id, body=event).execute()
-                print("Event updated after moving.")
+                # print("Event updated after moving.")
             else:
                 logging.error("Failed to move event, no response received.")
 
@@ -1893,26 +1880,6 @@ animate_text_wave_with_progress(text="Loading", new_text="Checked 2.3", target_p
 
 clear_line()
 
-# 更新 Notion 中的事件
-def update_notion_event_with_recurrence(notion_event, recurrence_info):
-    """
-    更新 Notion 事件以包含重複信息。
-
-    :param notion_event: Notion 中的事件對象
-    :param recurrence_info: 從 Google Calendar 提取的重複信息
-    """
-    
-    notion.pages.update(
-        page_id=notion_event['id'],
-        properties={
-            Frequency_Notion_Name: {
-                'select': {
-                    'name': recurrence_info  # 將重複信息存儲到 Initiative_Notion_Name
-                }
-            }
-        }
-    )
-
 def is_valid_uuid(uuid_to_test, version=4):
     regex = re.compile(
         r'^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}\Z', re.I
@@ -1924,7 +1891,7 @@ def is_valid_uuid(uuid_to_test, version=4):
 value =''
 exitVar = ''
 for i, gCalId in enumerate(notion_gCal_IDs):
-    print(f"\nProcessing gCalId: {gCalId} (Index: {i})")
+    # print(f"\nProcessing gCalId: {gCalId} (Index: {i})")
     try:
         # 檢查 gCalId 是否有效
         if not is_valid_uuid(gCalId):
@@ -2000,8 +1967,8 @@ for i, gCalId in enumerate(notion_gCal_IDs):
                 # 提取重複事件信息
                 recurrence_info = extract_recurrence_info(gc, calendarID, x, el)
 
-                if recurrence_info:
-                    print(f"Recurrence info extracted: {recurrence_info}")
+                # if recurrence_info:
+                    # print(f"Recurrence info extracted: {recurrence_info}")
 
                 if currentCalId != newCalId:
                     # print(f"Event has moved from {currentCalId} to {newCalId}. Syncing to Notion.")
@@ -3022,7 +2989,7 @@ def generate_unique_title(existing_titles, base_title, new_titles, number):
 
     return new_title.strip()
 
-def create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, end=None):
+def create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, end=None, recurring_event_id=None):
     
     # Create a timezone object
     local_tz = pytz_timezone('Asia/Kuala_Lumpur')
@@ -3053,11 +3020,19 @@ def create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gC
 
     # 提取重複事件信息
     event = calItems[i]
-    recurrence_info = extract_recurrence_info(service, gCal_calendarId[i], event, el)
+    recurrence_info, found_recurring_event_id = extract_recurrence_info(service, gCal_calendarId[i], event, el)
+
+    # # 检查是否已存在相同的 recurringEventId
+    # if found_recurring_event_id:
+    #     # 这里直接使用 found_recurring_event_id 进行判断
+    #     existing_page = el.get('id') if el else None  # 这里假设 el 可能是查找到的页面
+    #     if existing_page and recurring_event_id == found_recurring_event_id:
+    #         print(f"Event with recurringEventId {found_recurring_event_id} already exists. Skipping creation.")
+    #         return existing_page  # 如果已存在，则返回该页面
 
     # Create a page in Notion
     # print("Creating page with title:", calName[i])
-    unique_id = f"{calIds[i]}"
+    unique_id = found_recurring_event_id if found_recurring_event_id else calIds[i]
     properties = {
         Task_Notion_Name: {
             "type": 'title',
@@ -3118,16 +3093,36 @@ def create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gC
         }
     }
 
-    # Only update Frequency_Notion_Name if recurrence_info is valid
+    # 同步 recurrence 信息到 Notion
     if recurrence_info:
+        # print(f"recurrence_info: {recurrence_info}")
         properties[Frequency_Notion_Name] = {
             "select": {
-                "name": recurrence_info  # Only update if valid
+                "name": recurrence_info.get('frequency', 'Unknown')
             }
         }
-    else:
-        # Log or print a message if no recurrence info is available (optional)
-        print(f"No recurrence info available for event {calIds[i]}, skipping update for Frequency_Notion_Name.")
+        properties[Recur_Interval_Notion_Name] = {
+            "number": int(recurrence_info.get('interval', 1))
+        }
+
+        # 如果存在 `until`，则优先同步 `until`，否则同步 `count`
+        if recurrence_info.get('until'):
+            properties[Recur_Until_Notion_Name] = {
+                "date": {
+                    'start': recurrence_info['until'],
+                    'end': None
+                }
+            }
+        elif recurrence_info.get('count'):
+            properties[Recur_Count_Notion_Name] = {
+                "number": int(recurrence_info['count'])
+            }
+
+        # 处理 byday 信息
+        if recurrence_info.get('byday'):
+            properties[Days_Notion_Name] = {
+                "multi_select": [{'name': day} for day in recurrence_info['byday'].split(',')]
+            }
 
     # Create the page in Notion
     page = notion.pages.create(
@@ -3157,9 +3152,27 @@ def update_google_calendar_event_title(service, calendar_id, event_id, new_title
 
 new_titles = []
 
+# 在脚本开始处初始化一个集合用于跟踪已处理的 recurringEventId
+processed_recurring_ids = set()
+
+# Initialize a list to track added tasks
+unique_added_tasks = []
+
 # 使用enumerate()改进循环
 for i, calId in enumerate(calIds):
-    unique_id = f"{calIds[i]}"
+
+    # 提取事件的重复信息
+    event = calItems[i]  # 假设 calItems[i] 是当前事件
+    recurrence_info, found_recurring_event_id = extract_recurrence_info(service, gCal_calendarId[i], event, el)
+
+    unique_id = found_recurring_event_id if found_recurring_event_id else calIds[i]
+    
+    # 确保同一个 recurringEventId 只被处理一次
+    if found_recurring_event_id in processed_recurring_ids:
+        # print(f"Skipping event {calId} because recurringEventId {found_recurring_event_id} was already processed.")
+        continue  # 跳过已处理的重复事件
+
+    # 如果该事件还没有在 Notion 中，并且没有被标记为删除
     if unique_id not in ALL_notion_gCal_Ids and not delete_notion_flags[i]:
 
         if i < len(calName):
@@ -3174,42 +3187,34 @@ for i, calId in enumerate(calIds):
             calName[i] = title  # Update calName[i] with the new title
             new_titles.append(title)  # Add the new title to new_titles list
             update_google_calendar_event_title(service, gCal_calendarId[i], calId, title)
-            added_tasks.append((calId, title))
+
+            # 只添加一次到 added_tasks
+            if found_recurring_event_id not in processed_recurring_ids:
+                added_tasks.append((calId, title))
+
         else:
             print(f"Index {i} is out of range for the list calName")
 
-        # 提取事件的重複信息
-        event = calItems[i]  # 假設 calItems[i] 是當前事件
-        recurrence_info = extract_recurrence_info(service, gCal_calendarId[i], event, el)
-        # print(f"Recurrence info for event ID {calId}: {recurrence_info}")
-        
-        # if recurrence_info is None:
-        #     print(f"No recurrence information found for event ID {calId}.")
+        # 将当前的 recurringEventId 添加到集合中，确保之后不再处理同一系列的事件
+        if found_recurring_event_id:
+            processed_recurring_ids.add(found_recurring_event_id)
 
-        if calStartDates[i] == calEndDates[i] - timedelta(days=1): #only add in the start DATE
-
-            #Here, we create a new page for every new GCal event
+        # 创建 Notion 页面的逻辑
+        if calStartDates[i] == calEndDates[i] - timedelta(days=1):  # only add in the start DATE
             end = calEndDates[i] - timedelta(days=1)
-            
-            my_page = create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, end)
+            my_page = create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, end, found_recurring_event_id)
+            # print(f"Created Notion page {my_page['id']} for event ID {calId}")
             notion_ID = my_page['id']  # 獲取創建的頁面 ID
 
-            print(f"Updating Notion page {notion_ID} with recurrence info: {recurrence_info}")
-            # 更新 Notion 頁面，包含提取的重複信息
-            try:
-                update_notion_event_with_recurrence(my_page, recurrence_info)  # 使用更新函數
-                print(f"Successfully updated Notion page {notion_ID}")
-            except Exception as e:
-                print(f"Error updating Notion page {notion_ID}: {e}")
-            
-        elif calStartDates[i].hour == 0 and calStartDates[i].minute == 0 and calEndDates[i].hour == 0 and calEndDates[i].minute == 0: #add start and end in DATE format
-            #Here, we create a new page for every new GCal event
+        elif calStartDates[i].hour == 0 and calStartDates[i].minute == 0 and calEndDates[i].hour == 0 and calEndDates[i].minute == 0:  # add start and end in DATE format
             end = calEndDates[i] - timedelta(days=1)
-            my_page = create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, end)
+            my_page = create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, end, found_recurring_event_id)
 
-        else: #regular datetime stuff
-            #Here, we create a new page for every new GCal event
-            my_page = create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, calEndDates[i])
+        else:  # regular datetime stuff
+            my_page = create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, calEndDates[i], found_recurring_event_id)
+
+# 打印已处理的 recurringEventId
+# print(f"Processed recurring event IDs: {processed_recurring_ids}")
 
 animate_text_wave_with_progress(text="Loading", new_text="Checked 3.7", target_percentage=80, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
 
