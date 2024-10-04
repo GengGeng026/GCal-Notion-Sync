@@ -376,6 +376,7 @@ Months_Notion_Name = 'Months'
 ExtraInfo_Notion_Name = 'Notes'
 On_GCal_Notion_Name = 'On GCal?'
 to_Auto_Sync_Notion_Name = 'to Auto-Sync'
+AutoRename_Notion_Name = 'AutoRename'
 NeedGCalUpdate_Notion_Name = 'NeedGCalUpdate'
 GCalEventId_Notion_Name = 'GCal Event Id'
 LastUpdatedTime_Notion_Name  = 'Last Updated Time'
@@ -719,10 +720,24 @@ def extract_recurrence_info(service, calendar_id, event, el):
 
     return None, None
 
+number = 0
+new_titles = []
 
 def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, eventId, eventEndTime, currentCalId, CalId, thread, recurrence_info=None):
 
     x = None
+
+    # Step 1: 檢查 autorename_notion_name
+    if AutoRename_Notion_Name:
+        # 生成唯一標題，並使用 autorename_notion_name 來覆蓋事件標題
+        eventName = generate_unique_title(
+            CurrentCalList,  # 這應該是現有標題的列表
+            task_name,       # 這是基本標題
+            new_titles,      # 這是新的標題列表
+            number,          # 數字參數，通常是用來生成唯一標題的序號
+            resultList  # 自動重命名的名稱
+        )
+        print(f"Generated unique title: {eventName}")
 
     if eventStartTime.hour == 0 and eventStartTime.minute == 0 and eventEndTime == eventStartTime:  # 单日事件
         stop_clear_and_print()
@@ -1024,6 +1039,10 @@ def is_spelling_close_enough(term, correct_terms):
     best_match = process.extractOne(term, correct_terms)
     return best_match[1] > 60  # 如果相似度高于90，就认为拼写接近
 
+def contains_chinese(s):
+    """檢查字串是否包含中文字符"""
+    return bool(re.search(r'[\u4e00-\u9fff]', s))
+
 def correct_spelling(term):
     # 如果是 "Untitled"，直接返回，不進行校正
     if term.lower().startswith("untitled"):
@@ -1035,6 +1054,10 @@ def correct_spelling(term):
 
     # 先检查是否是保護詞或专业术语，直接返回原词
     if is_special_term(term):
+        return term
+
+    # 检查是否包含中文字符，若有则不进行校正
+    if contains_chinese(term):
         return term
     
     # 如果拼写已经接近正确，则直接返回原词
@@ -1098,10 +1121,43 @@ def extract_number_and_position(title):
         return int(match.group(1)), match.start(), match.end()
     return None, None, None
 
-def generate_unique_title(existing_titles, base_title, new_titles, number):
+def contains_latin_or_numbers_or_chinese(s):
+    """檢查字串是否包含任何羅馬字母、數字或中文字符"""
+    return bool(re.search(r'[A-Za-z0-9\u4e00-\u9fff]', s))
+
+notion_data = {}
+
+def generate_unique_title(existing_titles, base_title, new_titles, number, resultList):
     new_title = base_title  # Initialize new_title with a default value
     all_titles = existing_titles + new_titles
 
+    # 确保 number 在 resultList 的有效范围内
+    if number >= len(resultList):
+        print("Error: Invalid index number.")
+        return new_title  # 返回默认标题
+
+    # 'AutoRename_Notion_Name' 的键
+    AutoRename_Notion_Name_key = 'AutoRename'
+
+    # # 打印 resultList 和 properties
+    print(f"resultList: {resultList}")
+    # print(f"Selected Item: {resultList[number]}")  # 打印选中的项
+    # print(f"Properties: {resultList[number]['properties']}")  # 打印 properties
+    auto_rename_notion_name_value = resultList[0]['properties']['AutoRename']['formula']['string']
+    # print(f"auto_rename_notion_name_value: {auto_rename_notion_name_value}")
+
+    # 确认提取的标题值
+    if auto_rename_notion_name_value is not None and contains_latin_or_numbers_or_chinese(auto_rename_notion_name_value):
+        AutoRename_Notion_Name = auto_rename_notion_name_value
+    else:
+        AutoRename_Notion_Name = None  # 如果没有获取到，设置为 None
+    
+    print(f"AutoRename value: {AutoRename_Notion_Name}")  # 确认 AutoRename 值
+
+    # 如果 AutoRename_Notion_Name 包含罗马字母或数字，直接使用它作为标题
+    if AutoRename_Notion_Name is not None:
+        return AutoRename_Notion_Name  # 返回提取的标题
+    
     # 去除空白字符並轉換為小寫
     base_title_clean = base_title.strip().lower()
 
@@ -1238,7 +1294,6 @@ def generate_unique_title(existing_titles, base_title, new_titles, number):
         next_number = max(numbers) + 1
 
     return new_title.strip()
-
 
 animate_text_wave_with_progress(text="Loading", new_text="Checked 1", target_percentage=6, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
 
@@ -2107,6 +2162,14 @@ loop_length_titles = min(len(notion_titles), len(gCal_titles))
 for i in range(loop_length_titles):
     if notion_titles[i] != gCal_titles[i] and gCal_titles[i] != '':
         new_notion_titles[i] = gCal_titles[i]
+        # print(f"Title for Notion page ID {notion_IDs_List[i]} changed to {new_notion_titles[i]}")
+        if new_notion_titles[i] != '':
+            # 更新 Notion 的標題
+            try:
+                page_id = notion_IDs_List[i]
+                notion.pages.update(page_id=page_id, properties={Task_Notion_Name: {'title': [{'text': {'content': new_notion_titles[i]}}]}})
+            except Exception as e:
+                print(f"Failed to update title for Notion page ID {page_id}: {e}")
     else:
         new_notion_titles[i] = notion_titles[i]  # If gCal_titles[i] is empty, keep the original Notion title
 
@@ -3212,8 +3275,6 @@ def update_google_calendar_event_title(service, calendar_id, event_id, new_title
         # print(f"Updating event ID: {event_id} with title: {new_title}")
     except HttpError as error:
         print(f"An error occurred: {error}")
-
-new_titles = []
 
 # 在脚本开始处初始化一个集合用于跟踪已处理的 recurringEventId
 processed_recurring_ids = set()
