@@ -857,7 +857,7 @@ def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, event
                 
         try:
             x = service.events().move(calendarId=currentCalId, eventId=eventId, destination=CalId).execute()
-            print(f"Attempting to update event. Calendar ID: {CalId}, Event ID: {eventId}, Event Body: {event}")
+            # print(f"Attempting to update event. Calendar ID: {CalId}, Event ID: {eventId}, Event Body: {event}")
             x = service.events().update(calendarId=CalId, eventId = eventId, body=event).execute()
         except googleapiclient.errors.HttpError as error:
             if error.resp.status == 400 and 'cannotChangeOrganizer' in str(error):
@@ -1696,6 +1696,8 @@ CalendarList = []
 CurrentCalList = []
 tasks_by_calendar = {}
 
+created_single_day_events = set()
+
 if len(resultList) > 0:
     
     for i, el in enumerate(resultList):
@@ -1746,15 +1748,18 @@ if len(resultList) > 0:
         #depending on the format of the dates, we'll update the gCal event as necessary
         try:
             calEventId = upDateCalEvent(task_name, makeEventDescription(Frequencies[i], ExtraInfo[i]), parse_date(start_Dates[i]), URL_list[i], updatingCalEventIds[i],  parse_date(end_Times[i]), CurrentCalList[i], CalendarList[i], thread)
+            created_single_day_events.add(task_name)  # 标记为已创建
             No_pages_modified = False
             no_new_updated = False
         except:
             try:
                 calEventId = upDateCalEvent(task_name, makeEventDescription(Frequencies[i], ExtraInfo[i]), parse_date(start_Dates[i]), URL_list[i], updatingCalEventIds[i],  parse_date(end_Times[i]), CurrentCalList[i], CalendarList[i], thread)
+                created_single_day_events.add(task_name)  # 标记为已创建
                 No_pages_modified = False
                 no_new_updated = False
             except:
                 calEventId = upDateCalEvent(TaskNames[i], makeEventDescription(Frequencies[i], ExtraInfo[i]), parse_date(start_Dates[i]), URL_list[i], updatingCalEventIds[i],  parse_date(end_Times[i]), CurrentCalList[i], CalendarList[i], thread)
+                created_single_day_events.add(task_name)  # 标记为已创建
                 No_pages_modified = False     
                 no_new_updated = False
         
@@ -3205,7 +3210,9 @@ processed_recurring_ids = set()
 # Initialize a list to track added tasks
 unique_added_tasks = []
 
-# 使用enumerate()改进循环
+# 新集合來追踪已創建的單日事件
+created_single_day_events = set()
+
 for i, calId in enumerate(calIds):
 
     # 提取事件的重复信息
@@ -3213,10 +3220,9 @@ for i, calId in enumerate(calIds):
     recurrence_info, found_recurring_event_id = extract_recurrence_info(service, gCal_calendarId[i], event, el)
 
     unique_id = found_recurring_event_id if found_recurring_event_id else calIds[i]
-    
+
     # 确保同一个 recurringEventId 只被处理一次
     if found_recurring_event_id in processed_recurring_ids:
-        # print(f"Skipping event {calId} because recurringEventId {found_recurring_event_id} was already processed.")
         continue  # 跳过已处理的重复事件
 
     # 如果该事件还没有在 Notion 中，并且没有被标记为删除
@@ -3225,19 +3231,15 @@ for i, calId in enumerate(calIds):
         if i < len(calName):
             title = calName[i].strip() if calName[i] else None
             if not title:
-                title = 'Untitled'  # Simplify logic for generating Untitled titles
+                title = 'Untitled'  # 简化逻辑以生成未命名标题
             
-            # Retrieve existing titles and generate a unique title considering new_titles
+            # 检索现有标题并生成唯一标题
             existing_titles = get_existing_titles(service, n_months_ago, gCal_calendarId[i])
             default_number = 1
             title = generate_unique_title(existing_titles, title, new_titles, default_number)
-            calName[i] = title  # Update calName[i] with the new title
-            new_titles.append(title)  # Add the new title to new_titles list
+            calName[i] = title  # 更新 calName[i] 为新标题
+            new_titles.append(title)  # 将新标题添加到 new_titles 列表
             update_google_calendar_event_title(service, gCal_calendarId[i], calId, title)
-
-            # 只添加一次到 added_tasks
-            if found_recurring_event_id not in processed_recurring_ids:
-                added_tasks.append((calId, title))
 
         else:
             print(f"Index {i} is out of range for the list calName")
@@ -3247,18 +3249,33 @@ for i, calId in enumerate(calIds):
             processed_recurring_ids.add(found_recurring_event_id)
 
         # 创建 Notion 页面的逻辑
-        if calStartDates[i] == calEndDates[i] - timedelta(days=1):  # only add in the start DATE
+        if calStartDates[i] == calEndDates[i] - timedelta(days=1):  # 只在起始日期添加
             end = calEndDates[i] - timedelta(days=1)
-            my_page = create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, end, found_recurring_event_id)
-            # print(f"Created Notion page {my_page['id']} for event ID {calId}")
-            notion_ID = my_page['id']  # 獲取創建的頁面 ID
-
-        elif calStartDates[i].hour == 0 and calStartDates[i].minute == 0 and calEndDates[i].hour == 0 and calEndDates[i].minute == 0:  # add start and end in DATE format
-            end = calEndDates[i] - timedelta(days=1)
+            if title in created_single_day_events:
+                print(f"Event '{title}' already created. Skipping.")
+                continue  # Skip to the next iteration if already created
             my_page = create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, end, found_recurring_event_id)
 
-        else:  # regular datetime stuff
+        elif calStartDates[i].hour == 0 and calStartDates[i].minute == 0 and calEndDates[i].hour == 0 and calEndDates[i].minute == 0:  # 日期格式
+            end = calEndDates[i] - timedelta(days=1)
+            if task_name in created_single_day_events:
+                print(f"Event '{task_name}' already created. Skipping.")
+                continue  # Skip to the next iteration if already created
+            my_page = create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, end, found_recurring_event_id)
+            created_single_day_events.add(title)
+
+        else:  # 常规日期时间处理
+            if task_name in created_single_day_events:
+                print(f"Event '{task_name}' already created. Skipping.")
+                continue  # Skip to the next iteration if already created
             my_page = create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, calEndDates[i], found_recurring_event_id)
+            created_single_day_events.add(title)
+
+        # 添加任务到 added_tasks，确保每个事件只添加一次
+        if title not in created_single_day_events:  # 检查是否已经创建过单日事件
+            created_single_day_events.add(title)  # 标记为已创建
+            
+        added_tasks.append((calId, title))
 
 # 打印已处理的 recurringEventId
 # print(f"Processed recurring event IDs: {processed_recurring_ids}")
