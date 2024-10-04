@@ -600,8 +600,9 @@ def parse_recurrence(recurrence_list):
 
             # 解析每个参数
             for param in params:
-                key, value = param.split('=')
-                recurrence_info[key] = value
+                if '=' in param:
+                    key, value = param.split('=', 1)  # 只分割一次
+                    recurrence_info[key] = value
 
             # 将频率信息单独提取出来，并添加到 recurrence_info
             frequency = recurrence_info.get('FREQ', None)
@@ -621,190 +622,155 @@ def parse_recurrence(recurrence_list):
 
     return None
 
+def validate_rrule(rrule_str):
+    until_value = None
+    try:
+        if 'UNTIL' in rrule_str:
+            match = re.search(r"UNTIL=(\d{8}T\d{6}Z)", rrule_str)
+            if match:
+                until_value = match.group(1)
+                if not re.match(r"\d{8}T\d{6}Z", until_value):
+                    raise ValueError(f"Invalid UNTIL format: {until_value}")
+            else:
+                raise ValueError("UNTIL is missing or has an invalid format.")
+
+        
+        # if until_value is not None:
+        #     print(f"Checking UNTIL value: {until_value}")
+        # else:
+        #     print("UNTIL value is not defined.")
+
+        return True
+    except Exception as e:
+        print(f"RRULE validation failed: {e}")
+        return False
+
+def format_until_date(until: str) -> str:
+    try:
+        dt = datetime.fromisoformat(until[:-1] + '+00:00') if until.endswith('Z') else datetime.fromisoformat(until)
+        return dt.strftime('%Y%m%dT%H%M%SZ')
+    except ValueError as e:
+        raise ValueError(f"Invalid UNTIL format: {until}") from e
+
 def extract_recurrence_info(service, calendar_id, event, el):
-    # 检查事件是否有重複信息
     recurring_event_id = event.get('recurringEventId')
     if 'recurrence' in event and event['recurrence']:
-        print("Recurrence found:", event['recurrence'])
-        return parse_recurrence(event['recurrence'])  # 解析重複信息
+        # print("Recurrence found:", event['recurrence'])
+        return parse_recurrence(event['recurrence'])
 
-    # 初始化 recurrence 信息
     Frequency_name = ""
-    interval = '1'  # 默认为 1，如果 Notion 中存在 interval，则更新
+    interval = '1'
     until = None
     count = None
     byday = None
 
-    # 確認 el 不是 None 並且包含正確的結構
-    try:
-        if el is not None and isinstance(el, dict) and 'properties' in el:
-            properties = el['properties']
-            
-            # 获取 Frequency 名称
-            if Frequency_Notion_Name in properties and properties[Frequency_Notion_Name]:
-                select_field = properties[Frequency_Notion_Name].get('select')
-                if select_field and isinstance(select_field, dict):
-                    Frequency_name = select_field.get('name', "")
-                    # print("Notion recurrence found:", Frequency_name)
-                else:
-                    print(f"No valid frequency found in Notion property: {Frequency_Notion_Name}")
-            
-            # 获取其他字段信息
-            interval = properties.get(Recur_Interval_Notion_Name, {}).get('number', '1')
-            until = properties.get(Recur_Until_Notion_Name, {}).get('date', {}).get('start', None)
-            count = properties.get(Recur_Count_Notion_Name, {}).get('number', None)
-            byday = properties.get(Days_Notion_Name, {}).get('multi_select', [])
-            
-            # 如果 Frequency_name 存在，则根据频率生成 RRULE
-            if Frequency_name:
-                rrule = f"RRULE:FREQ={Frequency_name.upper()};INTERVAL={interval}"
-                
-                if until:
-                    rrule += f";UNTIL={until}"
-                if count:
-                    rrule += f";COUNT={count}"
-                if byday:
-                    days = ','.join([day['name'] for day in byday])
-                    rrule += f";BYDAY={days}"
-                
+    if el is not None and isinstance(el, dict) and 'properties' in el:
+        properties = el['properties']
+        
+        if Frequency_Notion_Name in properties and properties[Frequency_Notion_Name]:
+            select_field = properties[Frequency_Notion_Name].get('select')
+            if select_field and isinstance(select_field, dict):
+                Frequency_name = select_field.get('name', "")
+        
+        interval = properties.get(Recur_Interval_Notion_Name, {}).get('number', '1')
+
+        # 假設 until_property 是從 event 中提取的某個屬性
+        until_property = event.get('recurrence', {}).get('until', None)  # 根據實際結構獲取 until_property
+
+        # 確保 until_property 不是 None
+        if until_property is None:
+            logging.warning("until_property is None, returning default value.")
+            return {
+                "until": None,
+                # 可以根據需要返回其他的默認值
+            }
+
+        # 繼續處理 until_property
+        until = until_property.get('date', {}).get('start', None) if until_property else None
+        
+        count = properties.get(Recur_Count_Notion_Name, {}).get('number', None)
+        byday = properties.get(Days_Notion_Name, {}).get('multi_select', [])
+
+        # 轉換 until 的格式
+        until = format_until_date(until) if until else None
+
+        if Frequency_name:
+            rrule = f"RRULE:FREQ={Frequency_name.upper()};INTERVAL={interval}"
+            if until:
+                rrule += f";UNTIL={until}"
+            if count:
+                rrule += f";COUNT={count}"
+            if byday:
+                days = ','.join([day['name'] for day in byday])
+                rrule += f";BYDAY={days}"
+
+            if validate_rrule(rrule):
                 return [rrule]
-
-        #     print(f"{Frequency_Notion_Name} does not exist in the properties or is empty.")
-        # else:
-        #     print("el is None, not a dict, or does not have 'properties'.")
-    except KeyError as e:
-        print(f"KeyError: {e}")
-
-    # print(f"Attempting to fetch event with recurringEventId: {event.get('recurringEventId')}")
-
-    # Check if the event is part of a recurring series (recurringEventId exists)
+            else:
+                print("Invalid RRULE")
+                return None
+            
     if 'recurringEventId' in event:
-        # print(f"recurringEventId found: {event['recurringEventId']}")
         try:
-            # Fetch original event
             original_event = service.events().get(calendarId=calendar_id, eventId=recurring_event_id).execute()
-            return parse_recurrence(original_event.get('recurrence', [])), recurring_event_id  # 返回解析信息和 recurringEventId
-            # print("Original event found:", original_event)
-            return parse_recurrence(original_event.get('recurrence', []))
+            return parse_recurrence(original_event.get('recurrence', [])), recurring_event_id
         except googleapiclient.errors.HttpError as e:
             logging.error(f"Failed to fetch original event: {e}")
-        # except Exception as e:
-        #     logging.error(f"Unexpected error: {e}")
 
-    # No recurrence information found
-    # print("No recurrence information available for event.")
-    return None, None  # 如果没有找到任何重複信息和 recurringEventId
+    return None, None
+
 
 def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, eventId, eventEndTime, currentCalId, CalId, thread, recurrence_info=None):
 
     x = None
-    
-    if eventStartTime.hour == 0 and eventStartTime.minute == 0 and eventEndTime == eventStartTime:  #you're given a single date
+
+    if eventStartTime.hour == 0 and eventStartTime.minute == 0 and eventEndTime == eventStartTime:  # 单日事件
         stop_clear_and_print()
         animate_text_wave("updating", repeat=1)
         start_dynamic_counter_indicator()
+        
         if AllDayEventOption == 1:
-            eventStartTime = datetime.combine(eventStartTime, datetime.min.time()) + timedelta(hours=DEFAULT_EVENT_START) ##make the events pop up at 8 am instead of 12 am
-            eventEndTime = eventStartTime + timedelta(minutes= DEFAULT_EVENT_LENGTH)
-            event = {
-                'summary': eventName,
-                'description': eventDescription,
-                'start': {
-                    'dateTime': eventStartTime.strftime("%Y-%m-%dT%H:%M:%S"),
-                    'timeZone': timezone,
-                },
-                'end': {
-                    'dateTime': eventEndTime.strftime("%Y-%m-%dT%H:%M:%S"),
-                    'timeZone': timezone,
-                }, 
-                'source': {
-                    'title': 'Notion Link',
-                    'url': sourceURL,
-                }
-            }
+            eventStartTime = datetime.combine(eventStartTime, datetime.min.time()) + timedelta(hours=DEFAULT_EVENT_START) 
+            eventEndTime = eventStartTime + timedelta(minutes=DEFAULT_EVENT_LENGTH)
+            event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, False)
         else:
-            eventEndTime = eventEndTime + timedelta(days=1) #gotta make it to 12AM the day after
-            event = {
-                'summary': eventName,
-                'description': eventDescription,
-                'start': {
-                    'date': eventStartTime.strftime("%Y-%m-%d"),
-                    'timeZone': timezone,
-                },
-                'end': {
-                    'date': eventEndTime.strftime("%Y-%m-%d"),
-                    'timeZone': timezone,
-                }, 
-                'source': {
-                    'title': 'Notion Link',
-                    'url': sourceURL,
-                }
-            }
-    elif eventStartTime.hour == 0 and eventStartTime.minute ==  0 and eventEndTime.hour == 0 and eventEndTime.minute == 0 and eventStartTime != eventEndTime: #it's a multiple day event
+            eventEndTime = eventEndTime + timedelta(days=1)
+            event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, True)
+
+    elif eventStartTime.hour == 0 and eventStartTime.minute == 0 and eventEndTime.hour == 0 and eventEndTime.minute == 0 and eventStartTime != eventEndTime:  # 多天事件
         stop_clear_and_print()
         animate_text_wave("updating", repeat=1)
         start_dynamic_counter_indicator()
-        
-        eventEndTime = eventEndTime + timedelta(days=1) #gotta make it to 12AM the day after
-        
-        event = {
-            'summary': eventName,
-            'description': eventDescription,
-            'start': {
-                'date': eventStartTime.strftime("%Y-%m-%d"),
-                'timeZone': timezone,
-            },
-            'end': {
-                'date': eventEndTime.strftime("%Y-%m-%d"),
-                'timeZone': timezone,
-            }, 
-            'source': {
-                'title': 'Notion Link',
-                'url': sourceURL,
-            }
-        }
+
+        eventEndTime = eventEndTime + timedelta(days=1)  
+        event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, True)
     
-    else: #just 2 datetimes passed in 
+    else:  # 处理具体的开始时间和结束时间
         stop_clear_and_print()
         animate_text_wave("updating", repeat=1)
         start_dynamic_counter_indicator()
-        if eventStartTime.hour == 0 and eventStartTime.minute == 0 and eventEndTime != eventStartTime: #Start on Notion is 12 am and end is also given on Notion 
-            eventStartTime = eventStartTime #start will be 12 am
-            eventEndTime = eventEndTime #end will be whenever specified
-        elif eventStartTime.hour == 0 and eventStartTime.minute == 0: #if the datetime fed into this is only a date or is at 12 AM, then the event will fall under here
-            eventStartTime = datetime.combine(eventStartTime, datetime.min.time()) + timedelta(hours=DEFAULT_EVENT_START) ##make the events pop up at 8 am instead of 12 am
-            eventEndTime = eventStartTime + timedelta(minutes= DEFAULT_EVENT_LENGTH)  
-        elif eventEndTime == eventStartTime: #this would meant that only 1 datetime was actually on the notion dashboard 
-            eventStartTime = eventStartTime
-            eventEndTime = eventStartTime + timedelta(minutes= DEFAULT_EVENT_LENGTH) 
-        else: #if you give a specific start time to the event
-            eventStartTime = eventStartTime
-            eventEndTime = eventEndTime 
-        event = {
-            'summary': eventName,
-            'description': eventDescription,
-            'start': {
-                'dateTime': eventStartTime.strftime("%Y-%m-%dT%H:%M:%S"),
-                'timeZone': timezone,
-            },
-            'end': {
-                'dateTime': eventEndTime.strftime("%Y-%m-%dT%H:%M:%S"),
-                'timeZone': timezone,
-            }, 
-            'source': {
-                'title': 'Notion Link',
-                'url': sourceURL,
-            }
-        }
+        
+        event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, False)
+
 
     recurrence_info = extract_recurrence_info(service, CalId, event, el)
     if recurrence_info:
-        # logging.debug("Recurrence info extracted and added to the event.")
-        event['recurrence'] = recurrence_info
+        # 确保 recurrence_info 是一个列表，并且至少有一个元素
+        if isinstance(recurrence_info, list) and len(recurrence_info) > 0:
+            if validate_rrule(recurrence_info[0]):  # Assuming recurrence_info is a list with RRULE as first element
+                event['recurrence'] = recurrence_info
+        else:
+            # 如果 recurrence_info 为空或不为列表，可以选择记录错误或采取其他措施
+            logging.warning("Recurrence information is empty or not a list.")
+            try:
+                original_event = service.events().get(calendarId=currentCalId, eventId=eventId).execute()
+                event['recurrence'] = original_event.get('recurrence')
+            except googleapiclient.errors.HttpError as e:
+                logging.error(f"Failed to fetch original event recurrence: {e}")
     
     try:
         if currentCalId == CalId:
-            # logging.info(f"Updating event {eventId} in calendar {CalId}.")
+            logging.info(f"Updating event {eventId} in calendar {CalId}.")
             x = service.events().update(calendarId=CalId, eventId=eventId, body=event).execute()
         else:
             stop_clear_and_print()
@@ -816,7 +782,7 @@ def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, event
             x = service.events().move(calendarId=currentCalId, eventId=eventId, destination=CalId).execute()
             
             if x is not None:
-                # logging.info(f"Event moved successfully, response: {x}.")
+                logging.info(f"Event moved successfully, response: {x}.")
                 
                 # 獲取移動後的事件ID
                 moved_event_id = x.get('id', eventId)  # 如果移動後返回的ID不存在，則保持原ID
@@ -900,12 +866,73 @@ def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, event
                 raise  # Re-raise the exception if it's not the specific error we're handling
     
     # 最後檢查 x
-    print(f"x response: {x}")  # 調試信息
+    # print(f"x response: {x}")  # 調試信息
     if x is not None and 'id' in x:
         return x['id']
     else:
         print("Event ID was not found in the response.")
         return None  # 或者根據需要返回一個其他值
+
+def create_event_body(eventName, eventDescription, startTime, endTime, sourceURL, isAllDay):
+    if isAllDay:
+        return {
+            'summary': eventName,
+            'description': eventDescription,
+            'start': {
+                'date': startTime.strftime("%Y-%m-%d"),
+                'timeZone': timezone,
+            },
+            'end': {
+                'date': endTime.strftime("%Y-%m-%d"),
+                'timeZone': timezone,
+            },
+            'source': {
+                'title': 'Notion Link',
+                'url': sourceURL,
+            }
+        }
+    else:
+        return {
+            'summary': eventName,
+            'description': eventDescription,
+            'start': {
+                'dateTime': startTime.strftime("%Y-%m-%dT%H:%M:%S"),
+                'timeZone': timezone,
+            },
+            'end': {
+                'dateTime': endTime.strftime("%Y-%m-%dT%H:%M:%S"),
+                'timeZone': timezone,
+            },
+            'source': {
+                'title': 'Notion Link',
+                'url': sourceURL,
+            }
+        }
+
+def handle_http_error(e, currentCalId, eventId, event, recurrence_info):
+    logging.error(f"Google API HttpError: {e}")
+
+    if e.resp.status == 400 and 'cannotChangeOrganizer' in str(e):
+        try:
+            logging.warning("Organizer cannot be changed, creating a new event.")
+            new_event = {
+                'summary': event['summary'],
+                'description': event['description'],
+                'start': event['start'],
+                'end': event['end'],
+                'recurrence': recurrence_info if recurrence_info else [],
+                'source': event.get('source', {}),
+            }
+            new_event_response = service.events().insert(calendarId=CalId, body=new_event).execute()
+            logging.info(f"New event created with ID: {new_event_response.get('id')}.")
+
+            service.events().delete(calendarId=currentCalId, eventId=eventId).execute()
+        except Exception as ex:
+            logging.error(f"Error creating or deleting event: {ex}")
+            raise
+    else:
+        logging.error(f"Unhandled Google API error: {e}")
+        raise
 
 ###########################################################################
 ##### Part 1: Take Notion Events not on GCal and move them over to GCal
@@ -1880,6 +1907,26 @@ animate_text_wave_with_progress(text="Loading", new_text="Checked 2.3", target_p
 
 clear_line()
 
+# 更新 Notion 中的事件
+def update_notion_event_with_recurrence(notion_event, recurrence_info):
+    """
+    更新 Notion 事件以包含重複信息。
+
+    :param notion_event: Notion 中的事件對象
+    :param recurrence_info: 從 Google Calendar 提取的重複信息
+    """
+    
+    notion.pages.update(
+        page_id=notion_event['id'],
+        properties={
+            Frequency_Notion_Name: {
+                'select': {
+                    'name': recurrence_info  # 將重複信息存儲到 Initiative_Notion_Name
+                }
+            }
+        }
+    )
+
 def is_valid_uuid(uuid_to_test, version=4):
     regex = re.compile(
         r'^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}\Z', re.I
@@ -1968,7 +2015,7 @@ for i, gCalId in enumerate(notion_gCal_IDs):
                 recurrence_info = extract_recurrence_info(gc, calendarID, x, el)
 
                 # if recurrence_info:
-                    # print(f"Recurrence info extracted: {recurrence_info}")
+                #     print(f"Recurrence info extracted: {recurrence_info}")
 
                 if currentCalId != newCalId:
                     # print(f"Event has moved from {currentCalId} to {newCalId}. Syncing to Notion.")
