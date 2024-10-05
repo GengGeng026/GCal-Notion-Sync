@@ -540,13 +540,35 @@ def makeTaskURL(ending, urlRoot):
 ######################################################################
 #METHOD TO MAKE A CALENDAR EVENT
 
-
-def makeCalEvent(eventName, eventDescription, eventStartTime, sourceURL, eventEndTime, calId, all_day=False):
-    # 确保在处理之前 eventEndTime 不是 None
+def makeCalEvent(eventName, eventDescription, eventStartTime, sourceURL, eventEndTime, calId, all_day=False, frequency=None, interval=None, byDay=None, byMonth=None, byMonthDay=None, byYearDay=None, byWeekNum=None, until=None, count=None):
+    # 確保在處理之前 eventEndTime 不是 None
     if eventEndTime is None:
         eventEndTime = eventStartTime
 
-    # 处理全天事件
+    # 生成 recurrence 相關規則
+    recurrence_rules = []
+
+    if frequency:  # 如果有頻率設定
+        rule = f"RRULE:FREQ={frequency.upper()}"
+        if interval:
+            rule += f";INTERVAL={interval}"
+        if byDay:
+            rule += f";BYDAY={byDay}"
+        if byMonth:
+            rule += f";BYMONTH={byMonth}"
+        if byMonthDay:
+            rule += f";BYMONTHDAY={byMonthDay}"
+        if byYearDay:
+            rule += f";BYYEARDAY={byYearDay}"
+        if byWeekNum:
+            rule += f";BYWEEKNO={byWeekNum}"
+        if until:
+            rule += f";UNTIL={until.strftime('%Y%m%dT%H%M%SZ')}"  # 確保日期格式正確
+        if count:
+            rule += f";COUNT={count}"
+        recurrence_rules.append(rule)
+
+    # 處理全天事件
     if all_day or (eventStartTime.hour == 0 and eventStartTime.minute == 0 and eventEndTime == eventStartTime):
         event = {
             'summary': eventName,
@@ -562,10 +584,11 @@ def makeCalEvent(eventName, eventDescription, eventStartTime, sourceURL, eventEn
             'source': {
                 'title': 'Notion Link',
                 'url': sourceURL,
-            }
+            },
+            'recurrence': recurrence_rules if recurrence_rules else None  # 設置 recurrence
         }
     else:
-        # 非全天事件的处理逻辑
+        # 非全天事件的處理邏輯
         event = {
             'summary': eventName,
             'description': eventDescription,
@@ -580,7 +603,8 @@ def makeCalEvent(eventName, eventDescription, eventStartTime, sourceURL, eventEn
             'source': {
                 'title': 'Notion Link',
                 'url': sourceURL,
-            }
+            },
+            'recurrence': recurrence_rules if recurrence_rules else None  # 設置 recurrence
         }
 
     x = service.events().insert(calendarId=calId, body=event).execute()
@@ -782,7 +806,16 @@ def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, event
                 event['recurrence'] = original_event.get('recurrence')
             except googleapiclient.errors.HttpError as e:
                 logging.error(f"Failed to fetch original event recurrence: {e}")
-    
+
+    # 這裡加入檢查已存在的事件
+    existing_events = service.events().list(calendarId=CalId, q=eventName).execute().get('items', [])
+    existing_event_ids = [event['id'] for event in existing_events]
+
+    # 檢查當前事件是否已存在於目標日曆
+    if eventId in existing_event_ids:
+        logging.warning(f"Event ID {eventId} already exists in calendar {CalId}. Skipping update.")
+        return None  # 直接返回，避免重複更新
+
     try:
         if currentCalId == CalId:
             logging.info(f"Updating event {eventId} in calendar {CalId}.")
@@ -799,8 +832,11 @@ def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, event
             if x is not None:
                 logging.info(f"Event moved successfully, response: {x}.")
                 
-                # 獲取移動後的事件ID
-                moved_event_id = x.get('id', eventId)  # 如果移動後返回的ID不存在，則保持原ID
+                # 在移動事件之前再檢查一次，以避免覆蓋其他事件
+                moved_event_id = x.get('id', eventId)
+                if moved_event_id in existing_event_ids:
+                    logging.warning(f"Moved event ID {moved_event_id} already exists in calendar {CalId}. Skipping update.")
+                    return None  # 避免重複更新
                 
                 # 更新事件的屬性
                 x = service.events().update(calendarId=CalId, eventId=moved_event_id, body=event).execute()
@@ -1008,7 +1044,16 @@ clear_line()
 TaskNames = []
 start_Dates = []
 end_Times = []
+First_Days = []
 Frequencies = []
+Recur_Intervals = []
+Recur_Days = []
+Recur_Months = []
+byMonthDays = []
+byYearDays = []
+byWeekNumbers = []
+Recur_Untils = []
+Recur_Counts = []
 ExtraInfo = []
 URL_list = []
 calEventIdList = []
@@ -1133,14 +1178,14 @@ def generate_unique_title(existing_titles, base_title, new_titles, number, resul
 
     # 确保 number 在 resultList 的有效范围内
     if number >= len(resultList):
-        print("Error: Invalid index number.")
+        # print("Error: Invalid index number.")
         return new_title  # 返回默认标题
 
     # 'AutoRename_Notion_Name' 的键
     AutoRename_Notion_Name_key = 'AutoRename'
 
     # # 打印 resultList 和 properties
-    print(f"resultList: {resultList}")
+    # print(f"resultList: {resultList}")
     # print(f"Selected Item: {resultList[number]}")  # 打印选中的项
     # print(f"Properties: {resultList[number]['properties']}")  # 打印 properties
     auto_rename_notion_name_value = resultList[0]['properties']['AutoRename']['formula']['string']
@@ -1152,7 +1197,7 @@ def generate_unique_title(existing_titles, base_title, new_titles, number, resul
     else:
         AutoRename_Notion_Name = None  # 如果没有获取到，设置为 None
     
-    print(f"AutoRename value: {AutoRename_Notion_Name}")  # 确认 AutoRename 值
+    # print(f"AutoRename value: {AutoRename_Notion_Name}")  # 确认 AutoRename 值
 
     # 如果 AutoRename_Notion_Name 包含罗马字母或数字，直接使用它作为标题
     if AutoRename_Notion_Name is not None:
@@ -1304,7 +1349,8 @@ untitled_counter = 1
 
 if len(resultList) > 0:
     for i, el in enumerate(resultList):
-        
+        print(f"Lengths - TaskNames: {len(TaskNames)}, start_Dates: {len(start_Dates)}, end_Times: {len(end_Times)}, URL_list: {len(URL_list)}, CalendarList: {len(CalendarList)}")
+
         # 检查标题列表是否为空
         if el['properties'][Task_Notion_Name]['title'] and el['properties'][Task_Notion_Name]['title'][0]['text']['content'] != None:
             TaskNames.append(el['properties'][Task_Notion_Name]['title'][0]['text']['content'])
@@ -1326,7 +1372,20 @@ if len(resultList) > 0:
         start_date_dt = parser.parse(start_date_str)
         end_date_dt = parser.parse(end_date_str)
 
-        # 检查是否为全天事件
+        def process_date(date_str):
+            try:
+                return datetime.strptime(date_str, "%Y-%m-%d")
+            except ValueError:
+                # Handle other date formats or log error
+                pass
+
+        start_date_processed = process_date(start_date_str)
+        end_date_processed = process_date(end_date_str) if end_date_str else start_date_processed
+
+        print(f"start_date_processed type: {type(start_date_processed)}")
+        print(f"end_date_processed type: {type(end_date_processed)}")
+
+        # 判斷是否為全天事件
         is_all_day_event = False
         if len(start_date_str) <= 10 and len(end_date_str) <= 10:
             # 如果日期字符串长度只包含日期部分，则假定为全天事件
@@ -1337,8 +1396,10 @@ if len(resultList) > 0:
 
         if is_all_day_event:
             # 调整为只包含日期部分
-            start_date_str = start_date_dt.strftime("%Y-%m-%d")
-            end_date_str = end_date_dt.strftime("%Y-%m-%d")
+            if isinstance(start_date_processed, datetime):
+                start_date_str = start_date_processed.strftime(start_date_str)
+            if isinstance(end_date_processed, datetime):
+                end_date_str = end_date_processed.strftime(end_date_str)
 
             if start_date_str == end_date_str:
                 # 对于同一天的全天事件
@@ -1378,11 +1439,56 @@ if len(resultList) > 0:
         # 如果 start_Dates 有日期和時間但沒有對應的 end_Times，則跳過當前迭代
         if 'T' in start_Dates[i] and start_Dates[i] == end_Times[i]:
             continue
-
+        
+        try:
+            First_Days.append(el['properties'][First_Day_of_Week_Notion_Name]['select']['name'])
+        except:
+            First_Days.append("")
+        
         try:
             Frequencies.append(el['properties'][Frequency_Notion_Name]['select']['name'])
         except:
             Frequencies.append("")
+        
+        try:
+            Recur_Intervals.append(el['properties'][Recur_Interval_Notion_Name]['number']['name'])
+        except:
+            Recur_Intervals.append("")
+        
+        try:
+            Recur_Days.append(el['properties'][Days_Notion_Name]['multi_select'][0]['name'])
+        except:
+            Recur_Days.append("")
+        
+        try:
+            Recur_Months.append(el['properties'][Months_Notion_Name]['multi_select'][0]['name'])
+        except:
+            Recur_Months.append("")
+        
+        try:
+            byMonthDays.append(el['properties'][Days_of_Month_Notion_Name]['number']['name'])
+        except:
+            byMonthDays.append("")
+        
+        try:
+            byYearDays.append(el['properties'][Days_of_Year_Notion_Name]['number']['name'])
+        except:
+            byYearDays.append("")
+        
+        try:
+            byWeekNumbers.append(el['properties'][Week_Numbers_of_Year_Notion_Name]['number']['name'])
+        except:
+            byWeekNumbers.append("")
+        
+        try:
+            Recur_Untils.append(el['properties'][Recur_Until_Notion_Name]['date']['start'])
+        except:
+            Recur_Untils.append("")
+        
+        try:
+            Recur_Counts.append(el['properties'][Recur_Count_Notion_Name]['number']['name'])
+        except:
+            Recur_Counts.append("")
         
         try: 
             ExtraInfo.append(el['properties'][ExtraInfo_Notion_Name]['rich_text'][0]['text']['content'])
@@ -1412,13 +1518,6 @@ if len(resultList) > 0:
                 },
             },
         )
-                
-        def process_date(date_str):
-            try:
-                return datetime.strptime(date_str, "%Y-%m-%d")
-            except ValueError:
-                # Handle other date formats or log error
-                pass
 
         # 2 Cases: Start and End are  both either date or date+time 
         # #Have restriction that the calendar events don't cross days
@@ -1427,7 +1526,7 @@ if len(resultList) > 0:
             try:
                 
                 calendar_id = CalendarList[i]
-                unique_title = generate_unique_title(existing_titles[calendar_id], TaskNames[i], [], 1)
+                unique_title = generate_unique_title(existing_titles[calendar_id], TaskNames[i], [], 1, resultList)
                 TaskNames[i] = unique_title
                 existing_titles[calendar_id].append(unique_title)
 
@@ -1438,10 +1537,40 @@ if len(resultList) > 0:
                     # 对于全天事件，结束日期应增加一天
                     end_date_processed = (process_date(end_Times[i]) + timedelta(days=1)) if end_Times[i] else start_date_processed + timedelta(days=1)
                     # Create an all-day event with adjusted end date
-                    calEventId = makeCalEvent(TaskNames[i], makeEventDescription(Frequencies[i], ExtraInfo[i]), start_date_processed, URL_list[i], end_date_processed, CalendarList[i], all_day=True)
+                    calEventId = makeCalEvent(TaskNames[i], 
+                          makeEventDescription(Frequencies[i], ExtraInfo[i]), 
+                          start_date_processed, 
+                          URL_list[i], 
+                          end_date_processed, 
+                          CalendarList[i], 
+                          all_day=True, 
+                          frequency=Frequencies[i], 
+                          interval=Recur_Intervals[i], 
+                          byDay=Recur_Days[i], 
+                          byMonth=Recur_Months[i], 
+                          byMonthDay=byMonthDays[i], 
+                          byYearDay=byYearDays[i], 
+                          byWeekNum=byWeekNumbers[i], 
+                          until=Recur_Untils[i], 
+                          count=Recur_Counts[i])
                 else:
                     #start and end are both dates
-                    calEventId = makeCalEvent(TaskNames[i], makeEventDescription(Frequencies[i], ExtraInfo[i]), datetime.strptime(start_Dates[i], '%Y-%m-%d'), URL_list[i], datetime.strptime(end_Times[i], '%Y-%m-%d') + timedelta(days=1), CalendarList[i], all_day=True)
+                    calEventId = makeCalEvent(TaskNames[i], 
+                          makeEventDescription(Frequencies[i], ExtraInfo[i]), 
+                          start_date_processed, 
+                          URL_list[i], 
+                          end_date_processed, 
+                          CalendarList[i], 
+                          all_day=True, 
+                          frequency=Frequencies[i], 
+                          interval=Recur_Intervals[i], 
+                          byDay=Recur_Days[i], 
+                          byMonth=Recur_Months[i], 
+                          byMonthDay=byMonthDays[i], 
+                          byYearDay=byYearDays[i], 
+                          byWeekNum=byWeekNumbers[i], 
+                          until=Recur_Untils[i], 
+                          count=Recur_Counts[i])
 
                 # 更新 Notion 页面的标题
                 notion.pages.update(
@@ -1464,9 +1593,9 @@ if len(resultList) > 0:
             except:
                 try:
                     #start and end are both date+time
-                    calEventId = makeCalEvent(TaskNames[i], makeEventDescription(Frequencies[i], ExtraInfo[i]), datetime.strptime(start_Dates[i][:-6], "%Y-%m-%dT%H:%M:%S.000"), URL_list[i],  datetime.strptime(end_Times[i][:-6], "%Y-%m-%dT%H:%M:%S.000"), CalendarList[i])
+                    calEventId = makeCalEvent(TaskNames[i], makeEventDescription(Frequencies[i], ExtraInfo[i]), datetime.strptime(start_Dates[i][:-6], "%Y-%m-%dT%H:%M:%S.000"), URL_list[i],  datetime.strptime(end_Times[i][:-6], "%Y-%m-%dT%H:%M:%S.000"), CalendarList[i], frequency=Frequencies[i], interval=Recur_Intervals[i], byDay=Recur_Days[i], byMonth=Recur_Months[i], byMonthDay=byMonthDays[i], byYearDay=byYearDays[i], byWeekNum=byWeekNumbers[i], until=Recur_Untils[i], count=Recur_Counts[i])
                 except:
-                    calEventId = makeCalEvent(TaskNames[i], makeEventDescription(Frequencies[i], ExtraInfo[i]), datetime.strptime(start_Dates[i][:-6], "%Y-%m-%dT%H:%M:%S.%f"), URL_list[i],  datetime.strptime(end_Times[i][:-6], "%Y-%m-%dT%H:%M:%S.%f"), CalendarList[i])
+                    calEventId = makeCalEvent(TaskNames[i], makeEventDescription(Frequencies[i], ExtraInfo[i]), datetime.strptime(start_Dates[i][:-6], "%Y-%m-%dT%H:%M:%S.%f"), URL_list[i],  datetime.strptime(end_Times[i][:-6], "%Y-%m-%dT%H:%M:%S.%f"), CalendarList[i], frequency=Frequencies[i], interval=Recur_Intervals[i], byDay=Recur_Days[i], byMonth=Recur_Months[i], byMonthDay=byMonthDays[i], byYearDay=byYearDays[i], byWeekNum=byWeekNumbers[i], until=Recur_Untils[i], count=Recur_Counts[i])
 
                 notion.pages.update(
                     **{
@@ -1489,6 +1618,8 @@ if len(resultList) > 0:
             
         no_new_added = False
 
+        calEventId = None
+        
         # 检查任务名称是否为 "random"
         if TaskNames[i] == "random":
             # 更新 Notion 页面的标题属性
@@ -1507,35 +1638,45 @@ if len(resultList) > 0:
                 }
             )
         
-        calEventIdList.append(calEventId)
+        try:
+            calEventId = makeCalEvent(TaskNames[i], makeEventDescription(Frequencies[i], ExtraInfo[i]), start_Dates[i], URL_list[i], end_Times[i], CalendarList[i], all_day=True, frequency=Frequencies[i], interval=Recur_Intervals[i], byDay=Recur_Days[i], byMonth=Recur_Months[i], byMonthDay=byMonthDays[i], byYearDay=byYearDays[i], byWeekNum=byWeekNumbers[i], until=Recur_Untils[i], count=Recur_Counts[i])
+        except Exception as e:
+            print(f"Error processing event {TaskNames[i]}: {e}")
+        
+        if calEventId is not None:
+            calEventIdList.append(calEventId)
 
         if CalendarList[i] == calendarDictionary[DEFAULT_CALENDAR_NAME]: #this means that there is no calendar assigned on Notion
-            my_page = notion.pages.update( ##### This puts the the GCal Id into the Notion Dashboard
-                **{
-                    "page_id": pageId, 
-                    "properties": {
-                        GCalEventId_Notion_Name: {
-                            "rich_text": [{
-                                'text': {
-                                    'content': calEventIdList[i]
-                                }
-                            }]
-                        },
-                        Current_Calendar_Id_Notion_Name: {
-                            "rich_text": [{
-                                'text': {
-                                    'content': CalendarList[i]
-                                }
-                            }]
-                        },
-                        Calendar_Notion_Name:  { 
-                            'select': {
-                                "name": DEFAULT_CALENDAR_NAME
+            if i < len(calEventIdList):
+                print(f"Adding calEventId for event {i}: {calEventIdList[i]}")
+                my_page = notion.pages.update( ##### This puts the the GCal Id into the Notion Dashboard
+                    **{
+                        "page_id": pageId, 
+                        "properties": {
+                            GCalEventId_Notion_Name: {
+                                "rich_text": [{
+                                    'text': {
+                                        'content': calEventIdList[i]
+                                    }
+                                }]
+                            },
+                            Current_Calendar_Id_Notion_Name: {
+                                "rich_text": [{
+                                    'text': {
+                                        'content': CalendarList[i]
+                                    }
+                                }]
+                            },
+                            Calendar_Notion_Name:  { 
+                                'select': {
+                                    "name": DEFAULT_CALENDAR_NAME
+                                },
                             },
                         },
                     },
-                },
-            )
+                )
+            else:
+                print(f"calEventIdList index out of range for i={i}, len(calEventIdList)={len(calEventIdList)}")
         else: #just a regular update
             my_page = notion.pages.update(
                 **{
@@ -1803,18 +1944,18 @@ if len(resultList) > 0:
         #depending on the format of the dates, we'll update the gCal event as necessary
         try:
             calEventId = upDateCalEvent(task_name, makeEventDescription(Frequencies[i], ExtraInfo[i]), parse_date(start_Dates[i]), URL_list[i], updatingCalEventIds[i],  parse_date(end_Times[i]), CurrentCalList[i], CalendarList[i], thread)
-            created_single_day_events.add(task_name)  # 标记为已创建
+            created_single_day_events.add(updatingCalEventIds[i])  # 标记为已创建
             No_pages_modified = False
             no_new_updated = False
         except:
             try:
                 calEventId = upDateCalEvent(task_name, makeEventDescription(Frequencies[i], ExtraInfo[i]), parse_date(start_Dates[i]), URL_list[i], updatingCalEventIds[i],  parse_date(end_Times[i]), CurrentCalList[i], CalendarList[i], thread)
-                created_single_day_events.add(task_name)  # 标记为已创建
+                created_single_day_events.add(updatingCalEventIds[i])  # 标记为已创建
                 No_pages_modified = False
                 no_new_updated = False
             except:
                 calEventId = upDateCalEvent(TaskNames[i], makeEventDescription(Frequencies[i], ExtraInfo[i]), parse_date(start_Dates[i]), URL_list[i], updatingCalEventIds[i],  parse_date(end_Times[i]), CurrentCalList[i], CalendarList[i], thread)
-                created_single_day_events.add(task_name)  # 标记为已创建
+                created_single_day_events.add(updatingCalEventIds[i])  # 标记为已创建
                 No_pages_modified = False     
                 no_new_updated = False
         
@@ -1995,10 +2136,11 @@ def is_valid_uuid(uuid_to_test, version=4):
     return bool(match)
 
 ##We use the gCalId from the Notion dashboard to get retrieve the start Time from the gCal event
-value =''
+value = ''
 exitVar = ''
+
 for i, gCalId in enumerate(notion_gCal_IDs):
-    # print(f"\nProcessing gCalId: {gCalId} (Index: {i})")
+    print(f"\nProcessing gCalId: {gCalId} (Index: {i})")
     try:
         # 檢查 gCalId 是否有效
         if not is_valid_uuid(gCalId):
@@ -2074,8 +2216,8 @@ for i, gCalId in enumerate(notion_gCal_IDs):
                 # 提取重複事件信息
                 recurrence_info = extract_recurrence_info(gc, calendarID, x, el)
 
-                # if recurrence_info:
-                #     print(f"Recurrence info extracted: {recurrence_info}")
+                if recurrence_info:
+                    print(f"Recurrence info extracted: {recurrence_info}")
 
                 if currentCalId != newCalId:
                     # print(f"Event has moved from {currentCalId} to {newCalId}. Syncing to Notion.")
@@ -2122,10 +2264,11 @@ for i, gCalId in enumerate(notion_gCal_IDs):
     except IndexError as e:
         print(f"Index error: {e}. Current index: {i}. Length of notion_IDs_List: {len(notion_IDs_List)}")
 
-# # 在循環後打印列表狀態
-# print("Final states:")
-# print(f"notion_IDs_List: {notion_IDs_List}")
-# print(f"notion_gCal_IDs: {notion_gCal_IDs}")
+
+# 在循環後打印列表狀態
+print("Final states:")
+print(f"notion_IDs_List: {notion_IDs_List}")
+print(f"notion_gCal_IDs: {notion_gCal_IDs}")
 
 
 animate_text_wave_with_progress(text="Loading", new_text="Checked 2.4", target_percentage=45, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
@@ -2972,148 +3115,148 @@ def extract_number_and_position(title):
         return int(match.group(1)), match.start(), match.end()
     return None, None, None
 
-def generate_unique_title(existing_titles, base_title, new_titles, number):
-    new_title = base_title  # Initialize new_title with a default value
-    all_titles = existing_titles + new_titles
+# def generate_unique_title(existing_titles, base_title, new_titles, number):
+#     new_title = base_title  # Initialize new_title with a default value
+#     all_titles = existing_titles + new_titles
 
-    # 去除空白字符並轉換為小寫
-    base_title_clean = base_title.strip().lower()
+#     # 去除空白字符並轉換為小寫
+#     base_title_clean = base_title.strip().lower()
 
-    # 对基础标题进行拼写校正，先 TextBlob 后 fuzzywuzzy
-    base_title = correct_spelling(base_title)
+#     # 对基础标题进行拼写校正，先 TextBlob 后 fuzzywuzzy
+#     base_title = correct_spelling(base_title)
 
-    # 继续进行模糊匹配和生成标题的逻辑
-    positions = []
-    numbers = []
+#     # 继续进行模糊匹配和生成标题的逻辑
+#     positions = []
+#     numbers = []
 
-    # print("Existing titles for calendar ID:", gCal_calendarId[i], existing_titles)
+#     # print("Existing titles for calendar ID:", gCal_calendarId[i], existing_titles)
 
-    # 特殊处理 "Untitled" 标题
-    if base_title == "Untitled":
-        untitled_exists = any(title.strip() == "Untitled" for title in all_titles)
-        untitled_numbers = [0]  # 用于存储 "Untitled" 后的数字，0 表示仅 "Untitled"
+#     # 特殊处理 "Untitled" 标题
+#     if base_title == "Untitled":
+#         untitled_exists = any(title.strip() == "Untitled" for title in all_titles)
+#         untitled_numbers = [0]  # 用于存储 "Untitled" 后的数字，0 表示仅 "Untitled"
         
-        for title in all_titles:
-            if title.startswith("Untitled"):
-                try:
-                    # 尝试提取序号，忽略无序号的 "Untitled"
-                    num = int(title.split(" ")[-1])
-                    untitled_numbers.append(num)
-                except ValueError:
-                    continue
+#         for title in all_titles:
+#             if title.startswith("Untitled"):
+#                 try:
+#                     # 尝试提取序号，忽略无序号的 "Untitled"
+#                     num = int(title.split(" ")[-1])
+#                     untitled_numbers.append(num)
+#                 except ValueError:
+#                     continue
         
-        if untitled_exists:
-            next_number = 2  # 如果存在 "Untitled"，从 "Untitled 2" 开始
-            while next_number in untitled_numbers:
-                next_number += 1
-            return f"{base_title} {next_number}"
-        else:
-            return "Untitled"  # 如果不存在 "Untitled"，直接返回
+#         if untitled_exists:
+#             next_number = 2  # 如果存在 "Untitled"，从 "Untitled 2" 开始
+#             while next_number in untitled_numbers:
+#                 next_number += 1
+#             return f"{base_title} {next_number}"
+#         else:
+#             return "Untitled"  # 如果不存在 "Untitled"，直接返回
         
     
-    # Function to check if a title is relevant to the base_title
-    def is_relevant_title(title, base):
-        return base.lower() in title.lower()
+#     # Function to check if a title is relevant to the base_title
+#     def is_relevant_title(title, base):
+#         return base.lower() in title.lower()
     
-    # Filter relevant titles
-    relevant_titles = [title for title in all_titles if is_relevant_title(title, base_title)]
+#     # Filter relevant titles
+#     relevant_titles = [title for title in all_titles if is_relevant_title(title, base_title)]
     
-    if not relevant_titles:
-        return base_title  # If no relevant titles found, return the original base_title
+#     if not relevant_titles:
+#         return base_title  # If no relevant titles found, return the original base_title
     
-    # Pattern to match ordinal numbers and surrounding text
-    pattern = re.compile(r'(.*?)(\d+)(st|nd|rd|th)\s*(.*?)((?:\s*F\/up|\s*Follow[\s-]up)?)', re.IGNORECASE)
+#     # Pattern to match ordinal numbers and surrounding text
+#     pattern = re.compile(r'(.*?)(\d+)(st|nd|rd|th)\s*(.*?)((?:\s*F\/up|\s*Follow[\s-]up)?)', re.IGNORECASE)
     
-    matching_titles = []
-    numbers = []
+#     matching_titles = []
+#     numbers = []
     
-    for title in relevant_titles:
-        match = pattern.search(title)
-        if match:
-            prefix, num, _, suffix, followup = match.groups()
-            numbers.append(int(num))
-            matching_titles.append((prefix.strip(), suffix.strip(), followup.strip()))
+#     for title in relevant_titles:
+#         match = pattern.search(title)
+#         if match:
+#             prefix, num, _, suffix, followup = match.groups()
+#             numbers.append(int(num))
+#             matching_titles.append((prefix.strip(), suffix.strip(), followup.strip()))
     
-    if not matching_titles:
-        return base_title  # If no matching structure found in relevant titles
+#     if not matching_titles:
+#         return base_title  # If no matching structure found in relevant titles
     
-    # Determine the next number
-    next_number = max(numbers) + 1 if numbers else 1
+#     # Determine the next number
+#     next_number = max(numbers) + 1 if numbers else 1
     
-    # Find the most common prefix and suffix combination
-    common_parts = Counter(matching_titles).most_common(1)[0][0]
+#     # Find the most common prefix and suffix combination
+#     common_parts = Counter(matching_titles).most_common(1)[0][0]
     
-    # Construct the new title
-    new_title = f"{common_parts[0].strip()} {ordinal(next_number)} {common_parts[1].strip()}"
-    if common_parts[2]:  # If there's a F/up or Follow-up
-        new_title += f"{common_parts[2].strip()}"
+#     # Construct the new title
+#     new_title = f"{common_parts[0].strip()} {ordinal(next_number)} {common_parts[1].strip()}"
+#     if common_parts[2]:  # If there's a F/up or Follow-up
+#         new_title += f"{common_parts[2].strip()}"
 
 
-    # 处理 "visit" 类型的标题
-    if base_title.lower().startswith("visit"):
-        visit_pattern = re.compile(r'(\d+)(st|nd|rd|th)\s*(visit\s*\w*)', re.IGNORECASE)
-        numbers = []
-        full_visit_titles = []
+#     # 处理 "visit" 类型的标题
+#     if base_title.lower().startswith("visit"):
+#         visit_pattern = re.compile(r'(\d+)(st|nd|rd|th)\s*(visit\s*\w*)', re.IGNORECASE)
+#         numbers = []
+#         full_visit_titles = []
         
-        for title in all_titles:
-            match = visit_pattern.search(title)
-            if match:
-                num = int(match.group(1))
-                numbers.append(num)
-                full_visit_titles.append(match.group(3))
+#         for title in all_titles:
+#             match = visit_pattern.search(title)
+#             if match:
+#                 num = int(match.group(1))
+#                 numbers.append(num)
+#                 full_visit_titles.append(match.group(3))
         
-        if numbers:
-            next_number = max(numbers) + 1
-        else:
-            next_number = 1
+#         if numbers:
+#             next_number = max(numbers) + 1
+#         else:
+#             next_number = 1
         
-        # 使用最常见的完整 "visit" 标题
-        if full_visit_titles:
-            most_common_visit = max(set(full_visit_titles), key=full_visit_titles.count)
-        else:
-            most_common_visit = "visit"
+#         # 使用最常见的完整 "visit" 标题
+#         if full_visit_titles:
+#             most_common_visit = max(set(full_visit_titles), key=full_visit_titles.count)
+#         else:
+#             most_common_visit = "visit"
         
-        return f"{ordinal(next_number)} {most_common_visit}"
+#         return f"{ordinal(next_number)} {most_common_visit}"
     
-    # 確保 "JC" 標題保持 "visit"
-    if base_title.lower() == "jc":
-        visit_pattern = re.compile(r'(\d+)(st|nd|rd|th)\s*(visit\s*\w*)', re.IGNORECASE)
-        visit_titles = [title for title in all_titles if visit_pattern.search(title)]
+#     # 確保 "JC" 標題保持 "visit"
+#     if base_title.lower() == "jc":
+#         visit_pattern = re.compile(r'(\d+)(st|nd|rd|th)\s*(visit\s*\w*)', re.IGNORECASE)
+#         visit_titles = [title for title in all_titles if visit_pattern.search(title)]
         
-        if visit_titles:
-            numbers = [int(visit_pattern.search(title).group(1)) for title in visit_titles]
-            next_number = max(numbers) + 1 if numbers else 1
-            return f"{ordinal(next_number)} visit {base_title}"
+#         if visit_titles:
+#             numbers = [int(visit_pattern.search(title).group(1)) for title in visit_titles]
+#             next_number = max(numbers) + 1 if numbers else 1
+#             return f"{ordinal(next_number)} visit {base_title}"
     
-    # 保留原有逻辑处理其他带序数词的标题
-    if positions:
-        start_pos, end_pos = positions[0]
-        if start_pos == 0:
-            new_title = f"{ordinal(next_number)} {base_title}"
-        elif end_pos == len(existing_titles[0]):
-            pass  # 保留原有逻辑
-        else:
-            pass  # 保留原有逻辑
-    else:
-        pass  # 保留原有逻辑
-        #new_title = f"{base_title} {ordinal(next_number)}" 
-        '''決定 Untitled 和 40th visit 以外的標題後綴，是否也要遞增序數詞'''
+#     # 保留原有逻辑处理其他带序数词的标题
+#     if positions:
+#         start_pos, end_pos = positions[0]
+#         if start_pos == 0:
+#             new_title = f"{ordinal(next_number)} {base_title}"
+#         elif end_pos == len(existing_titles[0]):
+#             pass  # 保留原有逻辑
+#         else:
+#             pass  # 保留原有逻辑
+#     else:
+#         pass  # 保留原有逻辑
+#         #new_title = f"{base_title} {ordinal(next_number)}" 
+#         '''決定 Untitled 和 40th visit 以外的標題後綴，是否也要遞增序數詞'''
 
 
-    # 处理其他带基础标题的情况
-    for title in all_titles:
-        if base_title in title:
-            number, start_pos, end_pos = extract_number_and_position(title)
-            if number is not None:
-                numbers.append(number)
-                positions.append((start_pos, end_pos))
+#     # 处理其他带基础标题的情况
+#     for title in all_titles:
+#         if base_title in title:
+#             number, start_pos, end_pos = extract_number_and_position(title)
+#             if number is not None:
+#                 numbers.append(number)
+#                 positions.append((start_pos, end_pos))
     
-    if not numbers:
-        next_number = 1
-    else:
-        next_number = max(numbers) + 1
+#     if not numbers:
+#         next_number = 1
+#     else:
+#         next_number = max(numbers) + 1
 
-    return new_title.strip()
+#     return new_title.strip()
 
 def create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, end=None, recurring_event_id=None):
     
@@ -3308,7 +3451,7 @@ for i, calId in enumerate(calIds):
             # 检索现有标题并生成唯一标题
             existing_titles = get_existing_titles(service, n_months_ago, gCal_calendarId[i])
             default_number = 1
-            title = generate_unique_title(existing_titles, title, new_titles, default_number)
+            title = generate_unique_title(existing_titles, title, new_titles, default_number, resultList)
             calName[i] = title  # 更新 calName[i] 为新标题
             new_titles.append(title)  # 将新标题添加到 new_titles 列表
             update_google_calendar_event_title(service, gCal_calendarId[i], calId, title)
@@ -3326,26 +3469,29 @@ for i, calId in enumerate(calIds):
             if title in created_single_day_events:
                 print(f"Event '{title}' already created. Skipping.")
                 continue  # Skip to the next iteration if already created
-            my_page = create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, end, found_recurring_event_id)
+            else:
+                my_page = create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, end, found_recurring_event_id)
 
         elif calStartDates[i].hour == 0 and calStartDates[i].minute == 0 and calEndDates[i].hour == 0 and calEndDates[i].minute == 0:  # 日期格式
             end = calEndDates[i] - timedelta(days=1)
-            if task_name in created_single_day_events:
-                print(f"Event '{task_name}' already created. Skipping.")
+            if CalIds[i] in created_single_day_events:
+                print(f"Event '{title}' already created. Skipping.")
                 continue  # Skip to the next iteration if already created
-            my_page = create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, end, found_recurring_event_id)
-            created_single_day_events.add(title)
+            else:
+                my_page = create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, end, found_recurring_event_id)
+                created_single_day_events.add(CalIds[i])
 
         else:  # 常规日期时间处理
-            if task_name in created_single_day_events:
-                print(f"Event '{task_name}' already created. Skipping.")
+            if CalIds[i] in created_single_day_events:
+                print(f"Event '{title}' already created. Skipping.")
                 continue  # Skip to the next iteration if already created
-            my_page = create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, calEndDates[i], found_recurring_event_id)
-            created_single_day_events.add(title)
+            else:
+                my_page = create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, calEndDates[i], found_recurring_event_id)
+                created_single_day_events.add(CalIds[i])
 
         # 添加任务到 added_tasks，确保每个事件只添加一次
-        if title not in created_single_day_events:  # 检查是否已经创建过单日事件
-            created_single_day_events.add(title)  # 标记为已创建
+        if CalIds[i] not in created_single_day_events:  # 检查是否已经创建过单日事件
+            created_single_day_events.add(CalIds[i])  # 标记为已创建
             
         added_tasks.append((calId, title))
 
