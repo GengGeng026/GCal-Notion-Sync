@@ -1349,7 +1349,6 @@ untitled_counter = 1
 
 if len(resultList) > 0:
     for i, el in enumerate(resultList):
-        print(f"Lengths - TaskNames: {len(TaskNames)}, start_Dates: {len(start_Dates)}, end_Times: {len(end_Times)}, URL_list: {len(URL_list)}, CalendarList: {len(CalendarList)}")
 
         # 检查标题列表是否为空
         if el['properties'][Task_Notion_Name]['title'] and el['properties'][Task_Notion_Name]['title'][0]['text']['content'] != None:
@@ -1381,9 +1380,6 @@ if len(resultList) > 0:
 
         start_date_processed = process_date(start_date_str)
         end_date_processed = process_date(end_date_str) if end_date_str else start_date_processed
-
-        print(f"start_date_processed type: {type(start_date_processed)}")
-        print(f"end_date_processed type: {type(end_date_processed)}")
 
         # 判斷是否為全天事件
         is_all_day_event = False
@@ -1524,69 +1520,46 @@ if len(resultList) > 0:
         # 在尝试访问列表元素之前，检查索引 i 是否在所有相关列表的长度范围内
         if i < len(TaskNames) and i < len(start_Dates) and i < len(end_Times) and i < len(URL_list) and i < len(CalendarList):
             try:
-                
                 calendar_id = CalendarList[i]
                 unique_title = generate_unique_title(existing_titles[calendar_id], TaskNames[i], [], 1, resultList)
                 TaskNames[i] = unique_title
                 existing_titles[calendar_id].append(unique_title)
 
-                # Check if start_Dates has only date (no time) and end_Times is the same or not provided
-                if 'T' not in start_Dates[i] and (start_Dates[i] == end_Times[i] or not end_Times[i]):
-                    # Use the improved function for date processing
-                    start_date_processed = process_date(start_Dates[i])
-                    # 对于全天事件，结束日期应增加一天
-                    end_date_processed = (process_date(end_Times[i]) + timedelta(days=1)) if end_Times[i] else start_date_processed + timedelta(days=1)
-                    # Create an all-day event with adjusted end date
-                    calEventId = makeCalEvent(TaskNames[i], 
-                          makeEventDescription(Frequencies[i], ExtraInfo[i]), 
-                          start_date_processed, 
-                          URL_list[i], 
-                          end_date_processed, 
-                          CalendarList[i], 
-                          all_day=True, 
-                          frequency=Frequencies[i], 
-                          interval=Recur_Intervals[i], 
-                          byDay=Recur_Days[i], 
-                          byMonth=Recur_Months[i], 
-                          byMonthDay=byMonthDays[i], 
-                          byYearDay=byYearDays[i], 
-                          byWeekNum=byWeekNumbers[i], 
-                          until=Recur_Untils[i], 
-                          count=Recur_Counts[i])
-                else:
-                    #start and end are both dates
-                    calEventId = makeCalEvent(TaskNames[i], 
-                          makeEventDescription(Frequencies[i], ExtraInfo[i]), 
-                          start_date_processed, 
-                          URL_list[i], 
-                          end_date_processed, 
-                          CalendarList[i], 
-                          all_day=True, 
-                          frequency=Frequencies[i], 
-                          interval=Recur_Intervals[i], 
-                          byDay=Recur_Days[i], 
-                          byMonth=Recur_Months[i], 
-                          byMonthDay=byMonthDays[i], 
-                          byYearDay=byYearDays[i], 
-                          byWeekNum=byWeekNumbers[i], 
-                          until=Recur_Untils[i], 
-                          count=Recur_Counts[i])
+                # 處理日期和時間
+                start_date_processed = process_date(start_Dates[i])
+                end_date_processed = process_date(end_Times[i]) if end_Times[i] else start_date_processed + timedelta(days=1)
 
-                # 更新 Notion 页面的标题
+                # 創建事件
+                calEventId = makeCalEvent(TaskNames[i], 
+                                        makeEventDescription(Frequencies[i], ExtraInfo[i]), 
+                                        start_date_processed, 
+                                        URL_list[i], 
+                                        end_date_processed, 
+                                        CalendarList[i], 
+                                        all_day=True, 
+                                        frequency=Frequencies[i], 
+                                        interval=Recur_Intervals[i], 
+                                        byDay=Recur_Days[i], 
+                                        byMonth=Recur_Months[i], 
+                                        byMonthDay=byMonthDays[i], 
+                                        byYearDay=byYearDays[i], 
+                                        byWeekNum=byWeekNumbers[i], 
+                                        until=Recur_Untils[i], 
+                                        count=Recur_Counts[i])
+
+                # 更新 Notion 頁面
                 notion.pages.update(
                     **{
                         "page_id": pageId,
                         "properties": {
-                            Task_Notion_Name: {
-                                "title": [{
-                                    "text": {
-                                        "content": unique_title
-                                    }
-                                }]
-                            }
+                            Task_Notion_Name: {"title": [{"text": {"content": unique_title}}]},
+                            GCalEventId_Notion_Name: {"rich_text": [{"text": {"content": calEventId}}]},
+                            Current_Calendar_Id_Notion_Name: {"rich_text": [{"text": {"content": CalendarList[i]}}]}
                         },
                     }
                 )
+
+                calEventIdList.append(calEventId)
 
             except Exception as e:
                 print(f"Error processing event {TaskNames[i]}: {e}")
@@ -1637,11 +1610,6 @@ if len(resultList) > 0:
                     },
                 }
             )
-        
-        try:
-            calEventId = makeCalEvent(TaskNames[i], makeEventDescription(Frequencies[i], ExtraInfo[i]), start_Dates[i], URL_list[i], end_Times[i], CalendarList[i], all_day=True, frequency=Frequencies[i], interval=Recur_Intervals[i], byDay=Recur_Days[i], byMonth=Recur_Months[i], byMonthDay=byMonthDays[i], byYearDay=byYearDays[i], byWeekNum=byWeekNumbers[i], until=Recur_Untils[i], count=Recur_Counts[i])
-        except Exception as e:
-            print(f"Error processing event {TaskNames[i]}: {e}")
         
         if calEventId is not None:
             calEventIdList.append(calEventId)
