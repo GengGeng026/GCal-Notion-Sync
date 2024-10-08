@@ -2213,7 +2213,13 @@ for i, gCalId in enumerate(notion_gCal_IDs):
                                     "Event Start": {
                                         "date": {"start": new_start_time.isoformat(), "end": new_end_time.isoformat()}
                                     },
-                                    "Event Title": {"title": [{"text": {"content": x['summary']}}]}
+                                    "Event Title": {"title": [{"text": {"content": x['summary']}}]},
+                                LastUpdatedTime_Notion_Name: {
+                                    "date":{
+                                        'start': notion_time(), #has to be adjsuted for when daylight savings is different
+                                        'end': None,
+                                    }
+                                },
                                 }
                             )
                             # print(f"Notion page {notion_ID} updated successfully with new start/end time and title.")
