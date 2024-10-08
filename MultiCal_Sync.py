@@ -754,61 +754,48 @@ def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, event
 
     # Step 1: 檢查 autorename_notion_name
     if AutoRename_Notion_Name:
-        # 生成唯一標題，並使用 autorename_notion_name 來覆蓋事件標題
         eventName = generate_unique_title(
-            CurrentCalList,  # 這應該是現有標題的列表
-            task_name,       # 這是基本標題
-            new_titles,      # 這是新的標題列表
-            number,          # 數字參數，通常是用來生成唯一標題的序號
-            resultList  # 自動重命名的名稱
+            CurrentCalList,  
+            task_name,       
+            new_titles,      
+            number,          
+            resultList  
         )
-        print(f"Generated unique title: {eventName}")
 
+    stop_clear_and_print()
+    animate_text_wave("updating", repeat=1)
+    start_dynamic_counter_indicator()
+
+    # 事件時間處理
     if eventStartTime.hour == 0 and eventStartTime.minute == 0 and eventEndTime == eventStartTime:  # 单日事件
-        stop_clear_and_print()
-        animate_text_wave("updating", repeat=1)
-        start_dynamic_counter_indicator()
-        
         if AllDayEventOption == 1:
             eventStartTime = datetime.combine(eventStartTime, datetime.min.time()) + timedelta(hours=DEFAULT_EVENT_START) 
             eventEndTime = eventStartTime + timedelta(minutes=DEFAULT_EVENT_LENGTH)
             event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, False)
         else:
-            eventEndTime = eventEndTime + timedelta(days=1)
+            eventEndTime += timedelta(days=1)
             event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, True)
 
     elif eventStartTime.hour == 0 and eventStartTime.minute == 0 and eventEndTime.hour == 0 and eventEndTime.minute == 0 and eventStartTime != eventEndTime:  # 多天事件
-        stop_clear_and_print()
-        animate_text_wave("updating", repeat=1)
-        start_dynamic_counter_indicator()
-
-        eventEndTime = eventEndTime + timedelta(days=1)  
+        eventEndTime += timedelta(days=1)  
         event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, True)
-    
+
     else:  # 处理具体的开始时间和结束时间
-        stop_clear_and_print()
-        animate_text_wave("updating", repeat=1)
-        start_dynamic_counter_indicator()
-        
         event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, False)
 
-
+    # 提取重複信息
     recurrence_info = extract_recurrence_info(service, CalId, event, el)
-    if recurrence_info:
-        # 确保 recurrence_info 是一个列表，并且至少有一个元素
-        if isinstance(recurrence_info, list) and len(recurrence_info) > 0:
-            if validate_rrule(recurrence_info[0]):  # Assuming recurrence_info is a list with RRULE as first element
-                event['recurrence'] = recurrence_info
-        else:
-            # 如果 recurrence_info 为空或不为列表，可以选择记录错误或采取其他措施
-            logging.warning("Recurrence information is empty or not a list.")
-            try:
-                original_event = service.events().get(calendarId=currentCalId, eventId=eventId).execute()
-                event['recurrence'] = original_event.get('recurrence')
-            except googleapiclient.errors.HttpError as e:
-                logging.error(f"Failed to fetch original event recurrence: {e}")
+    if recurrence_info and isinstance(recurrence_info, list) and len(recurrence_info) > 0 and validate_rrule(recurrence_info[0]):
+        event['recurrence'] = recurrence_info
+    else:
+        logging.warning("Recurrence information is empty or not valid.")
+        try:
+            original_event = service.events().get(calendarId=currentCalId, eventId=eventId).execute()
+            event['recurrence'] = original_event.get('recurrence')
+        except googleapiclient.errors.HttpError as e:
+            logging.error(f"Failed to fetch original event recurrence: {e}")
 
-    # 這裡加入檢查已存在的事件
+    # 檢查已存在的事件
     existing_events = service.events().list(calendarId=CalId, q=eventName).execute().get('items', [])
     existing_event_ids = [event['id'] for event in existing_events]
 
@@ -822,42 +809,33 @@ def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, event
             logging.info(f"Updating event {eventId} in calendar {CalId}.")
             x = service.events().update(calendarId=CalId, eventId=eventId, body=event).execute()
         else:
-            stop_clear_and_print()
-            animate_text_wave("movin", repeat=1)
-            start_dynamic_counter_indicator()
-            # print(f"Moving event with ID: {eventId} from calendar: {currentCalId} to {CalId}")
-            
             # 移動事件
             x = service.events().move(calendarId=currentCalId, eventId=eventId, destination=CalId).execute()
-            
             if x is not None:
                 logging.info(f"Event moved successfully, response: {x}.")
                 
-                # 在移動事件之前再檢查一次，以避免覆蓋其他事件
+                # 檢查移動後的事件是否已存在
                 moved_event_id = x.get('id', eventId)
                 if moved_event_id in existing_event_ids:
                     logging.warning(f"Moved event ID {moved_event_id} already exists in calendar {CalId}. Skipping update.")
-                    return None  # 避免重複更新
+                    return None
                 
                 # 更新事件的屬性
                 x = service.events().update(calendarId=CalId, eventId=moved_event_id, body=event).execute()
-                # print("Event updated after moving.")
             else:
                 logging.error("Failed to move event, no response received.")
 
     except googleapiclient.errors.HttpError as e:
         logging.error(f"Google API HttpError: {e}")
-
         if e.resp.status == 400 and 'cannotChangeOrganizer' in str(e):
             try:
                 logging.warning("Organizer cannot be changed, creating a new event.")
-                # 創建新事件，包含重複事件信息
                 new_event = {
                     'summary': event['summary'],
                     'description': event['description'],
                     'start': event['start'],
                     'end': event['end'],
-                    'recurrence': recurrence_info if recurrence_info else [],  # 添加重複事件信息
+                    'recurrence': recurrence_info if recurrence_info else [],
                     'source': event.get('source', {}),
                 }
                 new_event_response = service.events().insert(calendarId=CalId, body=new_event).execute()
@@ -871,59 +849,34 @@ def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, event
                         print("Old event has already been deleted.")
                     else:
                         print(f"Failed to delete old event: {delete_error}")
-
             except Exception as ex:
-                x = None
                 logging.error(f"Error creating or deleting event: {ex}")
                 raise
         else:
-            x = None
             logging.error(f"Unhandled Google API error: {e}")
             raise
-        
-    else: #When we have to move the event to a new calendar. We must move the event over to the new calendar and then update the information on the event
-        stop_clear_and_print()
-        animate_text_wave("movin", repeat=1)
-        start_dynamic_counter_indicator()
-        
 
-        # 反转calendarDictionary字典
-        id_to_calendar_name = {v: k for k, v in calendarDictionary.items()}
+    # 打印事件信息
+    stop_clear_and_print()
+    print(format_string(eventName, bold=True))  # 打印事件标题
 
-        def get_calendar_name_by_id(calendar_id):
-            # 使用反转的字典来获取日历名称，如果找不到则返回"Unknown Calendar"
-            return id_to_calendar_name.get(calendar_id, "Unknown Calendar")
-                    
-        # 使用get_calendar_name_by_id函数转换ID为名称
-        currentCalName = get_calendar_name_by_id(currentCalId)
-        CalName = get_calendar_name_by_id(CalId)
-        
-        stop_clear_and_print()
-        print(format_string(eventName, bold=True))  # 打印事件标题
-        # Ensure currentCalName is passed through format_string with less_visible=True
-        formattedCurrentCalName = format_string(currentCalName, less_visible=True)
-        formattedCalName = format_string(CalName, italic=True, light_color=True)
-        print(f'{formattedCurrentCalName} {formatted_right_arrow} {formattedCalName}\n')
-        start_dynamic_counter_indicator()
-
-                
-        try:
-            x = service.events().move(calendarId=currentCalId, eventId=eventId, destination=CalId).execute()
-            # print(f"Attempting to update event. Calendar ID: {CalId}, Event ID: {eventId}, Event Body: {event}")
-            x = service.events().update(calendarId=CalId, eventId = eventId, body=event).execute()
-        except googleapiclient.errors.HttpError as error:
-            if error.resp.status == 400 and 'cannotChangeOrganizer' in str(error):
-                pass  # Ignore the error if it's due to changing the organizer
-            else:
-                raise  # Re-raise the exception if it's not the specific error we're handling
+    # 反转calendarDictionary字典並獲取日曆名稱
+    id_to_calendar_name = {v: k for k, v in calendarDictionary.items()}
+    currentCalName = id_to_calendar_name.get(currentCalId, "Unknown Calendar")
+    CalName = id_to_calendar_name.get(CalId, "Unknown Calendar")
     
+    formattedCurrentCalName = format_string(currentCalName, less_visible=True)
+    formattedCalName = format_string(CalName, italic=True, light_color=True)
+    print(f'{formattedCurrentCalName} {formatted_right_arrow} {formattedCalName}\n')
+    start_dynamic_counter_indicator()
+
     # 最後檢查 x
-    # print(f"x response: {x}")  # 調試信息
     if x is not None and 'id' in x:
         return x['id']
     else:
         print("Event ID was not found in the response.")
         return None  # 或者根據需要返回一個其他值
+
 
 def create_event_body(eventName, eventDescription, startTime, endTime, sourceURL, isAllDay):
     if isAllDay:
@@ -1192,10 +1145,10 @@ def generate_unique_title(existing_titles, base_title, new_titles, number, resul
 
     # 确保不会错误覆盖原始标题
     if AutoRename_Notion_Name:
-        print(f"Using AutoRename value: {AutoRename_Notion_Name}")
+        # print(f"Using AutoRename value: {AutoRename_Notion_Name}")
         # 检查 base_title 是否已存在于 existing_titles 中
         if base_title in all_titles:
-            print(f"Base title '{base_title}' already exists. Keeping original title.")
+            # print(f"Base title '{base_title}' already exists. Keeping original title.")
             return base_title  # 如果原始标题存在，直接返回
         return AutoRename_Notion_Name  # 返回提取的标题
 
@@ -1591,7 +1544,7 @@ if len(resultList) > 0:
 
         if CalendarList[i] == calendarDictionary[DEFAULT_CALENDAR_NAME]: #this means that there is no calendar assigned on Notion
             if i < len(calEventIdList):
-                print(f"Adding calEventId for event {i}: {calEventIdList[i]}")
+                # print(f"Adding calEventId for event {i}: {calEventIdList[i]}")
                 my_page = notion.pages.update( ##### This puts the the GCal Id into the Notion Dashboard
                     **{
                         "page_id": pageId, 
@@ -3270,7 +3223,7 @@ for i, calId in enumerate(calIds):
             new_title = generate_unique_title(existing_titles, title, new_titles, default_number, resultList)
 
             # 調試輸出
-            print(f"Original title: {calName[i]}, Generated title: {new_title}")
+            # print(f"Original title: {calName[i]}, Generated title: {new_title}")
 
             calName[i] = new_title  # 更新標題
             new_titles.append(new_title)
@@ -3297,7 +3250,7 @@ for i, calId in enumerate(calIds):
         elif calStartDates[i].hour == 0 and calStartDates[i].minute == 0 and calEndDates[i].hour == 0 and calEndDates[i].minute == 0:
             end = calEndDates[i] - timedelta(days=1)
             if calIds[i] in created_single_day_events:
-                print(f"Event '{title}' already created. Skipping.")
+                # print(f"Event '{title}' already created. Skipping.")
                 continue
             else:
                 my_page = create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, end, found_recurring_event_id)
@@ -3306,7 +3259,7 @@ for i, calId in enumerate(calIds):
         # 常規日期時間
         else:
             if calIds[i] in created_single_day_events:
-                print(f"Event '{title}' already created. Skipping.")
+                # print(f"Event '{title}' already created. Skipping.")
                 continue
             else:
                 my_page = create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, calEndDates[i], found_recurring_event_id)
