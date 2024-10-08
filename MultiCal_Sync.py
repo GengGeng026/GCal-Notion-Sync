@@ -788,12 +788,12 @@ def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, event
     if recurrence_info and isinstance(recurrence_info, list) and len(recurrence_info) > 0 and validate_rrule(recurrence_info[0]):
         event['recurrence'] = recurrence_info
     else:
-        logging.warning("Recurrence information is empty or not valid.")
+        # print("Recurrence information is empty or not valid.")
         try:
             original_event = service.events().get(calendarId=currentCalId, eventId=eventId).execute()
             event['recurrence'] = original_event.get('recurrence')
         except googleapiclient.errors.HttpError as e:
-            logging.error(f"Failed to fetch original event recurrence: {e}")
+            print(f"Failed to fetch original event recurrence: {e}")
 
     # 檢查已存在的事件
     existing_events = service.events().list(calendarId=CalId, q=eventName).execute().get('items', [])
@@ -801,23 +801,23 @@ def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, event
 
     # 檢查當前事件是否已存在於目標日曆
     if eventId in existing_event_ids:
-        logging.warning(f"Event ID {eventId} already exists in calendar {CalId}. Skipping update.")
+        # print(f"Event ID {eventId} already exists in calendar {CalId}. Skipping update.")
         return None  # 直接返回，避免重複更新
 
     try:
         if currentCalId == CalId:
-            logging.info(f"Updating event {eventId} in calendar {CalId}.")
+            # print(f"Updating event {eventId} in calendar {CalId}.")
             x = service.events().update(calendarId=CalId, eventId=eventId, body=event).execute()
         else:
             # 移動事件
             x = service.events().move(calendarId=currentCalId, eventId=eventId, destination=CalId).execute()
             if x is not None:
-                logging.info(f"Event moved successfully, response: {x}.")
+                # print(f"Event moved successfully, response: {x}.")
                 
                 # 檢查移動後的事件是否已存在
                 moved_event_id = x.get('id', eventId)
                 if moved_event_id in existing_event_ids:
-                    logging.warning(f"Moved event ID {moved_event_id} already exists in calendar {CalId}. Skipping update.")
+                    # print(f"Moved event ID {moved_event_id} already exists in calendar {CalId}. Skipping update.")
                     return None
                 
                 # 更新事件的屬性
@@ -829,7 +829,7 @@ def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, event
         logging.error(f"Google API HttpError: {e}")
         if e.resp.status == 400 and 'cannotChangeOrganizer' in str(e):
             try:
-                logging.warning("Organizer cannot be changed, creating a new event.")
+                # print("Organizer cannot be changed, creating a new event.")
                 new_event = {
                     'summary': event['summary'],
                     'description': event['description'],
@@ -839,7 +839,7 @@ def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, event
                     'source': event.get('source', {}),
                 }
                 new_event_response = service.events().insert(calendarId=CalId, body=new_event).execute()
-                logging.info(f"New event created with ID: {new_event_response.get('id')}.")
+                # print(f"New event created with ID: {new_event_response.get('id')}.")
 
                 # 刪除舊事件
                 try:
@@ -856,18 +856,20 @@ def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, event
             logging.error(f"Unhandled Google API error: {e}")
             raise
 
-    # 打印事件信息
-    stop_clear_and_print()
-    print(format_string(eventName, bold=True))  # 打印事件标题
 
     # 反转calendarDictionary字典並獲取日曆名稱
     id_to_calendar_name = {v: k for k, v in calendarDictionary.items()}
     currentCalName = id_to_calendar_name.get(currentCalId, "Unknown Calendar")
     CalName = id_to_calendar_name.get(CalId, "Unknown Calendar")
-    
-    formattedCurrentCalName = format_string(currentCalName, less_visible=True)
-    formattedCalName = format_string(CalName, italic=True, light_color=True)
-    print(f'{formattedCurrentCalName} {formatted_right_arrow} {formattedCalName}\n')
+
+    # 打印事件信息
+    stop_clear_and_print()
+    if currentCalName != CalName:
+        print(format_string(eventName, bold=True))  # 打印事件标题
+        
+        formattedCurrentCalName = format_string(currentCalName, less_visible=True)
+        formattedCalName = format_string(CalName, italic=True, light_color=True)
+        print(f'{formattedCurrentCalName} {formatted_right_arrow} {formattedCalName}\n')
     start_dynamic_counter_indicator()
 
     # 最後檢查 x
@@ -1137,7 +1139,7 @@ def generate_unique_title(existing_titles, base_title, new_titles, number, resul
 
     # 尝试获取 AutoRename 值
     auto_rename_notion_name_value = resultList[0]['properties']['AutoRename']['formula']['string']
-    
+
     if auto_rename_notion_name_value and contains_latin_or_numbers_or_chinese(auto_rename_notion_name_value):
         AutoRename_Notion_Name = auto_rename_notion_name_value
     else:
@@ -1145,11 +1147,18 @@ def generate_unique_title(existing_titles, base_title, new_titles, number, resul
 
     # 确保不会错误覆盖原始标题
     if AutoRename_Notion_Name:
+        # 使用正则表达式检查是否与其他字符同时存在
+        if re.search(r'\bUntitled\b', AutoRename_Notion_Name) and len(AutoRename_Notion_Name.split()) > 1:
+            # 如果 "Untitled" 与其他单词同时存在，替换为 ""
+            AutoRename_Notion_Name = re.sub(r'\bUntitled\b', '', AutoRename_Notion_Name).strip()
+        
         # print(f"Using AutoRename value: {AutoRename_Notion_Name}")
+
         # 检查 base_title 是否已存在于 existing_titles 中
         if base_title in all_titles:
             # print(f"Base title '{base_title}' already exists. Keeping original title.")
             return base_title  # 如果原始标题存在，直接返回
+        
         return AutoRename_Notion_Name  # 返回提取的标题
 
     # 去除空白字符并转换为小写
