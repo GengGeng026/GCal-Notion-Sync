@@ -2107,136 +2107,132 @@ def is_valid_uuid(uuid_to_test, version=4):
 value = ''
 exitVar = ''
 
+
 for i, gCalId in enumerate(notion_gCal_IDs):
-    print(f"\nProcessing gCalId: {gCalId} (Index: {i})")
+    # print(f"\nProcessing gCalId: {gCalId} (Index: {i})")
     try:
-        # 檢查 gCalId 是否有效
+        # 確認 gCalId 是否有效
         if not is_valid_uuid(gCalId):
-            # print(f"Invalid gCalId detected: {gCalId}. Trying to find a valid page_id.")
             valid_page_id = None
-            
-            # 嘗試從 resultList 中找到對應的有效 page_id
             for result in resultList:
                 if result['properties'][GCalEventId_Notion_Name]['rich_text']:
                     if result['properties'][GCalEventId_Notion_Name]['rich_text'][0]['text']['content'] == gCalId:
                         valid_page_id = result['id']
-                        # print(f"Found valid page_id: {valid_page_id} for gCalId: {gCalId}")
                         break
 
             if valid_page_id:
-                # 更新 notion_gCal_IDs 和 notion_IDs_List
                 if valid_page_id not in notion_IDs_List:
                     notion_IDs_List.append(valid_page_id)
-                # 確保 notion_gCal_IDs 長度一致
                 if i < len(notion_gCal_IDs):
                     notion_gCal_IDs[i] = valid_page_id
                 else:
                     notion_gCal_IDs.append(valid_page_id)
-                # print(f"Updated notion_gCal_IDs: {notion_gCal_IDs}")
             else:
-                # print(f"No valid page_id found for gCalId: {gCalId}. Skipping.")
                 continue
 
-        # 確保索引在範圍內，並且 gCalId 在 notion_gCal_IDs 中
-        if valid_page_id:  # 使用有效的 page_id
-            gCalId_to_check = valid_page_id
-        else:
-            gCalId_to_check = gCalId
-
+        # 確保索引範圍內，並且 gCalId 在 notion_gCal_IDs 中
+        gCalId_to_check = valid_page_id if valid_page_id else gCalId
         if gCalId_to_check in notion_gCal_IDs:
             notion_index = notion_gCal_IDs.index(gCalId_to_check)
-            if notion_index < len(notion_IDs_List):
-                notion_ID = notion_IDs_List[notion_index]
-            else:
-                # print(f"Index {notion_index} is out of range for notion_IDs_List.")
-                continue
+            notion_ID = notion_IDs_List[notion_index]
         else:
-            # print(f"gCalId {gCalId_to_check} not found in notion_gCal_IDs.")
             continue
 
         # 繼續處理有效的 gCalId
         event_found = False
         for calendarID in calendarDictionary.keys():
-            # print(f"Checking calendar ID: {calendarID} for event ID: {gCalId}")
             try:
                 x = service.events().get(calendarId=calendarDictionary[calendarID], eventId=gCalId).execute()
-                # print(f"Event retrieved: {x}")
-            except HttpError as e:
-                # if e.resp.status == 404:
-                #     print(f"Event with ID {gCalId} not found in calendar {calendarDictionary[calendarID]}.")
-                # else:
-                #     print(f"Error occurred for event ID {gCalId} in calendar {calendarDictionary[calendarID]}: {e}")
+            except HttpError:
                 continue
-            
+
             event_found = True
-            
+
             if x['status'] == 'confirmed':
-                # print(f"Event {gCalId} is confirmed.")
                 value = x
                 currentCalId = notion_gCal_CalNames[notion_index]
                 newCalId = calendarID
                 eventName = x['summary']
-                gCal_titles.append(value['summary'])
+                gCal_titles.append(eventName)
                 gCal_CalIds.append(calendarID)
 
-                el = x.get('recurrence')
-                
                 # 提取重複事件信息
+                el = x.get('recurrence')
                 recurrence_info = extract_recurrence_info(gc, calendarID, x, el)
+                # if recurrence_info:
+                #     print(f"Recurrence info extracted: {recurrence_info}")
 
-                if recurrence_info:
-                    print(f"Recurrence info extracted: {recurrence_info}")
-
+                # 更新日曆信息
                 if currentCalId != newCalId:
-                    # print(f"Event has moved from {currentCalId} to {newCalId}. Syncing to Notion.")
-                    # Ensure currentCalName is passed through format_string with less_visible=True
                     formattedCurrentCalName = format_string(currentCalId, less_visible=True)
                     formattedCalName = format_string(newCalId, italic=True, light_color=True)
+                    print(f"{eventName}")
                     print(f'{formattedCurrentCalName} {formatted_right_arrow} {formattedCalName}\n')
-                    
                     modified_events_counter += 1
-                    
-                    # 嘗試更新 Notion 頁面
                     try:
-                        page_id = valid_page_id if valid_page_id else notion_ID
-                        # print(f"Updating Notion page with ID {page_id}.")
-                        page_id = valid_page_id if valid_page_id else notion_ID
-                        notion.pages.update(page_id=notion_ID, properties={Calendar_Notion_Name: {'select': {'name': newCalId}}})
-                        # print(f"Notion page {page_id} updated successfully.")
+                        notion.pages.update(
+                            page_id=notion_ID, 
+                            properties={
+                                Calendar_Notion_Name: {
+                                    'select': {
+                                        'name': newCalId
+                                        }
+                                    },
+                                LastUpdatedTime_Notion_Name: {
+                                    "date":{
+                                        'start': notion_time(), #has to be adjsuted for when daylight savings is different
+                                        'end': None,
+                                    }
+                                },
+                                }
+                            )
                     except APIResponseError as e:
                         print(f"Failed to update Notion page with ID {notion_ID}: {e}")
 
                 # 更新事件的開始和結束時間
-                if isinstance(value, dict) and 'start' in value:
+                if 'start' in value:
                     if 'dateTime' in value['start']:
-                        gCal_start_datetimes.append(datetime.strptime(value['start']['dateTime'][:-6], "%Y-%m-%dT%H:%M:%S"))
-                        # print(f"Start time for event {gCalId} updated to: {gCal_start_datetimes[-1]}")
+                        new_start_time = datetime.strptime(value['start']['dateTime'][:-6], "%Y-%m-%dT%H:%M:%S")
+                        new_end_time = datetime.strptime(value['end']['dateTime'][:-6], "%Y-%m-%dT%H:%M:%S")
                     elif 'date' in value['start']:
                         date = datetime.strptime(value['start']['date'], "%Y-%m-%d")
-                        gCal_start_datetimes.append(datetime(date.year, date.month, date.day, 0, 0, 0))
-                        # print(f"Start date for event {gCalId} updated to: {gCal_start_datetimes[-1]}")
-                    try:
-                        gCal_end_datetimes.append(datetime.strptime(value['end']['dateTime'][:-6], "%Y-%m-%dT%H:%M:%S"))
-                        # print(f"End time for event {gCalId} updated to: {gCal_end_datetimes[-1]}")
-                    except:
-                        date = datetime.strptime(value['end']['date'], "%Y-%m-%d")
-                        x = datetime(date.year, date.month, date.day, 0, 0, 0) - timedelta(days=1)
-                        gCal_end_datetimes.append(x)
-                        # print(f"End date for event {gCalId} updated to: {gCal_end_datetimes[-1]}")
-                else:
-                    print(f"Unexpected value format for confirmed event: {value}")
+                        new_start_time = datetime(date.year, date.month, date.day, 0, 0, 0)
+                        new_end_time = datetime(date.year, date.month, date.day, 23, 59, 59)
+
+                    # 檢查單日事件是否需要更新
+                    if (not recurrence_info and 
+                        (new_start_time != notion_start_datetimes[notion_index] or 
+                         new_end_time != notion_end_datetimes[notion_index] or 
+                         x['summary'] != notion_titles[notion_index])):
+
+                        # 更新 Notion 頁面
+                        try:
+                            notion.pages.update(
+                                page_id=notion_ID,
+                                properties={
+                                    "Event Start": {
+                                        "date": {"start": new_start_time.isoformat(), "end": new_end_time.isoformat()}
+                                    },
+                                    "Event Title": {"title": [{"text": {"content": x['summary']}}]}
+                                }
+                            )
+                            # print(f"Notion page {notion_ID} updated successfully with new start/end time and title.")
+                        except APIResponseError as e:
+                            print(f"Failed to update Notion page with ID {notion_ID}: {e}")
+                    # else:
+                    #     print(f"Event {gCalId} is already up-to-date in Notion.")
             # else:
-            #     print(f"Event with ID {gCalId} is not confirmed.")
-    except HttpError as e:
+            #     print(f"Event {gCalId} is not confirmed; skipping.")
+    except (HttpError, ValueError, IndexError) as e:
         print(f"Error occurred for event ID {gCalId}: {e}")
     except IndexError as e:
         print(f"Index error: {e}. Current index: {i}. Length of notion_IDs_List: {len(notion_IDs_List)}")
 
 
 # 在循環後打印列表狀態
-print("Final states:")
-print(f"notion_IDs_List: {notion_IDs_List}")
-print(f"notion_gCal_IDs: {notion_gCal_IDs}")
+# print("Final states:")
+# print(f"notion_IDs_List: {notion_IDs_List}")
+# print(f"notion_gCal_IDs: {notion_gCal_IDs}")
 
 
 animate_text_wave_with_progress(text="Loading", new_text="Checked 2.4", target_percentage=45, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
@@ -2278,7 +2274,24 @@ for i in range(loop_length_titles):
             # 更新 Notion 的標題
             try:
                 page_id = notion_IDs_List[i]
-                notion.pages.update(page_id=page_id, properties={Task_Notion_Name: {'title': [{'text': {'content': new_notion_titles[i]}}]}})
+                notion.pages.update(
+                    page_id=page_id, 
+                    properties={
+                        Task_Notion_Name: {
+                            'title': [
+                                {'text': {
+                                    'content': new_notion_titles[i]
+                                    }}
+                                ]
+                            },
+                        LastUpdatedTime_Notion_Name: {
+                            "date":{
+                                'start': notion_time(), #has to be adjsuted for when daylight savings is different
+                                'end': None,
+                            }
+                        },
+                        }
+                    )
             except Exception as e:
                 print(f"Failed to update title for Notion page ID {page_id}: {e}")
     else:
