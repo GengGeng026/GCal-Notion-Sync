@@ -1,4 +1,5 @@
 from configparser import NoOptionError
+from dis import Positions
 import os
 import re
 from dotenv import load_dotenv
@@ -974,7 +975,7 @@ def handle_http_error(e, currentCalId, eventId, event, recurrence_info):
                 'recurrence': recurrence_info if recurrence_info else [],
                 'source': event.get('source', {}),
             }
-            new_event_response = service.events().insert(calendarId=CalId, body=new_event).execute()
+            new_event_response = service.events().insert(calendarId=calId, body=new_event).execute()
             logging.info(f"New event created with ID: {new_event_response.get('id')}.")
 
             service.events().delete(calendarId=currentCalId, eventId=eventId).execute()
@@ -1002,40 +1003,44 @@ this_month = datetime(today.year, today.month, 1)
 # Format the date to match the format used in your code
 this_month_str = this_month.strftime("%Y-%m-%dT%H:%M:%S.%f")
 
-my_page = notion.databases.query(  #this query will return a dictionary that we will parse for information that we want
-    **{
-        "database_id": database_id, 
-        "filter": {
-            "and": [
-                {
-                    "property": On_GCal_Notion_Name, 
-                    "checkbox":  {
-                        "equals": False
+max_retries = 5
+retry_delay = 2  # seconds
+
+for attempt in range(max_retries):
+    try:
+        my_page = notion.databases.query(
+            database_id=database_id,
+            filter={
+                "and": [
+                    {
+                        "property": On_GCal_Notion_Name,
+                        "checkbox": {
+                            "equals": False
+                        }
+                    },
+                    {
+                        "property": Date_Notion_Name,
+                        "date": {
+                            "on_or_after": this_month_str
+                        }
+                    },
+                    {
+                        "property": Delete_Notion_Name,
+                        "checkbox": {
+                            "equals": False
+                        }
                     }
-                }, 
-                {
-                    "property": Date_Notion_Name, 
-                    "date": {
-                        "on_or_after": this_month_str
-                    }
-                },
-                {
-                    "property": Delete_Notion_Name, 
-                    "checkbox":  {
-                        "equals": False
-                    }
-                },
-                {
-                    "property": Delete_Notion_Name, 
-                    "checkbox":  {
-                        "equals": False
-                    }
-                }
-            ]
-        },
-    }
-)
-resultList = my_page['results']
+                ]
+            }
+        )
+        resultList = my_page['results']
+        break  # 成功後退出循環
+    except APIResponseError as e:
+        print(f"Error: {e}. Retrying in {retry_delay} seconds...")
+        time.sleep(retry_delay)
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        break  # 遇到其他錯誤則退出
 
 animate_text_wave_with_progress(text="Loading", new_text="Checked 1", target_percentage=5, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
 
@@ -1178,46 +1183,36 @@ def generate_unique_title(existing_titles, base_title, new_titles, number, resul
 
     # 确保 number 在 resultList 的有效范围内
     if number >= len(resultList):
-        # print("Error: Invalid index number.")
         return new_title  # 返回默认标题
 
-    # 'AutoRename_Notion_Name' 的键
-    AutoRename_Notion_Name_key = 'AutoRename'
-
-    # # 打印 resultList 和 properties
-    # print(f"resultList: {resultList}")
-    # print(f"Selected Item: {resultList[number]}")  # 打印选中的项
-    # print(f"Properties: {resultList[number]['properties']}")  # 打印 properties
+    # 尝试获取 AutoRename 值
     auto_rename_notion_name_value = resultList[0]['properties']['AutoRename']['formula']['string']
-    # print(f"auto_rename_notion_name_value: {auto_rename_notion_name_value}")
-
-    # 确认提取的标题值
-    if auto_rename_notion_name_value is not None and contains_latin_or_numbers_or_chinese(auto_rename_notion_name_value):
+    
+    if auto_rename_notion_name_value and contains_latin_or_numbers_or_chinese(auto_rename_notion_name_value):
         AutoRename_Notion_Name = auto_rename_notion_name_value
     else:
-        AutoRename_Notion_Name = None  # 如果没有获取到，设置为 None
-    
-    # print(f"AutoRename value: {AutoRename_Notion_Name}")  # 确认 AutoRename 值
+        AutoRename_Notion_Name = None
 
-    # 如果 AutoRename_Notion_Name 包含罗马字母或数字，直接使用它作为标题
-    if AutoRename_Notion_Name is not None:
+    # 确保不会错误覆盖原始标题
+    if AutoRename_Notion_Name:
+        print(f"Using AutoRename value: {AutoRename_Notion_Name}")
+        # 检查 base_title 是否已存在于 existing_titles 中
+        if base_title in all_titles:
+            print(f"Base title '{base_title}' already exists. Keeping original title.")
+            return base_title  # 如果原始标题存在，直接返回
         return AutoRename_Notion_Name  # 返回提取的标题
-    
-    # 去除空白字符並轉換為小寫
+
+    # 去除空白字符并转换为小写
     base_title_clean = base_title.strip().lower()
 
     # 对基础标题进行拼写校正，先 TextBlob 后 fuzzywuzzy
     base_title = correct_spelling(base_title)
 
-    # 继续进行模糊匹配和生成标题的逻辑
-    positions = []
-    numbers = []
-
     # 特殊处理 "Untitled" 标题
     if base_title == "Untitled":
         untitled_exists = any(title.strip() == "Untitled" for title in all_titles)
         untitled_numbers = [0]  # 用于存储 "Untitled" 后的数字，0 表示仅 "Untitled"
-        
+
         for title in all_titles:
             if title.startswith("Untitled"):
                 try:
@@ -1226,7 +1221,7 @@ def generate_unique_title(existing_titles, base_title, new_titles, number, resul
                     untitled_numbers.append(num)
                 except ValueError:
                     continue
-        
+
         if untitled_exists:
             next_number = 2  # 如果存在 "Untitled"，从 "Untitled 2" 开始
             while next_number in untitled_numbers:
@@ -1234,105 +1229,88 @@ def generate_unique_title(existing_titles, base_title, new_titles, number, resul
             return f"{base_title} {next_number}"
         else:
             return "Untitled"  # 如果不存在 "Untitled"，直接返回
-        
-    
+
     # Function to check if a title is relevant to the base_title
     def is_relevant_title(title, base):
         return base.lower() in title.lower()
-    
+
     # Filter relevant titles
     relevant_titles = [title for title in all_titles if is_relevant_title(title, base_title)]
-    
+
     if not relevant_titles:
         return base_title  # If no relevant titles found, return the original base_title
-    
+
     # Pattern to match ordinal numbers and surrounding text
     pattern = re.compile(r'(.*?)(\d+)(st|nd|rd|th)\s*(.*?)((?:\s*F\/up|\s*Follow[\s-]up)?)', re.IGNORECASE)
-    
+
     matching_titles = []
     numbers = []
-    
+
     for title in relevant_titles:
         match = pattern.search(title)
         if match:
             prefix, num, _, suffix, followup = match.groups()
             numbers.append(int(num))
             matching_titles.append((prefix.strip(), suffix.strip(), followup.strip()))
-    
+
     if not matching_titles:
         return base_title  # If no matching structure found in relevant titles
-    
+
     # Determine the next number
     next_number = max(numbers) + 1 if numbers else 1
-    
+
     # Find the most common prefix and suffix combination
     common_parts = Counter(matching_titles).most_common(1)[0][0]
-    
+
     # Construct the new title
     new_title = f"{common_parts[0].strip()} {ordinal(next_number)} {common_parts[1].strip()}"
     if common_parts[2]:  # If there's a F/up or Follow-up
         new_title += f"{common_parts[2].strip()}"
-
 
     # 处理 "visit" 类型的标题
     if base_title.lower().startswith("visit"):
         visit_pattern = re.compile(r'(\d+)(st|nd|rd|th)\s*(visit\s*\w*)', re.IGNORECASE)
         numbers = []
         full_visit_titles = []
-        
+
         for title in all_titles:
             match = visit_pattern.search(title)
             if match:
                 num = int(match.group(1))
                 numbers.append(num)
                 full_visit_titles.append(match.group(3))
-        
+
         if numbers:
             next_number = max(numbers) + 1
         else:
             next_number = 1
-        
+
         # 使用最常见的完整 "visit" 标题
         if full_visit_titles:
             most_common_visit = max(set(full_visit_titles), key=full_visit_titles.count)
         else:
             most_common_visit = "visit"
-        
+
         return f"{ordinal(next_number)} {most_common_visit}"
-    
-    # 確保 "JC" 標題保持 "visit"
+
+    # 确保 "JC" 标题保持 "visit"
     if base_title.lower() == "jc":
         visit_pattern = re.compile(r'(\d+)(st|nd|rd|th)\s*(visit\s*\w*)', re.IGNORECASE)
         visit_titles = [title for title in all_titles if visit_pattern.search(title)]
-        
+
         if visit_titles:
             numbers = [int(visit_pattern.search(title).group(1)) for title in visit_titles]
             next_number = max(numbers) + 1 if numbers else 1
             return f"{ordinal(next_number)} visit {base_title}"
-    
+
     # 保留原有逻辑处理其他带序数词的标题
-    if positions:
-        start_pos, end_pos = positions[0]
-        if start_pos == 0:
-            new_title = f"{ordinal(next_number)} {base_title}"
-        elif end_pos == len(existing_titles[0]):
-            pass  # 保留原有逻辑
-        else:
-            pass  # 保留原有逻辑
-    else:
-        pass  # 保留原有逻辑
-        #new_title = f"{base_title} {ordinal(next_number)}" 
-        '''決定 Untitled 和 40th visit 以外的標題後綴，是否也要遞增序數詞'''
-
-
     # 处理其他带基础标题的情况
     for title in all_titles:
         if base_title in title:
             number, start_pos, end_pos = extract_number_and_position(title)
             if number is not None:
                 numbers.append(number)
-                positions.append((start_pos, end_pos))
-    
+
     if not numbers:
         next_number = 1
     else:
@@ -3048,30 +3026,30 @@ def is_simple_typo(term):
     return False  # 复杂的词汇，认为不是简单的拼写错误
 
 # 进行拼写校正
-def correct_spelling(term):
-    # 如果是 "Untitled" 或者空格，直接返回，不進行校正
-    if term.lower().startswith("untitled") or re.match(r'^\s+$', term):
-        return "Untitled"
+# def correct_spelling(term):
+#     # 如果是 "Untitled" 或者空格，直接返回，不進行校正
+#     if term.lower().startswith("untitled") or re.match(r'^\s+$', term):
+#         return "Untitled"
     
-    # 如果是保护词汇，跳过拼写校正
-    if protected_terms and term.lower() in [t.lower() for t in protected_terms]:
-        return term
+#     # 如果是保护词汇，跳过拼写校正
+#     if protected_terms and term.lower() in [t.lower() for t in protected_terms]:
+#         return term
 
-    # 仅对可能的常见拼写错误进行校正
-    if is_simple_typo(term):
-        # 使用 TextBlob 进行拼写校正
-        blob = TextBlob(term)
-        corrected_term = str(blob.correct())
+#     # 仅对可能的常见拼写错误进行校正
+#     if is_simple_typo(term):
+#         # 使用 TextBlob 进行拼写校正
+#         blob = TextBlob(term)
+#         corrected_term = str(blob.correct())
 
-        # 使用 fuzzywuzzy 模糊匹配进一步校正
-        best_match = process.extractOne(corrected_term, correct_terms)
-        if best_match and best_match[1] > 60:  # 如果 fuzzywuzzy 相似度较高
-            return best_match[0]
+#         # 使用 fuzzywuzzy 模糊匹配进一步校正
+#         best_match = process.extractOne(corrected_term, correct_terms)
+#         if best_match and best_match[1] > 60:  # 如果 fuzzywuzzy 相似度较高
+#             return best_match[0]
         
-        return corrected_term  # 否则返回 TextBlob 校正结果
+#         return corrected_term  # 否则返回 TextBlob 校正结果
     
-    # 如果不是简单拼写错误，直接返回原词
-    return term
+#     # 如果不是简单拼写错误，直接返回原词
+#     return term
 
 def get_existing_titles(service, n_months_ago, calendar_id):
     # Include time in the start_date in RFC3339 format
@@ -3101,149 +3079,6 @@ def extract_number_and_position(title):
     for match in matches:
         return int(match.group(1)), match.start(), match.end()
     return None, None, None
-
-# def generate_unique_title(existing_titles, base_title, new_titles, number):
-#     new_title = base_title  # Initialize new_title with a default value
-#     all_titles = existing_titles + new_titles
-
-#     # 去除空白字符並轉換為小寫
-#     base_title_clean = base_title.strip().lower()
-
-#     # 对基础标题进行拼写校正，先 TextBlob 后 fuzzywuzzy
-#     base_title = correct_spelling(base_title)
-
-#     # 继续进行模糊匹配和生成标题的逻辑
-#     positions = []
-#     numbers = []
-
-#     # print("Existing titles for calendar ID:", gCal_calendarId[i], existing_titles)
-
-#     # 特殊处理 "Untitled" 标题
-#     if base_title == "Untitled":
-#         untitled_exists = any(title.strip() == "Untitled" for title in all_titles)
-#         untitled_numbers = [0]  # 用于存储 "Untitled" 后的数字，0 表示仅 "Untitled"
-        
-#         for title in all_titles:
-#             if title.startswith("Untitled"):
-#                 try:
-#                     # 尝试提取序号，忽略无序号的 "Untitled"
-#                     num = int(title.split(" ")[-1])
-#                     untitled_numbers.append(num)
-#                 except ValueError:
-#                     continue
-        
-#         if untitled_exists:
-#             next_number = 2  # 如果存在 "Untitled"，从 "Untitled 2" 开始
-#             while next_number in untitled_numbers:
-#                 next_number += 1
-#             return f"{base_title} {next_number}"
-#         else:
-#             return "Untitled"  # 如果不存在 "Untitled"，直接返回
-        
-    
-#     # Function to check if a title is relevant to the base_title
-#     def is_relevant_title(title, base):
-#         return base.lower() in title.lower()
-    
-#     # Filter relevant titles
-#     relevant_titles = [title for title in all_titles if is_relevant_title(title, base_title)]
-    
-#     if not relevant_titles:
-#         return base_title  # If no relevant titles found, return the original base_title
-    
-#     # Pattern to match ordinal numbers and surrounding text
-#     pattern = re.compile(r'(.*?)(\d+)(st|nd|rd|th)\s*(.*?)((?:\s*F\/up|\s*Follow[\s-]up)?)', re.IGNORECASE)
-    
-#     matching_titles = []
-#     numbers = []
-    
-#     for title in relevant_titles:
-#         match = pattern.search(title)
-#         if match:
-#             prefix, num, _, suffix, followup = match.groups()
-#             numbers.append(int(num))
-#             matching_titles.append((prefix.strip(), suffix.strip(), followup.strip()))
-    
-#     if not matching_titles:
-#         return base_title  # If no matching structure found in relevant titles
-    
-#     # Determine the next number
-#     next_number = max(numbers) + 1 if numbers else 1
-    
-#     # Find the most common prefix and suffix combination
-#     common_parts = Counter(matching_titles).most_common(1)[0][0]
-    
-#     # Construct the new title
-#     new_title = f"{common_parts[0].strip()} {ordinal(next_number)} {common_parts[1].strip()}"
-#     if common_parts[2]:  # If there's a F/up or Follow-up
-#         new_title += f"{common_parts[2].strip()}"
-
-
-#     # 处理 "visit" 类型的标题
-#     if base_title.lower().startswith("visit"):
-#         visit_pattern = re.compile(r'(\d+)(st|nd|rd|th)\s*(visit\s*\w*)', re.IGNORECASE)
-#         numbers = []
-#         full_visit_titles = []
-        
-#         for title in all_titles:
-#             match = visit_pattern.search(title)
-#             if match:
-#                 num = int(match.group(1))
-#                 numbers.append(num)
-#                 full_visit_titles.append(match.group(3))
-        
-#         if numbers:
-#             next_number = max(numbers) + 1
-#         else:
-#             next_number = 1
-        
-#         # 使用最常见的完整 "visit" 标题
-#         if full_visit_titles:
-#             most_common_visit = max(set(full_visit_titles), key=full_visit_titles.count)
-#         else:
-#             most_common_visit = "visit"
-        
-#         return f"{ordinal(next_number)} {most_common_visit}"
-    
-#     # 確保 "JC" 標題保持 "visit"
-#     if base_title.lower() == "jc":
-#         visit_pattern = re.compile(r'(\d+)(st|nd|rd|th)\s*(visit\s*\w*)', re.IGNORECASE)
-#         visit_titles = [title for title in all_titles if visit_pattern.search(title)]
-        
-#         if visit_titles:
-#             numbers = [int(visit_pattern.search(title).group(1)) for title in visit_titles]
-#             next_number = max(numbers) + 1 if numbers else 1
-#             return f"{ordinal(next_number)} visit {base_title}"
-    
-#     # 保留原有逻辑处理其他带序数词的标题
-#     if positions:
-#         start_pos, end_pos = positions[0]
-#         if start_pos == 0:
-#             new_title = f"{ordinal(next_number)} {base_title}"
-#         elif end_pos == len(existing_titles[0]):
-#             pass  # 保留原有逻辑
-#         else:
-#             pass  # 保留原有逻辑
-#     else:
-#         pass  # 保留原有逻辑
-#         #new_title = f"{base_title} {ordinal(next_number)}" 
-#         '''決定 Untitled 和 40th visit 以外的標題後綴，是否也要遞增序數詞'''
-
-
-#     # 处理其他带基础标题的情况
-#     for title in all_titles:
-#         if base_title in title:
-#             number, start_pos, end_pos = extract_number_and_position(title)
-#             if number is not None:
-#                 numbers.append(number)
-#                 positions.append((start_pos, end_pos))
-    
-#     if not numbers:
-#         next_number = 1
-#     else:
-#         next_number = max(numbers) + 1
-
-#     return new_title.strip()
 
 def create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, end=None, recurring_event_id=None):
     
@@ -3277,14 +3112,6 @@ def create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gC
     # 提取重複事件信息
     event = calItems[i]
     recurrence_info, found_recurring_event_id = extract_recurrence_info(service, gCal_calendarId[i], event, el)
-
-    # # 检查是否已存在相同的 recurringEventId
-    # if found_recurring_event_id:
-    #     # 这里直接使用 found_recurring_event_id 进行判断
-    #     existing_page = el.get('id') if el else None  # 这里假设 el 可能是查找到的页面
-    #     if existing_page and recurring_event_id == found_recurring_event_id:
-    #         print(f"Event with recurringEventId {found_recurring_event_id} already exists. Skipping creation.")
-    #         return existing_page  # 如果已存在，则返回该页面
 
     # Create a page in Notion
     # print("Creating page with title:", calName[i])
@@ -3421,7 +3248,10 @@ for i, calId in enumerate(calIds):
     event = calItems[i]  # 假设 calItems[i] 是当前事件
     recurrence_info, found_recurring_event_id = extract_recurrence_info(service, gCal_calendarId[i], event, el)
 
+    # 检查是否已处理此事件
     unique_id = found_recurring_event_id if found_recurring_event_id else calIds[i]
+    if unique_id in processed_recurring_ids:
+        continue
 
     # 确保同一个 recurringEventId 只被处理一次
     if found_recurring_event_id in processed_recurring_ids:
@@ -3434,14 +3264,18 @@ for i, calId in enumerate(calIds):
             title = calName[i].strip() if calName[i] else None
             if not title:
                 title = 'Untitled'  # 简化逻辑以生成未命名标题
-            
-            # 检索现有标题并生成唯一标题
+                    
+            # 確保不覆蓋原有標題
             existing_titles = get_existing_titles(service, n_months_ago, gCal_calendarId[i])
             default_number = 1
-            title = generate_unique_title(existing_titles, title, new_titles, default_number, resultList)
-            calName[i] = title  # 更新 calName[i] 为新标题
-            new_titles.append(title)  # 将新标题添加到 new_titles 列表
-            update_google_calendar_event_title(service, gCal_calendarId[i], calId, title)
+            new_title = generate_unique_title(existing_titles, title, new_titles, default_number, resultList)
+            
+            # 打印標題狀態以進行調試
+            print(f"Original title: {calName[i]}, Generated title: {new_title}")
+
+            calName[i] = new_title  # 更新 calName[i] 為新標題
+            new_titles.append(new_title)  # 將新標題添加到 new_titles 列表
+            update_google_calendar_event_title(service, gCal_calendarId[i], calId, new_title)
 
         else:
             print(f"Index {i} is out of range for the list calName")
