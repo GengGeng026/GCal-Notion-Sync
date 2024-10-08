@@ -1075,12 +1075,14 @@ protected_terms = ["Daily", "Weekly", "Monthly", "Yearly", "JC", "Appt.", "【Ap
 
 # 判断是否为专业术语或保護詞
 def is_special_term(term):
-    # 如果是保護詞，直接返回 True
     if term in protected_terms:
         return True
-    # 检查是否是拼写选项中的专业术语
     for correct_term in correct_terms:
         if correct_term.lower().startswith(term.lower()):
+            return True
+    # 使用正則表達式匹配多單詞保護詞
+    for protected in protected_terms:
+        if re.search(r'\b' + re.escape(protected) + r'\b', term, re.IGNORECASE):
             return True
     return False
 
@@ -1093,37 +1095,32 @@ def contains_chinese(s):
     """檢查字串是否包含中文字符"""
     return bool(re.search(r'[\u4e00-\u9fff]', s))
 
+
 def correct_spelling(term):
-    # 如果是 "Untitled"，直接返回，不進行校正
     if term.lower().startswith("untitled"):
         return "Untitled"
 
     if re.match(r'^\s+$', term.strip()):
         return "Untitled"
 
-
-    # 先检查是否是保護詞或专业术语，直接返回原词
+    # 對包含保護詞的標題直接返回原標題
     if is_special_term(term):
         return term
 
-    # 检查是否包含中文字符，若有则不进行校正
     if contains_chinese(term):
         return term
     
-    # 如果拼写已经接近正确，则直接返回原词
     if is_spelling_close_enough(term, correct_terms):
         return term
     
-    # 否则使用 TextBlob 进行拼写校正
     blob = TextBlob(term)
     corrected_term = str(blob.correct())
-
-    # 再使用 fuzzywuzzy 对校正后的结果进行模糊匹配
+    
     best_match = process.extractOne(corrected_term, correct_terms)
-    if best_match[1] > 60:  # 如果 fuzzywuzzy 的相似度较高，选择 fuzzywuzzy 的结果
+    if best_match[1] > 90:  # 增加相似度閾值
         return best_match[0]
     
-    return corrected_term  # 否则返回 TextBlob 校正的结果
+    return corrected_term
 
 
 def get_existing_titles_from_gcal(service, calendar_id, time_min):
@@ -3005,25 +3002,25 @@ for i in range(len(calIds)):
     if i >= len(delete_notion_flags):
         delete_notion_flags.insert(i, False)
 
-# 判断是否为专业术语或保護詞
-def is_special_term(term):
-    # 保護大小写和词形的保護词匹配
-    if term in protected_terms or term.lower() in [t.lower() for t in protected_terms]:
-        return True
-    # 检查是否是拼写选项中的专业术语
-    for correct_term in correct_terms:
-        if correct_term.lower().startswith(term.lower()):
-            return True
-    return False
+# # 判断是否为专业术语或保護詞
+# def is_special_term(term):
+#     # 保護大小写和词形的保護词匹配
+#     if term in protected_terms or term.lower() in [t.lower() for t in protected_terms]:
+#         return True
+#     # 检查是否是拼写选项中的专业术语
+#     for correct_term in correct_terms:
+#         if correct_term.lower().startswith(term.lower()):
+#             return True
+#     return False
 
 
-# 判断是否为常见的拼写错误（如重复字母、少字母等）
-def is_simple_typo(term):
-    # 常见拼写错误的简单规则，比如单词太短不作校正或只有一个字母不同
-    if len(term) < 6:
-        return True  # 字符太少，可能是普通拼写错误
-    # 检查是否有明显的错字，如重复字符、漏字等
-    return False  # 复杂的词汇，认为不是简单的拼写错误
+# # 判断是否为常见的拼写错误（如重复字母、少字母等）
+# def is_simple_typo(term):
+#     # 常见拼写错误的简单规则，比如单词太短不作校正或只有一个字母不同
+#     if len(term) < 6:
+#         return True  # 字符太少，可能是普通拼写错误
+#     # 检查是否有明显的错字，如重复字符、漏字等
+#     return False  # 复杂的词汇，认为不是简单的拼写错误
 
 # 进行拼写校正
 # def correct_spelling(term):
@@ -3244,77 +3241,82 @@ created_single_day_events = set()
 
 for i, calId in enumerate(calIds):
 
+    # 檢查是否超出任何列表範圍，以防止 IndexError
+    if i >= len(calItems) or i >= len(gCal_calendarId) or i >= len(calName) or i >= len(calStartDates) or i >= len(calEndDates) or i >= len(delete_notion_flags):
+        print(f"Index {i} is out of range for one or more lists.")
+        continue  # 跳過該次迭代
+
     # 提取事件的重复信息
     event = calItems[i]  # 假设 calItems[i] 是当前事件
     recurrence_info, found_recurring_event_id = extract_recurrence_info(service, gCal_calendarId[i], event, el)
 
-    # 检查是否已处理此事件
+    # 檢查是否已處理此事件
     unique_id = found_recurring_event_id if found_recurring_event_id else calIds[i]
     if unique_id in processed_recurring_ids:
         continue
 
-    # 确保同一个 recurringEventId 只被处理一次
+    # 確保同一 recurringEventId 只被處理一次
     if found_recurring_event_id in processed_recurring_ids:
-        continue  # 跳过已处理的重复事件
+        continue  # 跳過已處理的重複事件
 
-    # 如果该事件还没有在 Notion 中，并且没有被标记为删除
+    # 檢查是否需要創建新的事件
     if unique_id not in ALL_notion_gCal_Ids and not delete_notion_flags[i]:
 
+        # 處理標題生成邏輯
         if i < len(calName):
-            title = calName[i].strip() if calName[i] else None
-            if not title:
-                title = 'Untitled'  # 简化逻辑以生成未命名标题
-                    
-            # 確保不覆蓋原有標題
+            title = calName[i].strip() if calName[i] else 'Untitled'  # 默認未命名標題
             existing_titles = get_existing_titles(service, n_months_ago, gCal_calendarId[i])
             default_number = 1
             new_title = generate_unique_title(existing_titles, title, new_titles, default_number, resultList)
-            
-            # 打印標題狀態以進行調試
+
+            # 調試輸出
             print(f"Original title: {calName[i]}, Generated title: {new_title}")
 
-            calName[i] = new_title  # 更新 calName[i] 為新標題
-            new_titles.append(new_title)  # 將新標題添加到 new_titles 列表
+            calName[i] = new_title  # 更新標題
+            new_titles.append(new_title)
             update_google_calendar_event_title(service, gCal_calendarId[i], calId, new_title)
-
         else:
             print(f"Index {i} is out of range for the list calName")
 
-        # 将当前的 recurringEventId 添加到集合中，确保之后不再处理同一系列的事件
+        # 添加到已處理的重複事件集合
         if found_recurring_event_id:
             processed_recurring_ids.add(found_recurring_event_id)
 
-        # 创建 Notion 页面的逻辑
-        if calStartDates[i] == calEndDates[i] - timedelta(days=1):  # 只在起始日期添加
+        # 創建 Notion 頁面的邏輯
+        # 單日事件
+        if calStartDates[i] == calEndDates[i] - timedelta(days=1):
             end = calEndDates[i] - timedelta(days=1)
             if title in created_single_day_events:
                 print(f"Event '{title}' already created. Skipping.")
-                continue  # Skip to the next iteration if already created
+                continue
             else:
                 my_page = create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, end, found_recurring_event_id)
+                created_single_day_events.add(title)  # 添加到追踪集合
 
-        elif calStartDates[i].hour == 0 and calStartDates[i].minute == 0 and calEndDates[i].hour == 0 and calEndDates[i].minute == 0:  # 日期格式
+        # 日期格式
+        elif calStartDates[i].hour == 0 and calStartDates[i].minute == 0 and calEndDates[i].hour == 0 and calEndDates[i].minute == 0:
             end = calEndDates[i] - timedelta(days=1)
-            if CalIds[i] in created_single_day_events:
+            if calIds[i] in created_single_day_events:
                 print(f"Event '{title}' already created. Skipping.")
-                continue  # Skip to the next iteration if already created
+                continue
             else:
                 my_page = create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, end, found_recurring_event_id)
-                created_single_day_events.add(CalIds[i])
+                created_single_day_events.add(calIds[i])
 
-        else:  # 常规日期时间处理
-            if CalIds[i] in created_single_day_events:
+        # 常規日期時間
+        else:
+            if calIds[i] in created_single_day_events:
                 print(f"Event '{title}' already created. Skipping.")
-                continue  # Skip to the next iteration if already created
+                continue
             else:
                 my_page = create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, calEndDates[i], found_recurring_event_id)
-                created_single_day_events.add(CalIds[i])
+                created_single_day_events.add(calIds[i])
 
-        # 添加任务到 added_tasks，确保每个事件只添加一次
-        if CalIds[i] not in created_single_day_events:  # 检查是否已经创建过单日事件
-            created_single_day_events.add(CalIds[i])  # 标记为已创建
-            
-        added_tasks.append((calId, title))
+        # 確保事件只添加一次
+        if calIds[i] not in created_single_day_events:
+            created_single_day_events.add(calIds[i])
+
+        added_tasks.append((calId, title))  # 添加到已處理任務列表
 
 # 打印已处理的 recurringEventId
 # print(f"Processed recurring event IDs: {processed_recurring_ids}")
