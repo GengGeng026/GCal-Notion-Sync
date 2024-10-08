@@ -1284,206 +1284,208 @@ clear_line()
 # 初始化计数器
 untitled_counter = 1
 
+def process_date(date_str):
+    if not date_str:
+        return None
+    try:
+        return parser.parse(date_str)
+    except Exception as e:
+        print(f"無法解析日期 {date_str}: {e}")
+        return None
+
+# 初始化计数器
+untitled_counter = 1
+
 if len(resultList) > 0:
     for i, el in enumerate(resultList):
-
-        # 检查标题列表是否为空
-        if el['properties'][Task_Notion_Name]['title'] and el['properties'][Task_Notion_Name]['title'][0]['text']['content'] != None:
-            TaskNames.append(el['properties'][Task_Notion_Name]['title'][0]['text']['content'])
-        else:
-            # 生成唯一的标题
-            while True:
-                new_title = f"Untitled {untitled_counter}"
-                if new_title not in TaskNames:
-                    TaskNames.append(new_title)
-                    untitled_counter += 1  # 如果标题已经存在，递增计数器
-                    break
-                untitled_counter += 1  # 增加计数器
-
-        # 解析开始和结束日期
-        start_date_str = el['properties'][Date_Notion_Name]['date']['start']
-        end_date_str = el['properties'][Date_Notion_Name]['date']['end'] if el['properties'][Date_Notion_Name]['date']['end'] else start_date_str
-        
-        # 转换为datetime对象以便于操作
-        start_date_dt = parser.parse(start_date_str)
-        end_date_dt = parser.parse(end_date_str)
-
-        def process_date(date_str):
-            try:
-                return datetime.strptime(date_str, "%Y-%m-%d")
-            except ValueError:
-                # Handle other date formats or log error
-                pass
-
-        start_date_processed = process_date(start_date_str)
-        end_date_processed = process_date(end_date_str) if end_date_str else start_date_processed
-
-        # 判斷是否為全天事件
-        is_all_day_event = False
-        if len(start_date_str) <= 10 and len(end_date_str) <= 10:
-            # 如果日期字符串长度只包含日期部分，则假定为全天事件
-            is_all_day_event = True
-        elif start_date_dt.time() == datetime.min.time() and end_date_dt.time() == datetime.min.time():
-            # 如果日期和时间都提供，但时间为00:00，则也视为全天事件
-            is_all_day_event = True
-
-        if is_all_day_event:
-            # 调整为只包含日期部分
-            if isinstance(start_date_processed, datetime):
-                start_date_str = start_date_processed.strftime(start_date_str)
-            if isinstance(end_date_processed, datetime):
-                end_date_str = end_date_processed.strftime(end_date_str)
-
-            if start_date_str == end_date_str:
-                # 对于同一天的全天事件
-                my_page = notion.pages.update(
-                    **{
-                        "page_id": el['id'], 
-                        "properties": {
-                            Date_Notion_Name: {
-                                "date":{
-                                    'start': start_date_str,
-                                    'end': None,
-                                }
-                            },
-                        },
-                    },
-                )
+        try:
+            # 檢查標題列表是否為空
+            if el['properties'][Task_Notion_Name]['title'] and el['properties'][Task_Notion_Name]['title'][0]['text']['content'] != None:
+                TaskNames.append(el['properties'][Task_Notion_Name]['title'][0]['text']['content'])
             else:
-                # 对于跨越多天的全天事件
-                my_page = notion.pages.update(
-                    **{
-                        "page_id": el['id'], 
-                        "properties": {
-                            Date_Notion_Name: {
-                                "date":{
-                                    'start': start_date_str,
-                                    'end': end_date_str,
-                                }
+                # 生成唯一的標題
+                while True:
+                    new_title = f"Untitled {untitled_counter}"
+                    if new_title not in TaskNames:
+                        TaskNames.append(new_title)
+                        untitled_counter += 1
+                        break
+                    untitled_counter += 1
+
+            # 解析開始和結束日期
+            start_date_str = el['properties'][Date_Notion_Name]['date']['start']
+            end_date_str = el['properties'][Date_Notion_Name]['date']['end'] if el['properties'][Date_Notion_Name]['date']['end'] else start_date_str
+            
+            start_date_dt = process_date(start_date_str)
+            end_date_dt = process_date(end_date_str)
+
+            if not start_date_dt:
+                print(f"警告: 事件 '{TaskNames[-1]}' 的開始日期無效")
+                continue
+
+            if not end_date_dt:
+                end_date_dt = start_date_dt + timedelta(hours=1)
+
+            # 判斷是否為全天事件
+            is_all_day_event = len(start_date_str) <= 10 and len(end_date_str) <= 10
+
+            if is_all_day_event:
+                # 對於全天事件，保持 Notion 中的原始日期不變
+                notion_start_date_str = start_date_dt.strftime("%Y-%m-%d")
+                notion_end_date_str = end_date_dt.strftime("%Y-%m-%d")
+                
+                # 對於 Google Calendar，結束日期需要加一天
+                gcal_end_date_dt = end_date_dt + timedelta(days=1)
+                gcal_end_date_str = gcal_end_date_dt.strftime("%Y-%m-%d")
+
+                if notion_start_date_str == notion_end_date_str:
+                    my_page = notion.pages.update(
+                        **{
+                            "page_id": el['id'], 
+                            "properties": {
+                                Date_Notion_Name: {
+                                    "date":{
+                                        'start': notion_start_date_str,
+                                        'end': None,
+                                    }
+                                },
                             },
                         },
-                    },
-                )
-        
-        # 更新start_Dates和end_Times列表
-        start_Dates.append(start_date_str)
-        end_Times.append(end_date_str)
+                    )
+                else:
+                    my_page = notion.pages.update(
+                        **{
+                            "page_id": el['id'], 
+                            "properties": {
+                                Date_Notion_Name: {
+                                    "date":{
+                                        'start': notion_start_date_str,
+                                        'end': notion_end_date_str,
+                                    }
+                                },
+                            },
+                        },
+                    )
+            else:
+                # 非全天事件保持不變
+                notion_start_date_str = start_date_str
+                notion_end_date_str = end_date_str
+                gcal_end_date_str = end_date_str
+            
+            # 更新start_Dates和end_Times列表
+            start_Dates.append(notion_start_date_str)
+            end_Times.append(notion_end_date_str)
 
-        # 如果 start_Dates 有日期和時間但沒有對應的 end_Times，則跳過當前迭代
-        if 'T' in start_Dates[i] and start_Dates[i] == end_Times[i]:
-            continue
-        
-        try:
-            First_Days.append(el['properties'][First_Day_of_Week_Notion_Name]['select']['name'])
-        except:
-            First_Days.append("")
-        
-        try:
-            Frequencies.append(el['properties'][Frequency_Notion_Name]['select']['name'])
-        except:
-            Frequencies.append("")
-        
-        try:
-            Recur_Intervals.append(el['properties'][Recur_Interval_Notion_Name]['number']['name'])
-        except:
-            Recur_Intervals.append("")
-        
-        try:
-            Recur_Days.append(el['properties'][Days_Notion_Name]['multi_select'][0]['name'])
-        except:
-            Recur_Days.append("")
-        
-        try:
-            Recur_Months.append(el['properties'][Months_Notion_Name]['multi_select'][0]['name'])
-        except:
-            Recur_Months.append("")
-        
-        try:
-            byMonthDays.append(el['properties'][Days_of_Month_Notion_Name]['number']['name'])
-        except:
-            byMonthDays.append("")
-        
-        try:
-            byYearDays.append(el['properties'][Days_of_Year_Notion_Name]['number']['name'])
-        except:
-            byYearDays.append("")
-        
-        try:
-            byWeekNumbers.append(el['properties'][Week_Numbers_of_Year_Notion_Name]['number']['name'])
-        except:
-            byWeekNumbers.append("")
-        
-        try:
-            Recur_Untils.append(el['properties'][Recur_Until_Notion_Name]['date']['start'])
-        except:
-            Recur_Untils.append("")
-        
-        try:
-            Recur_Counts.append(el['properties'][Recur_Count_Notion_Name]['number']['name'])
-        except:
-            Recur_Counts.append("")
-        
-        try: 
-            ExtraInfo.append(el['properties'][ExtraInfo_Notion_Name]['rich_text'][0]['text']['content'])
-        except:
-            ExtraInfo.append("")
-        URL_list.append(makeTaskURL(el['id'], urlRoot))
-        
-        try:
-            CalendarList.append(calendarDictionary[el['properties'][Calendar_Notion_Name]['select']['name']])
-        except: #keyerror occurs when there's nothing put into the calendar in the first place
-            CalendarList.append(calendarDictionary[DEFAULT_CALENDAR_NAME])
-
-        pageId = el['id']
-        my_page = notion.pages.update( ##### This checks off that the event has been put on Google Calendar
-            **{
-                "page_id": pageId, 
-                "properties": {
-                    On_GCal_Notion_Name: {
-                        "checkbox": True 
-                    },
-                    LastUpdatedTime_Notion_Name: {
-                        "date":{
-                            'start': notion_time(),
-                            'end': None,
-                        }
-                    }, 
-                },
-            },
-        )
-
-        # 2 Cases: Start and End are  both either date or date+time 
-        # #Have restriction that the calendar events don't cross days
-        # 在尝试访问列表元素之前，检查索引 i 是否在所有相关列表的长度范围内
-        if i < len(TaskNames) and i < len(start_Dates) and i < len(end_Times) and i < len(URL_list) and i < len(CalendarList):
+            # 如果 start_Dates 有日期和時間但沒有對應的 end_Times，則跳過當前迭代
+            if 'T' in start_Dates[i] and start_Dates[i] == end_Times[i]:
+                continue
+            
+            # 處理其他屬性...
             try:
-                calendar_id = CalendarList[i]
-                unique_title = generate_unique_title(existing_titles[calendar_id], TaskNames[i], [], 1, resultList)
-                TaskNames[i] = unique_title
-                existing_titles[calendar_id].append(unique_title)
+                First_Days.append(el['properties'][First_Day_of_Week_Notion_Name]['select']['name'])
+            except:
+                First_Days.append("")
+            
+            try:
+                Frequencies.append(el['properties'][Frequency_Notion_Name]['select']['name'])
+            except:
+                Frequencies.append("")
+            
+            try:
+                Recur_Intervals.append(el['properties'][Recur_Interval_Notion_Name]['number'])
+            except:
+                Recur_Intervals.append("")
+            
+            try:
+                Recur_Days.append(el['properties'][Days_Notion_Name]['multi_select'][0]['name'])
+            except:
+                Recur_Days.append("")
+            
+            try:
+                Recur_Months.append(el['properties'][Months_Notion_Name]['multi_select'][0]['name'])
+            except:
+                Recur_Months.append("")
+            
+            try:
+                byMonthDays.append(el['properties'][Days_of_Month_Notion_Name]['number'])
+            except:
+                byMonthDays.append("")
+            
+            try:
+                byYearDays.append(el['properties'][Days_of_Year_Notion_Name]['number'])
+            except:
+                byYearDays.append("")
+            
+            try:
+                byWeekNumbers.append(el['properties'][Week_Numbers_of_Year_Notion_Name]['number'])
+            except:
+                byWeekNumbers.append("")
+            
+            try:
+                Recur_Untils.append(el['properties'][Recur_Until_Notion_Name]['date']['start'])
+            except:
+                Recur_Untils.append("")
+            
+            try:
+                Recur_Counts.append(el['properties'][Recur_Count_Notion_Name]['number'])
+            except:
+                Recur_Counts.append("")
+            
+            try: 
+                ExtraInfo.append(el['properties'][ExtraInfo_Notion_Name]['rich_text'][0]['text']['content'])
+            except:
+                ExtraInfo.append("")
 
-                # 處理日期和時間
-                start_date_processed = process_date(start_Dates[i])
-                end_date_processed = process_date(end_Times[i]) if end_Times[i] else start_date_processed + timedelta(days=1)
+            URL_list.append(makeTaskURL(el['id'], urlRoot))
+            
+            try:
+                CalendarList.append(calendarDictionary[el['properties'][Calendar_Notion_Name]['select']['name']])
+            except:
+                CalendarList.append(calendarDictionary[DEFAULT_CALENDAR_NAME])
 
-                # 創建事件
-                calEventId = makeCalEvent(TaskNames[i], 
-                                        makeEventDescription(Frequencies[i], ExtraInfo[i]), 
-                                        start_date_processed, 
-                                        URL_list[i], 
-                                        end_date_processed, 
-                                        CalendarList[i], 
-                                        all_day=True, 
-                                        frequency=Frequencies[i], 
-                                        interval=Recur_Intervals[i], 
-                                        byDay=Recur_Days[i], 
-                                        byMonth=Recur_Months[i], 
-                                        byMonthDay=byMonthDays[i], 
-                                        byYearDay=byYearDays[i], 
-                                        byWeekNum=byWeekNumbers[i], 
-                                        until=Recur_Untils[i], 
-                                        count=Recur_Counts[i])
+            pageId = el['id']
+            notion.pages.update(
+                **{
+                    "page_id": pageId, 
+                    "properties": {
+                        On_GCal_Notion_Name: {
+                            "checkbox": True 
+                        },
+                        LastUpdatedTime_Notion_Name: {
+                            "date":{
+                                'start': notion_time(),
+                                'end': None,
+                            }
+                        }, 
+                    },
+                },
+            )
 
+            # 創建日曆事件
+            calendar_id = CalendarList[i]
+            unique_title = generate_unique_title(existing_titles[calendar_id], TaskNames[i], [], 1, resultList)
+            TaskNames[i] = unique_title
+            existing_titles[calendar_id].append(unique_title)
+
+            calEventId = makeCalEvent(TaskNames[i], 
+                                    makeEventDescription(Frequencies[i], ExtraInfo[i]), 
+                                    start_date_dt, 
+                                    URL_list[i], 
+                                    gcal_end_date_dt if is_all_day_event else end_date_dt,  # 使用調整後的結束日期
+                                    CalendarList[i], 
+                                    all_day=is_all_day_event, 
+                                    frequency=Frequencies[i], 
+                                    interval=Recur_Intervals[i], 
+                                    byDay=Recur_Days[i], 
+                                    byMonth=Recur_Months[i], 
+                                    byMonthDay=byMonthDays[i], 
+                                    byYearDay=byYearDays[i], 
+                                    byWeekNum=byWeekNumbers[i], 
+                                    until=Recur_Untils[i], 
+                                    count=Recur_Counts[i])
+
+            if calEventId:
+                calEventIdList.append(calEventId)
                 # 更新 Notion 頁面
                 notion.pages.update(
                     **{
@@ -1496,114 +1498,65 @@ if len(resultList) > 0:
                     }
                 )
 
-                calEventIdList.append(calEventId)
+        except Exception as e:
+            print(f"處理事件 '{TaskNames[i] if i < len(TaskNames) else 'Unknown'}' 時發生錯誤: {e}")
+            continue
 
-            except Exception as e:
-                print(f"Error processing event {TaskNames[i]}: {e}")
-            except:
-                try:
-                    #start and end are both date+time
-                    calEventId = makeCalEvent(TaskNames[i], makeEventDescription(Frequencies[i], ExtraInfo[i]), datetime.strptime(start_Dates[i][:-6], "%Y-%m-%dT%H:%M:%S.000"), URL_list[i],  datetime.strptime(end_Times[i][:-6], "%Y-%m-%dT%H:%M:%S.000"), CalendarList[i], frequency=Frequencies[i], interval=Recur_Intervals[i], byDay=Recur_Days[i], byMonth=Recur_Months[i], byMonthDay=byMonthDays[i], byYearDay=byYearDays[i], byWeekNum=byWeekNumbers[i], until=Recur_Untils[i], count=Recur_Counts[i])
-                except:
-                    calEventId = makeCalEvent(TaskNames[i], makeEventDescription(Frequencies[i], ExtraInfo[i]), datetime.strptime(start_Dates[i][:-6], "%Y-%m-%dT%H:%M:%S.%f"), URL_list[i],  datetime.strptime(end_Times[i][:-6], "%Y-%m-%dT%H:%M:%S.%f"), CalendarList[i], frequency=Frequencies[i], interval=Recur_Intervals[i], byDay=Recur_Days[i], byMonth=Recur_Months[i], byMonthDay=byMonthDays[i], byYearDay=byYearDays[i], byWeekNum=byWeekNumbers[i], until=Recur_Untils[i], count=Recur_Counts[i])
-
-                notion.pages.update(
-                    **{
-                        "page_id": pageId,
-                        "properties": {
-                            Task_Notion_Name: {
-                                "title": [{
-                                    "text": {
-                                        "content": unique_title
-                                    }
-                                }]
-                            }
-                            # ... (其他需要更新的属性)
-                        },
-                    }
-                )
-        else:
-            # 如果索引超出范围，可以在这里记录错误或进行其他处理
-            print(f"索引 {i} 超出范围。")
-            
-        no_new_added = False
-
-        calEventId = None
-        
-        # 检查任务名称是否为 "random"
-        if TaskNames[i] == "random":
-            # 更新 Notion 页面的标题属性
-            notion.pages.update(
-                **{
-                    "page_id": pageId,
-                    "properties": {
-                        Task_Notion_Name: {
-                            "title": [{
-                                "text": {
-                                    "content": TaskNames[i]  # 将标题设置为 "random"
-                                }
-                            }]
-                        }
-                    },
-                }
-            )
-        
-        if calEventId is not None:
-            calEventIdList.append(calEventId)
-
-        if CalendarList[i] == calendarDictionary[DEFAULT_CALENDAR_NAME]: #this means that there is no calendar assigned on Notion
+    # 在使用 calEventIdList 之前檢查其長度
+    if calEventIdList:
+        for i, pageId in enumerate(resultList):
             if i < len(calEventIdList):
-                # print(f"Adding calEventId for event {i}: {calEventIdList[i]}")
-                my_page = notion.pages.update( ##### This puts the the GCal Id into the Notion Dashboard
-                    **{
-                        "page_id": pageId, 
-                        "properties": {
-                            GCalEventId_Notion_Name: {
-                                "rich_text": [{
-                                    'text': {
-                                        'content': calEventIdList[i]
-                                    }
-                                }]
-                            },
-                            Current_Calendar_Id_Notion_Name: {
-                                "rich_text": [{
-                                    'text': {
-                                        'content': CalendarList[i]
-                                    }
-                                }]
-                            },
-                            Calendar_Notion_Name:  { 
-                                'select': {
-                                    "name": DEFAULT_CALENDAR_NAME
+                if CalendarList[i] == calendarDictionary[DEFAULT_CALENDAR_NAME]:
+                    notion.pages.update(
+                        **{
+                            "page_id": pageId['id'], 
+                            "properties": {
+                                GCalEventId_Notion_Name: {
+                                    "rich_text": [{
+                                        'text': {
+                                            'content': calEventIdList[i]
+                                        }
+                                    }]
+                                },
+                                Current_Calendar_Id_Notion_Name: {
+                                    "rich_text": [{
+                                        'text': {
+                                            'content': CalendarList[i]
+                                        }
+                                    }]
+                                },
+                                Calendar_Notion_Name:  { 
+                                    'select': {
+                                        "name": DEFAULT_CALENDAR_NAME
+                                    },
                                 },
                             },
                         },
-                    },
-                )
-            else:
-                print(f"calEventIdList index out of range for i={i}, len(calEventIdList)={len(calEventIdList)}")
-        else: #just a regular update
-            my_page = notion.pages.update(
-                **{
-                    "page_id": pageId, 
-                    "properties": {
-                        GCalEventId_Notion_Name: {
-                            "rich_text": [{
-                                'text': {
-                                    'content': calEventIdList[i]
+                    )
+                else:
+                    notion.pages.update(
+                        **{
+                            "page_id": pageId['id'], 
+                            "properties": {
+                                GCalEventId_Notion_Name: {
+                                    "rich_text": [{
+                                        'text': {
+                                            'content': calEventIdList[i]
+                                        }
+                                    }]
+                                },
+                                Current_Calendar_Id_Notion_Name: {
+                                    "rich_text": [{
+                                        'text': {
+                                            'content': CalendarList[i]
+                                        }
+                                    }]
                                 }
-                            }]
+                            },
                         },
-                        Current_Calendar_Id_Notion_Name: {
-                            "rich_text": [{
-                                'text': {
-                                    'content': CalendarList[i]
-                                }
-                            }]
-                        }
-                    },
-                },
-            )
+                    )
+    else:
+        print("警告: 沒有成功創建任何日曆事件")
 
 animate_text_wave_with_progress(text="Loading", new_text="Checked 1", target_percentage=7, current_progress=global_progress, sleep_time=0.005, percentage_first=True)
 
