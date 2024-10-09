@@ -766,7 +766,8 @@ def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, event
             task_name,       
             new_titles,      
             number,          
-            resultList  
+            resultList,      
+            current_page=el,
         )
 
     stop_clear_and_print()
@@ -1136,44 +1137,23 @@ def contains_latin_or_numbers_or_chinese(s):
 
 notion_data = {}
 
-def generate_unique_title(existing_titles, base_title, new_titles, number, resultList):
-    # print(f"Processing base title: {base_title}...")
-    # print(f"Length of resultList: {len(resultList)}, value of number: {number}")
-
+def generate_unique_title(existing_titles, base_title, new_titles, number, resultList, current_page):
     new_title = base_title  # Initialize new_title with a default value
     all_titles = existing_titles + new_titles
 
     # 确保 number 在有效范围内
     if number < 0 or number >= len(resultList):
-        print(f"Invalid number: {number}. Adjusting to {len(resultList) - 1}.")
+        # print(f"Invalid number: {number}. Adjusting to {len(resultList) - 1}.")
         number = max(0, len(resultList) - 1)  # 调整 number
 
-    if resultList:  # 确保 resultList 不为 None 或空
-        print("resultList is not empty.")
-        if 'properties' in resultList[0]:
-            print("properties key found in resultList[0].")
-            if 'AutoRename' in resultList[0]['properties']:
-                print("AutoRename key found in properties.")
-                if 'formula' in resultList[0]['properties']['AutoRename']:
-                    print("formula key found in AutoRename.")
-                    if 'string' in resultList[0]['properties']['AutoRename']['formula']:
-                        auto_rename_notion_name_value = resultList[0]['properties']['AutoRename']['formula']['string']
-                        print(f"auto_rename_notion_name_value: {auto_rename_notion_name_value}")
-                    else:
-                        print("string key not found in AutoRename formula.")
-                        auto_rename_notion_name_value = None
-                else:
-                    print("formula key not found in AutoRename.")
-                    auto_rename_notion_name_value = None
-            else:
-                print("AutoRename key not found in properties.")
-                auto_rename_notion_name_value = None
-        else:
-            print("properties key not found in resultList[0].")
-            auto_rename_notion_name_value = None
-    else:
-        print("resultList is empty.")
-        auto_rename_notion_name_value = None
+    # 获取当前页面的 AutoRename 值
+    auto_rename_notion_name_value = None
+    if 'properties' in current_page:
+        if 'AutoRename' in current_page['properties']:
+            if 'formula' in current_page['properties']['AutoRename']:
+                if 'string' in current_page['properties']['AutoRename']['formula']:
+                    auto_rename_notion_name_value = current_page['properties']['AutoRename']['formula']['string']
+                    # print(f"auto_rename_notion_name_value: {auto_rename_notion_name_value}")
 
     # 如果成功获取了 AutoRename 值
     if auto_rename_notion_name_value and contains_latin_or_numbers_or_chinese(auto_rename_notion_name_value):
@@ -1189,24 +1169,23 @@ def generate_unique_title(existing_titles, base_title, new_titles, number, resul
             AutoRename_Notion_Name = re.sub(r'\bUntitled\b', '', AutoRename_Notion_Name).strip()
             new_title = AutoRename_Notion_Name
         else:
-            # 如果没有 AutoRename_Notion_Name，返回 base_title 或其他逻辑生成的标题
             new_title = base_title
 
-        print(f"New title after processing AutoRename: {new_title}")
-        print(f"Existing titles: {existing_titles}")
+        # print(f"New title after processing AutoRename: {new_title}")
+        # print(f"Existing titles: {existing_titles}")
         if new_title in existing_titles:
-            print(f"New title '{new_title}' already exists in existing titles. Returning base title.")
+            # print(f"New title '{new_title}' already exists in existing titles. Returning base title.")
             return base_title  # 或使用其他逻辑处理重复
 
         # 检查 base_title 是否已存在于 existing_titles 中
         if base_title in all_titles:
-            print(f"Base title '{base_title}' already exists. Keeping original title.")
+            # print(f"Base title '{base_title}' already exists. Keeping original title.")
             return base_title  # 如果原始标题存在，直接返回
         
-        print(f"Returning AutoRename title: {AutoRename_Notion_Name}")
+        # print(f"Returning AutoRename title: {AutoRename_Notion_Name}")
         return AutoRename_Notion_Name  # 返回提取的标题
 
-    print("AutoRename_Notion_Name is None. Proceeding with base title logic...")
+    # print("AutoRename_Notion_Name is None. Proceeding with base title logic...")
     # 此处可以添加更多代码逻辑来处理 base_title 的生成
 
     # 去除空白字符并转换为小写
@@ -1545,7 +1524,7 @@ if len(resultList) > 0:
 
             # 創建日曆事件
             calendar_id = CalendarList[i]
-            unique_title = generate_unique_title(existing_titles[calendar_id], TaskNames[i], [], 1, resultList)
+            unique_title = generate_unique_title(existing_titles[calendar_id], TaskNames[i], [], 1, resultList, current_page=el)
             TaskNames[i] = unique_title
             existing_titles[calendar_id].append(unique_title)
 
@@ -3283,7 +3262,7 @@ for i, calId in enumerate(calIds):
             title = calName[i].strip() if calName[i] else 'Untitled'  # 默認未命名標題
             existing_titles = get_existing_titles(service, n_months_ago, gCal_calendarId[i])
             default_number = 1
-            new_title = generate_unique_title(existing_titles, title, new_titles, default_number, resultList)
+            new_title = generate_unique_title(existing_titles, title, new_titles, default_number, resultList, current_page=event)
 
             # 調試輸出
             # print(f"Original title: {calName[i]}, Generated title: {new_title}")
