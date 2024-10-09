@@ -299,6 +299,7 @@ urlRoot = os.getenv("NOTION_DATABASE_URL") #open up a task and then copy the URL
 #GCal Set Up Part
 DEFAULT_EVENT_LENGTH = 60 #This is how many minutes the default event length is. Feel free to change it as you please
 timezone = 'Asia/Kuala_Lumpur' #Choose your respective time zone: http://www.timezoneconverter.com/cgi-bin/zonehelp.tzc
+local_tz = pytz.timezone(timezone)
 
 def notion_time():
     return datetime.now().strftime("%Y-%m-%dT%H:%M:%S+08:00") #Change the last 5 characters to be representative of your timezone
@@ -564,7 +565,13 @@ def makeCalEvent(eventName, eventDescription, eventStartTime, sourceURL, eventEn
         if byWeekNum:
             rule += f";BYWEEKNO={byWeekNum}"
         if until:
-            rule += f";UNTIL={until.strftime('%Y%m%dT%H%M%SZ')}"  # 確保日期格式正確
+            if isinstance(until, datetime):
+                # 將until的時間設置為該天的23:59:59
+                until = until.replace(hour=23, minute=59, second=59)
+                # print(f"until 參數: {until}, 轉換為: {until.strftime('%Y%m%dT%H%M%SZ')}")
+                rule += f";UNTIL={until.strftime('%Y%m%dT%H%M%SZ')}"
+            else:
+                print(f"警告: 'until' 參數不是有效的 datetime 對象: {until}")
         if count:
             rule += f";COUNT={count}"
         recurrence_rules.append(rule)
@@ -1130,16 +1137,45 @@ def contains_latin_or_numbers_or_chinese(s):
 notion_data = {}
 
 def generate_unique_title(existing_titles, base_title, new_titles, number, resultList):
+    # print(f"Processing base title: {base_title}...")
+    # print(f"Length of resultList: {len(resultList)}, value of number: {number}")
+
     new_title = base_title  # Initialize new_title with a default value
     all_titles = existing_titles + new_titles
 
-    # 确保 number 在 resultList 的有效范围内
-    if number >= len(resultList):
-        return new_title  # 返回默认标题
+    # 确保 number 在有效范围内
+    if number < 0 or number >= len(resultList):
+        print(f"Invalid number: {number}. Adjusting to {len(resultList) - 1}.")
+        number = max(0, len(resultList) - 1)  # 调整 number
 
-    # 尝试获取 AutoRename 值
-    auto_rename_notion_name_value = resultList[0]['properties']['AutoRename']['formula']['string']
+    if resultList:  # 确保 resultList 不为 None 或空
+        print("resultList is not empty.")
+        if 'properties' in resultList[0]:
+            print("properties key found in resultList[0].")
+            if 'AutoRename' in resultList[0]['properties']:
+                print("AutoRename key found in properties.")
+                if 'formula' in resultList[0]['properties']['AutoRename']:
+                    print("formula key found in AutoRename.")
+                    if 'string' in resultList[0]['properties']['AutoRename']['formula']:
+                        auto_rename_notion_name_value = resultList[0]['properties']['AutoRename']['formula']['string']
+                        print(f"auto_rename_notion_name_value: {auto_rename_notion_name_value}")
+                    else:
+                        print("string key not found in AutoRename formula.")
+                        auto_rename_notion_name_value = None
+                else:
+                    print("formula key not found in AutoRename.")
+                    auto_rename_notion_name_value = None
+            else:
+                print("AutoRename key not found in properties.")
+                auto_rename_notion_name_value = None
+        else:
+            print("properties key not found in resultList[0].")
+            auto_rename_notion_name_value = None
+    else:
+        print("resultList is empty.")
+        auto_rename_notion_name_value = None
 
+    # 如果成功获取了 AutoRename 值
     if auto_rename_notion_name_value and contains_latin_or_numbers_or_chinese(auto_rename_notion_name_value):
         AutoRename_Notion_Name = auto_rename_notion_name_value
     else:
@@ -1151,15 +1187,27 @@ def generate_unique_title(existing_titles, base_title, new_titles, number, resul
         if re.search(r'\bUntitled\b', AutoRename_Notion_Name) and len(AutoRename_Notion_Name.split()) > 1:
             # 如果 "Untitled" 与其他单词同时存在，替换为 ""
             AutoRename_Notion_Name = re.sub(r'\bUntitled\b', '', AutoRename_Notion_Name).strip()
-        
-        # print(f"Using AutoRename value: {AutoRename_Notion_Name}")
+            new_title = AutoRename_Notion_Name
+        else:
+            # 如果没有 AutoRename_Notion_Name，返回 base_title 或其他逻辑生成的标题
+            new_title = base_title
+
+        print(f"New title after processing AutoRename: {new_title}")
+        print(f"Existing titles: {existing_titles}")
+        if new_title in existing_titles:
+            print(f"New title '{new_title}' already exists in existing titles. Returning base title.")
+            return base_title  # 或使用其他逻辑处理重复
 
         # 检查 base_title 是否已存在于 existing_titles 中
         if base_title in all_titles:
-            # print(f"Base title '{base_title}' already exists. Keeping original title.")
+            print(f"Base title '{base_title}' already exists. Keeping original title.")
             return base_title  # 如果原始标题存在，直接返回
         
+        print(f"Returning AutoRename title: {AutoRename_Notion_Name}")
         return AutoRename_Notion_Name  # 返回提取的标题
+
+    print("AutoRename_Notion_Name is None. Proceeding with base title logic...")
+    # 此处可以添加更多代码逻辑来处理 base_title 的生成
 
     # 去除空白字符并转换为小写
     base_title_clean = base_title.strip().lower()
@@ -1287,6 +1335,8 @@ untitled_counter = 1
 def process_date(date_str):
     if not date_str:
         return None
+    if isinstance(date_str, datetime):
+        return date_str  # 如果是 datetime 對象，直接返回
     try:
         return parser.parse(date_str)
     except Exception as e:
@@ -1315,25 +1365,29 @@ if len(resultList) > 0:
             # 解析開始和結束日期
             start_date_str = el['properties'][Date_Notion_Name]['date']['start']
             end_date_str = el['properties'][Date_Notion_Name]['date']['end'] if el['properties'][Date_Notion_Name]['date']['end'] else start_date_str
-            
+
             start_date_dt = process_date(start_date_str)
             end_date_dt = process_date(end_date_str)
 
-            if not start_date_dt:
-                print(f"警告: 事件 '{TaskNames[-1]}' 的開始日期無效")
+            # 檢查日期對象的類型
+            if not isinstance(start_date_dt, datetime):
+                # print(f"警告: 開始日期 '{start_date_str}' 轉換為 datetime 失敗")
                 continue
 
-            if not end_date_dt:
-                end_date_dt = start_date_dt + timedelta(hours=1)
+            if not isinstance(end_date_dt, datetime):
+                # print(f"警告: 結束日期 '{end_date_str}' 轉換為 datetime 失敗")
+                end_date_dt = start_date_dt + timedelta(hours=1)  # 設置默認結束日期
 
-            # 判斷是否為全天事件
             is_all_day_event = len(start_date_str) <= 10 and len(end_date_str) <= 10
-
             if is_all_day_event:
-                # 對於全天事件，保持 Notion 中的原始日期不變
-                notion_start_date_str = start_date_dt.strftime("%Y-%m-%d")
-                notion_end_date_str = end_date_dt.strftime("%Y-%m-%d")
-                
+                # 確保使用 datetime 對象
+                if isinstance(start_date_dt, datetime) and isinstance(end_date_dt, datetime):
+                    notion_start_date_str = start_date_dt.strftime("%Y-%m-%d")
+                    notion_end_date_str = end_date_dt.strftime("%Y-%m-%d")
+                else:
+                    print(f"錯誤: 開始或結束日期不是有效的 datetime 對象。")
+                    continue
+
                 # 對於 Google Calendar，結束日期需要加一天
                 gcal_end_date_dt = end_date_dt + timedelta(days=1)
                 gcal_end_date_str = gcal_end_date_dt.strftime("%Y-%m-%d")
@@ -1397,9 +1451,10 @@ if len(resultList) > 0:
                 Recur_Intervals.append("")
             
             try:
-                Recur_Days.append(el['properties'][Days_Notion_Name]['multi_select'][0]['name'])
+                selected_days = el['properties'][Days_Notion_Name]['multi_select']
+                Recur_Days.append([day['name'] for day in selected_days])  # 提取所有選項
             except:
-                Recur_Days.append("")
+                Recur_Days.append([])
             
             try:
                 Recur_Months.append(el['properties'][Months_Notion_Name]['multi_select'][0]['name'])
@@ -1422,7 +1477,34 @@ if len(resultList) > 0:
                 byWeekNumbers.append("")
             
             try:
-                Recur_Untils.append(el['properties'][Recur_Until_Notion_Name]['date']['start'])
+                recur_until = el['properties'][Recur_Until_Notion_Name]['date']['start']
+                recur_until_dt = process_date(recur_until)  # 解析日期字符串
+
+                # 檢查是否為單日事件，且時間為開始時間
+                if recur_until_dt and recur_until_dt.time() == datetime.min.time():  
+                    recur_until_dt = recur_until_dt.replace(hour=23, minute=59, second=59)  # 調整為當天的最後一刻
+
+                    # 轉換為當地時區的時間
+                    local_recur_until_dt = recur_until_dt.astimezone(local_tz)
+
+                    pageId = el['id']
+                    notion.pages.update(
+                        **{
+                            "page_id": pageId, 
+                            "properties": {
+                                Recur_Until_Notion_Name: {
+                                    "date":{
+                                        'start': local_recur_until_dt.strftime("%Y-%m-%d %H:%M:%S%z"),
+                                        'end': None,
+                                    }
+                                }
+                            },
+                        },
+                    )
+
+                    Recur_Untils.append(local_recur_until_dt.strftime("%Y-%m-%d %H:%M:%S"))  # 存儲調整後的日期
+                else:
+                    Recur_Untils.append(recur_until_dt)
             except:
                 Recur_Untils.append("")
             
@@ -1456,7 +1538,7 @@ if len(resultList) > 0:
                                 'start': notion_time(),
                                 'end': None,
                             }
-                        }, 
+                        },
                     },
                 },
             )
@@ -1467,21 +1549,37 @@ if len(resultList) > 0:
             TaskNames[i] = unique_title
             existing_titles[calendar_id].append(unique_title)
 
+            # 用於確保 Recur_Until 時間部分正確的方法
+            def adjust_until_date(until_date):
+                if not until_date:
+                    return None
+                if until_date.time() == datetime.min.time():  # 如果時間是 00:00，則設置為 23:59:59
+                    return until_date.replace(hour=23, minute=59, second=59)
+                return until_date  # 若已包含時間，則直接返回
+
+            if Recur_Untils[i]:
+                # 在呼叫 makeCalEvent 前進行調整
+               until_adjusted = adjust_until_date(process_date(Recur_Untils[i]))
+            else:
+                until_adjusted = None
+
+            byDay = ",".join(Recur_Days[i])  # 生成用逗號分隔的字符串
+            
             calEventId = makeCalEvent(TaskNames[i], 
                                     makeEventDescription(Frequencies[i], ExtraInfo[i]), 
                                     start_date_dt, 
                                     URL_list[i], 
-                                    gcal_end_date_dt if is_all_day_event else end_date_dt,  # 使用調整後的結束日期
+                                    gcal_end_date_dt if is_all_day_event else end_date_dt, 
                                     CalendarList[i], 
                                     all_day=is_all_day_event, 
                                     frequency=Frequencies[i], 
                                     interval=Recur_Intervals[i], 
-                                    byDay=Recur_Days[i], 
+                                    byDay=byDay,  # 使用格式化後的 Recur_Days
                                     byMonth=Recur_Months[i], 
                                     byMonthDay=byMonthDays[i], 
                                     byYearDay=byYearDays[i], 
                                     byWeekNum=byWeekNumbers[i], 
-                                    until=Recur_Untils[i], 
+                                    until=until_adjusted,  # 確保這裡是 datetime 對象
                                     count=Recur_Counts[i])
 
             if calEventId:
@@ -1577,7 +1675,13 @@ for i, eventId in enumerate(calEventIdList, start=1):
         animate_text_wave("addin", repeat=1)
         start_dynamic_counter_indicator()
         calendarId = CalendarList[i-1]
-        event = service.events().get(calendarId=calendarId, eventId=eventId).execute()
+        try:
+            event = service.events().get(calendarId=calendarId, eventId=eventId).execute()
+        except googleapiclient.errors.HttpError as e:
+            if e.resp.status == 404:
+                print(f"Error: Event with ID '{eventId}' not found in calendar '{calendarId}'.")
+            else:
+                print(f"Unexpected error occurred: {e}")
         eventName = event['summary']
         processedEvents.add(eventId)
 
@@ -2993,9 +3097,6 @@ def extract_number_and_position(title):
     return None, None, None
 
 def create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, end=None, recurring_event_id=None):
-    
-    # Create a timezone object
-    local_tz = pytz_timezone('Asia/Kuala_Lumpur')
 
     # Convert dates to local timezone
     calStartDates[i] = calStartDates[i].astimezone(local_tz)
