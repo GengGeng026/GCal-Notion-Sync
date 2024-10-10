@@ -568,7 +568,7 @@ def makeCalEvent(eventName, eventDescription, eventStartTime, sourceURL, eventEn
         if until:
             if isinstance(until, datetime):
                 # 將until的時間設置為該天的23:59:59
-                until = until.replace(hour=23, minute=59, second=59)
+                until = until.replace(hour=00, minute=00, second=00, microsecond=0).astimezone(eventStartTime.tzinfo)
                 # print(f"until 參數: {until}, 轉換為: {until.strftime('%Y%m%dT%H%M%SZ')}")
                 rule += f";UNTIL={until.strftime('%Y%m%dT%H%M%SZ')}"
             else:
@@ -576,6 +576,7 @@ def makeCalEvent(eventName, eventDescription, eventStartTime, sourceURL, eventEn
         if count:
             rule += f";COUNT={count}"
         recurrence_rules.append(rule)
+        # print(f"rule: {rule}")
 
     # 處理全天事件
     if all_day or (eventStartTime.hour == 0 and eventStartTime.minute == 0 and eventEndTime == eventStartTime):
@@ -1329,6 +1330,9 @@ clear_line()
 # 初始化计数器
 untitled_counter = 1
 
+# 初始化计数器
+untitled_counter = 1
+
 def process_date(date_str):
     if not date_str:
         return None
@@ -1340,14 +1344,24 @@ def process_date(date_str):
         print(f"無法解析日期 {date_str}: {e}")
         return None
 
-# 初始化计数器
-untitled_counter = 1
+def auto_set_recur_days(start_date, until_date):
+    """根據開始日期和結束日期範圍返回所有對應的星期幾"""
+    print(f"start_date: {start_date}, until_date: {until_date}")
+    if start_date and until_date:
+        days = []
+        current_date = start_date
+        while current_date <= until_date:
+            day_of_week = current_date.strftime('%A').upper()
+            days.append(day_of_week[:2])  # 例如 'SA', 'SU'
+            current_date += timedelta(days=1)
+        return days
+    return []
 
 if len(resultList) > 0:
     for i, el in enumerate(resultList):
         try:
             # 檢查標題列表是否為空
-            if el['properties'][Task_Notion_Name]['title'] and el['properties'][Task_Notion_Name]['title'][0]['text']['content'] != None:
+            if el['properties'][Task_Notion_Name].get('title') and el['properties'][Task_Notion_Name]['title'][0]['text']['content']:
                 TaskNames.append(el['properties'][Task_Notion_Name]['title'][0]['text']['content'])
             else:
                 # 生成唯一的標題
@@ -1446,33 +1460,7 @@ if len(resultList) > 0:
                 Recur_Intervals.append(el['properties'][Recur_Interval_Notion_Name]['number'])
             except:
                 Recur_Intervals.append("")
-            
-            try:
-                selected_days = el['properties'][Days_Notion_Name]['multi_select']
-                Recur_Days.append([day['name'] for day in selected_days])  # 提取所有選項
-            except:
-                Recur_Days.append([])
-            
-            try:
-                Recur_Months.append(el['properties'][Months_Notion_Name]['multi_select'][0]['name'])
-            except:
-                Recur_Months.append("")
-            
-            try:
-                byMonthDays.append(el['properties'][Days_of_Month_Notion_Name]['number'])
-            except:
-                byMonthDays.append("")
-            
-            try:
-                byYearDays.append(el['properties'][Days_of_Year_Notion_Name]['number'])
-            except:
-                byYearDays.append("")
-            
-            try:
-                byWeekNumbers.append(el['properties'][Week_Numbers_of_Year_Notion_Name]['number'])
-            except:
-                byWeekNumbers.append("")
-            
+
             try:
                 recur_until = el['properties'][Recur_Until_Notion_Name]['date']['start']
                 recur_until_dt = process_date(recur_until)  # 解析日期字符串
@@ -1504,7 +1492,68 @@ if len(resultList) > 0:
                     Recur_Untils.append(recur_until_dt)
             except:
                 Recur_Untils.append("")
+                        
+            Recur_Days = []
+                        
+            # 檢查 Days_Notion_Name 的 multi_select 是否有值，並確保鍵存在
+            if 'multi_select' in el['properties'][Days_Notion_Name] and el['properties'][Days_Notion_Name]['multi_select']:
+                # 如果 multi_select 有值，則提取選項並更新 Recur_Days
+                selected_days = el['properties'][Days_Notion_Name]['multi_select']
+                Recur_Days.append([day['name'] for day in selected_days])
+                # print(f"Recur_Days after appending selected days: {Recur_Days}")
+            else:
+                # 如果 multi_select 沒有值，則使用自動生成的 days_list
+                local_tz = pytz.timezone(timezone)
+                if start_date_dt.tzinfo is None:
+                    start_date_dt = local_tz.localize(start_date_dt)
+                
+                # print(f"Before auto_set_recur_days: start_date_dt = {start_date_dt}, recur_until_dt = {recur_until_dt}")
+                
+                # 調用 auto_set_recur_days 並檢查返回值
+                days_list = auto_set_recur_days(start_date_dt, recur_until_dt)
+                # print(f"Returned days_list from auto_set_recur_days: {days_list}")
+                
+                # 更新 Notion 中的 Days_Notion_Name 屬性
+                notion_days = [{"name": day} for day in days_list]
+                page_id = el['id']
+                notion.pages.update(
+                    **{
+                        "page_id": page_id,
+                        "properties": {
+                            Days_Notion_Name: {
+                                "multi_select": notion_days
+                            }
+                        },
+                    },
+                )
+                
+                # 將生成的 days_list 加入 Recur_Days
+                if days_list:
+                    Recur_Days.append(days_list)
+                else:
+                    Recur_Days.append([])  # 確保結構一致，即使 days_list 為空
+                # print(f"Updated Recur_Days: {Recur_Days}")
             
+            try:
+                Recur_Months.append(el['properties'][Months_Notion_Name]['multi_select'][0]['name'])
+            except:
+                Recur_Months.append("")
+            
+            try:
+                byMonthDays.append(el['properties'][Days_of_Month_Notion_Name]['number'])
+            except:
+                byMonthDays.append("")
+            
+            try:
+                byYearDays.append(el['properties'][Days_of_Year_Notion_Name]['number'])
+            except:
+                byYearDays.append("")
+            
+            try:
+                byWeekNumbers.append(el['properties'][Week_Numbers_of_Year_Notion_Name]['number'])
+            except:
+                byWeekNumbers.append("")
+
             try:
                 Recur_Counts.append(el['properties'][Recur_Count_Notion_Name]['number'])
             except:
@@ -1554,7 +1603,7 @@ if len(resultList) > 0:
                     return until_date.replace(hour=23, minute=59, second=59)
                 return until_date  # 若已包含時間，則直接返回
 
-            if Recur_Untils[i]:
+            if i < len(Recur_Untils) and Recur_Untils[i]:
                 # 在呼叫 makeCalEvent 前進行調整
                until_adjusted = adjust_until_date(process_date(Recur_Untils[i]))
             else:
@@ -1562,22 +1611,23 @@ if len(resultList) > 0:
 
             byDay = ",".join(Recur_Days[i])  # 生成用逗號分隔的字符串
             
-            calEventId = makeCalEvent(TaskNames[i], 
-                                    makeEventDescription(Frequencies[i], ExtraInfo[i]), 
-                                    start_date_dt, 
-                                    URL_list[i], 
-                                    gcal_end_date_dt if is_all_day_event else end_date_dt, 
-                                    CalendarList[i], 
-                                    all_day=is_all_day_event, 
-                                    frequency=Frequencies[i], 
-                                    interval=Recur_Intervals[i], 
-                                    byDay=byDay,  # 使用格式化後的 Recur_Days
-                                    byMonth=Recur_Months[i], 
-                                    byMonthDay=byMonthDays[i], 
-                                    byYearDay=byYearDays[i], 
-                                    byWeekNum=byWeekNumbers[i], 
-                                    until=until_adjusted,  # 確保這裡是 datetime 對象
-                                    count=Recur_Counts[i])
+            if i < len(TaskNames) and i < len(Recur_Days):
+                calEventId = makeCalEvent(TaskNames[i], 
+                                        makeEventDescription(Frequencies[i], ExtraInfo[i]), 
+                                        start_date_dt, 
+                                        URL_list[i], 
+                                        gcal_end_date_dt if is_all_day_event else end_date_dt, 
+                                        CalendarList[i], 
+                                        all_day=is_all_day_event, 
+                                        frequency=Frequencies[i], 
+                                        interval=Recur_Intervals[i], 
+                                        byDay=byDay,  # 使用格式化後的 Recur_Days
+                                        byMonth=Recur_Months[i], 
+                                        byMonthDay=byMonthDays[i], 
+                                        byYearDay=byYearDays[i], 
+                                        byWeekNum=byWeekNumbers[i], 
+                                        until=until_adjusted,  # 確保這裡是 datetime 對象
+                                        count=Recur_Counts[i])
 
             if calEventId:
                 calEventIdList.append(calEventId)
@@ -1594,7 +1644,7 @@ if len(resultList) > 0:
                 )
 
         except Exception as e:
-            print(f"處理事件 '{TaskNames[i] if i < len(TaskNames) else 'Unknown'}' 時發生錯誤: {e}")
+            print(f"處理事件 '{TaskNames[i] if i < len(TaskNames) else 'Unknown'}' ({i}/{len(resultList)}) 時發生錯誤: {e}")
             continue
 
     # 在使用 calEventIdList 之前檢查其長度
