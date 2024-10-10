@@ -21,6 +21,7 @@ import threading
 from threading import Lock
 from textblob import TextBlob
 from fuzzywuzzy import process
+import Levenshtein as lev
 from collections import defaultdict
 from collections import Counter
 from oauthlib.oauth2 import BackendApplicationClient
@@ -1031,59 +1032,65 @@ no_new_updated = True
 no_new_added = True
 No_pages_modified = True
 
-
-# 定义一些正确的拼写选项
+# 定义一些正确的拼写选项和保護詞
 correct_terms = ["Untitled", "Physiotherapy", "General Physiotherapy", "Soka", "RUKA", "UMMC", "Sync"]
-protected_terms = ["Daily", "Weekly", "Monthly", "Yearly", "JC", "Appt.", "【Appt.】", "【Appt】", "Untitled", "JOKER", "Folie À Deux", "Movie", "Yeux", "Police"]  # 这些词不需要校正
+protected_terms = ["Daily", "Weekly", "Monthly", "Yearly", "JC", "Appt.", "【Appt.】", "【Appt】", "Untitled", "JOKER", "Folie À Deux", "Movie", "Yeux", "Police"]
 
 # 判断是否为专业术语或保護詞
 def is_special_term(term):
+    # 如果 term 是保護詞則直接返回 True
     if term in protected_terms:
         return True
+    # 如果 term 與專業詞列表中的某詞匹配，則返回 True
     for correct_term in correct_terms:
         if correct_term.lower().startswith(term.lower()):
             return True
-    # 使用正則表達式匹配多單詞保護詞
+    # 正則表達式匹配多單詞保護詞
     for protected in protected_terms:
         if re.search(r'\b' + re.escape(protected) + r'\b', term, re.IGNORECASE):
             return True
     return False
 
-# 判断拼写是否接近正确
+# 判定是否拼寫接近正確
 def is_spelling_close_enough(term, correct_terms):
     best_match = process.extractOne(term, correct_terms)
-    return best_match[1] > 60  # 如果相似度高于90，就认为拼写接近
+    return best_match and best_match[1] > 60
+
+# 判定是否為嚴重錯誤（使用 Levenshtein 距離）
+def is_severe_typo(term, correct_terms, threshold=3):
+    best_match = process.extractOne(term, correct_terms)
+    if best_match:
+        distance = lev.distance(term.lower(), best_match[0].lower())
+        return distance > threshold  # 阈值越高，判定越寬鬆
+    return False
 
 def contains_chinese(s):
     """檢查字串是否包含中文字符"""
     return bool(re.search(r'[\u4e00-\u9fff]', s))
 
-
 def correct_spelling(term):
-    if term.lower().startswith("untitled"):
-        return "Untitled"
-
-    if re.match(r'^\s+$', term.strip()):
-        return "Untitled"
-
-    # 對包含保護詞的標題直接返回原標題
+    # 優先判定保護詞和特殊字符
     if is_special_term(term):
         return term
-
     if contains_chinese(term):
         return term
-    
+
+    # 判定拼寫接近正確，則不做糾正
     if is_spelling_close_enough(term, correct_terms):
         return term
     
-    blob = TextBlob(term)
-    corrected_term = str(blob.correct())
+    # 嚴重錯誤才執行糾正
+    if is_severe_typo(term, correct_terms):
+        blob = TextBlob(term)
+        corrected_term = str(blob.correct())
+        
+        # 確保糾正後的結果符合專業詞語
+        best_match = process.extractOne(corrected_term, correct_terms)
+        if best_match and best_match[1] > 90:  # 增加相似度閾值
+            return best_match[0]
+        return corrected_term
     
-    best_match = process.extractOne(corrected_term, correct_terms)
-    if best_match[1] > 90:  # 增加相似度閾值
-        return best_match[0]
-    
-    return corrected_term
+    return term
 
 
 def get_existing_titles_from_gcal(service, calendar_id, time_min):
