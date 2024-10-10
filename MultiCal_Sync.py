@@ -1745,10 +1745,14 @@ my_page = notion.databases.query(
 )
 resultList = my_page['results']
 
-if len(resultList) > 0:
-    for i, el in enumerate(resultList):
-        pageId = el['id']
-        task_name = el['properties'][Task_Notion_Name]['title'][0]['text']['content']
+for i, el in enumerate(resultList):
+    pageId = el['id']
+    # 檢查 `title` 屬性是否存在並且列表不為空
+    task_property = el['properties'].get(Task_Notion_Name, {}).get('title', [])
+    if task_property and 'text' in task_property[0]:
+        task_name = task_property[0]['text']['content']
+
+        # 更新 Notion 頁面
         my_page = notion.pages.update( 
             **{
                 "page_id": pageId, 
@@ -1759,7 +1763,7 @@ if len(resultList) > 0:
                         },
                     },
                     LastUpdatedTime_Notion_Name: {
-                        "date":{
+                        "date": {
                             'start': notion_time(),
                             'end': None,
                         }
@@ -1767,6 +1771,9 @@ if len(resultList) > 0:
                 },
             },
         )
+
+    else:
+        continue
 
 
 ## Filter events that have been updated since the GCal event has been made
