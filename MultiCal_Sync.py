@@ -1139,6 +1139,9 @@ notion_data = {}
 
 def generate_unique_title(existing_titles, base_title, new_titles, number, resultList, current_page):
     new_title = base_title  # Initialize new_title with a default value
+    # 將空標題處理為 Untitled
+    if not base_title.strip():
+        base_title = "Untitled"
     all_titles = existing_titles + new_titles
 
     # 确保 number 在有效范围内
@@ -3264,9 +3267,6 @@ for i, calId in enumerate(calIds):
             default_number = 1
             new_title = generate_unique_title(existing_titles, title, new_titles, default_number, resultList, current_page=event)
 
-            # 調試輸出
-            # print(f"Original title: {calName[i]}, Generated title: {new_title}")
-
             calName[i] = new_title  # 更新標題
             new_titles.append(new_title)
             update_google_calendar_event_title(service, gCal_calendarId[i], calId, new_title)
@@ -3282,7 +3282,7 @@ for i, calId in enumerate(calIds):
         if calStartDates[i] == calEndDates[i] - timedelta(days=1):
             end = calEndDates[i] - timedelta(days=1)
             if title in created_single_day_events:
-                print(f"Event '{title}' already created. Skipping.")
+                # print(f"Event '{title}' already created. Skipping.")
                 continue
             else:
                 my_page = create_page(calName, calStartDates, calEndDates, calDescriptions, calIds, gCal_calendarId, gCal_calendarName, i, end, found_recurring_event_id)
@@ -3353,7 +3353,7 @@ if unique_added_tasks:
     
     # Sort tasks by their IDs (or any other specified key)
     sorted_tasks = sorted(unique_added_tasks, key=lambda x: list(x.keys())[0])
-    
+        
     for task in sorted_tasks:
         stop_clear_and_print()
         animate_text_wave("re/adding", repeat=1)
@@ -3361,13 +3361,19 @@ if unique_added_tasks:
         
         id, title = list(task.items())[0]
 
-        # Skip if we've already printed this title
-        if title in printed_titles:
-            continue
-        printed_titles.add(title)
+        # 使用 `new_title` 如果它存在，否則使用 `title`
+        current_title = new_title if new_title else title
 
-        # Append count if more than 1 and adjust title spacing
-        title_with_count = f"{title} (x{task_counts[title]})" if task_counts[title] > 1 else title
+        # 跳過已經打印的標題
+        if current_title in printed_titles:
+            continue
+        printed_titles.add(current_title)
+
+        # 使用 `.get()` 方法，設置默認值以避免 KeyError
+        title_count = task_counts.get(current_title, 0)
+        title_with_count = f"{current_title} (x{title_count})" if title_count > 1 else current_title
+
+        # 計算空間並格式化輸出
         spaces_to_add = max_width - wcswidth(title_with_count)
         title_with_count += ' ' * spaces_to_add
 
@@ -3375,7 +3381,7 @@ if unique_added_tasks:
         print(f"{format_string(f'{printed_index}', bold=True, italic=True)}{formatted_dot} {format_string(title_with_count, italic=True)}  ")
         start_dynamic_counter_indicator()
 
-        # Increment printed index for the next title
+        # 增加 printed_index 以便處理下一個標題
         printed_index += 1
 
 # Adjust the total count output
