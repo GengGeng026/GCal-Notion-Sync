@@ -624,13 +624,25 @@ my_page = notion.databases.query(**query_params)
 filtered_pages = my_page['results']
 
 # Sort the pages by group and ID
-filtered_pages.sort(key=lambda page: (page.get('group', ''), page['properties']['Task Name']['title'][0]['text']['content']))
+# 安全地排序 filtered_pages，確保 'Task Name' 和標題內容存在
+filtered_pages.sort(key=lambda page: (
+    page.get('group', ''),
+    page['properties'].get('Task Name', {}).get('title', [{'text': {'content': ''}}])[0]['text']['content'] if page['properties'].get('Task Name', {}).get('title') else ''
+))
 
-# Print the Task_Notion_Name and ID of the pages where 'to Auto-Sync' is checked and 'Created' is within current month
+# 打印 'Task Name' 屬性存在且有內容的頁面
 for page in filtered_pages:
-    page['group'] = page['properties']['Task Name']['title'][0]['text']['content']
-    print(f"{formatted_task} {formatted_colon} {formatted_italic.format(page['properties']['Task Name']['title'][0]['text']['content'])}")
+    task_name_property = page['properties'].get('Task Name', {}).get('title', [])
+    if task_name_property and 'text' in task_name_property[0]:
+        task_name = task_name_property[0]['text']['content']
+    else:
+        task_name = "Untitled"  # 提供一個默認值
+        # print(f"Warning: Missing title for page {page['id']}, using default title '{task_name}'.")
+    
+    page['group'] = task_name
+    print(f"{formatted_task} {formatted_colon} {formatted_italic.format(task_name)}")
 
+# 檢查並打印頁面總數
 if len(filtered_pages) > 0:
     print(f"\nTotal Pages set {formatted_to_auto_sync} {formatted_within_current_month} {formatted_colon} {formatted_count.format(len(filtered_pages))}\n")
 
@@ -1488,7 +1500,19 @@ def process_pages_condition_A(page, counts, details, lock, processed_pages, retu
     prev_end, _ = get_date_from_page(local_data.page, 'Previous End')
 
     # Retrieve the page title
-    page_title = local_data.page['properties']['Task Name']['title'][0]['text']['content']
+    # 獲取頁面標題時進行檢查，避免 IndexError
+    try:
+        task_name_property = local_data.page['properties']['Task Name']['title']
+        if task_name_property and 'text' in task_name_property[0]:
+            page_title = task_name_property[0]['text']['content']
+        else:
+            page_title = "Untitled"  # 預設值
+            # print(f"Warning: Missing Task Name title for page {page_id}, using default title '{page_title}'.")
+    except KeyError:
+        page_title = "Untitled"  # 預設值
+        # print(f"Warning: Task Name property is missing for page {page_id}, using default title '{page_title}'.")
+
+    result['page_title'] = page_title  # 將頁面標題儲存到結果字典中
 
     # Retrieve the 'Need GCal Update' property
     try:
@@ -3531,6 +3555,9 @@ result['total_pages_modified'] = len(modified_pages)
 @skip_in_jenkins
 def clear_line():
     print("\r\033[K", end="")
+
+# Erase the "Printing" message and the dots
+print("\r" + " " * (len(f"{formatted_Printing} ") + total_dots + 10) + "\r", end="", flush=True)  # Clear the line and print spaces
 
 if not no_pages_operated_B:
     print(f"{formatted_no} Condition is Met.\n{formatted_no} Operation is Performed.\n{formatted_no} Page is Modified\n")
