@@ -1034,7 +1034,7 @@ No_pages_modified = True
 
 # 定义一些正确的拼写选项和保護詞
 correct_terms = ["Untitled", "Physiotherapy", "General Physiotherapy", "Soka", "RUKA", "UMMC", "Sync"]
-protected_terms = ["Daily", "Weekly", "Monthly", "Yearly", "JC", "Appt.", "【Appt.】", "【Appt】", "Untitled", "JOKER", "Folie À Deux", "Movie", "Yeux", "Police"]
+protected_terms = ["Daily", "Weekly", "Monthly", "Yearly", "JC", "Appt.", "【Appt.】", "【Appt】", "Untitled", "JOKER", "Folie À Deux", "Movie", "Yeux", "Police", "RE"]
 
 # 判断是否为专业术语或保護詞
 def is_special_term(term):
@@ -1073,6 +1073,14 @@ def correct_spelling(term):
     if is_special_term(term):
         return term
     if contains_chinese(term):
+        return term
+
+    # 檢查詞長度，若小於3個字母則直接返回
+    if len(term) < 3:
+        return term
+    
+    # 檢查是否全大寫，若是則直接返回
+    if term.isupper():
         return term
 
     # 判定拼寫接近正確，則不做糾正
