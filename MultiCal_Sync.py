@@ -551,7 +551,11 @@ def makeCalEvent(eventName, eventDescription, eventStartTime, sourceURL, eventEn
     # 生成 recurrence 相關規則
     recurrence_rules = []
 
-    if frequency:  # 如果有頻率設定
+    # 檢查頻率是否有效
+    if frequency:
+        if frequency.upper() not in ['DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY']:
+            raise ValueError(f"Invalid frequency: {frequency}")
+
         rule = f"RRULE:FREQ={frequency.upper()}"
         if interval:
             rule += f";INTERVAL={interval}"
@@ -568,15 +572,16 @@ def makeCalEvent(eventName, eventDescription, eventStartTime, sourceURL, eventEn
         if until:
             if isinstance(until, datetime):
                 # 將until的時間設置為該天的23:59:59
-                until = until.replace(hour=00, minute=00, second=00, microsecond=0).astimezone(eventStartTime.tzinfo)
-                # print(f"until 參數: {until}, 轉換為: {until.strftime('%Y%m%dT%H%M%SZ')}")
+                until = until.replace(hour=23, minute=59, second=59, microsecond=0).astimezone(eventStartTime.tzinfo)
                 rule += f";UNTIL={until.strftime('%Y%m%dT%H%M%SZ')}"
             else:
                 print(f"警告: 'until' 參數不是有效的 datetime 對象: {until}")
         if count:
+            if until:
+                raise ValueError("Cannot specify both COUNT and UNTIL in the recurrence rule.")
             rule += f";COUNT={count}"
+
         recurrence_rules.append(rule)
-        # print(f"rule: {rule}")
 
     # 處理全天事件
     if all_day or (eventStartTime.hour == 0 and eventStartTime.minute == 0 and eventEndTime == eventStartTime):
@@ -617,8 +622,11 @@ def makeCalEvent(eventName, eventDescription, eventStartTime, sourceURL, eventEn
             'recurrence': recurrence_rules if recurrence_rules else None  # 設置 recurrence
         }
 
-    x = service.events().insert(calendarId=calId, body=event).execute()
-    return x['id']
+    try:
+        x = service.events().insert(calendarId=calId, body=event).execute()
+        return x['id']
+    except Exception as e:
+        print(f"Failed to create calendar event: {e}")
 
 
 ######################################################################
@@ -756,81 +764,103 @@ def extract_recurrence_info(service, calendar_id, event, el):
 
 number = 0
 new_titles = []
+got_new_update = False
 
 def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, eventId, eventEndTime, currentCalId, CalId, thread, recurrence_info=None):
+
+    # 設置初始值
+    got_new_update = False
+    updated_event_id = None
+
+    # print(f"Updating {eventName} ...")
     x = None
     recurrence_rules = None
 
     # 獲取當前事件狀態
     current_event = service.events().get(calendarId=CalId, eventId=eventId).execute()
+    # print(f"current event recurrence: {current_event.get('recurrence')}")
 
     # Define recurrence rules only if recurrence_info is provided
     def generate_recurrence_rules(frequency, interval, byDay, byMonth, byMonthDay, byYearDay, byWeekNum, until, count):
         recurrence_rules = []
-        if frequency:
-            rule = f"RRULE:FREQ={frequency.upper()}"
-            if interval and interval != '1':  # 避免冗余默認值
-                rule += f";INTERVAL={interval}"
-            if byDay:
-                rule += f";BYDAY={byDay}"
-            if byMonth:
-                rule += f";BYMONTH={byMonth}"
-            if byMonthDay:
-                rule += f";BYMONTHDAY={byMonthDay}"
-            if byYearDay:
-                rule += f";BYYEARDAY={byYearDay}"
-            if byWeekNum:
-                rule += f";BYWEEKNO={byWeekNum}"
-            if until:
-                if isinstance(until, datetime):
-                    until = until.replace(hour=23, minute=59, second=59).astimezone(eventStartTime.tzinfo)
-                    rule += f";UNTIL={until.strftime('%Y%m%dT%H%M%SZ')}"
-                else:
-                    print(f"警告: 'until' 參數不是有效的 datetime 對象: {until}")
-            if count:
-                rule += f";COUNT={count}"
-            recurrence_rules.append(rule)
+        # print(f"generating recurrence rules ...")
+        rule = f"RRULE:FREQ={frequency.upper()}"
+        
+        if interval and interval != '1':
+            rule += f";INTERVAL={interval}"
+        if byMonth:
+            rule += f";BYMONTH={byMonth}"
+        if byMonthDay:
+            rule += f";BYMONTHDAY={byMonthDay}"
+        if until and count is None:
+            # 將字符串格式的日期轉換為日期物件
+            try:
+                until_date = datetime.fromisoformat(until.replace("Z", "+00:00"))
+                rule += f";UNTIL={until_date.strftime('%Y%m%dT%H%M%SZ')}"
+            except ValueError as e:
+                print(f"Invalid `until` date format: {e}")
+                return None
+        elif count:
+            rule += f";COUNT={count}"
+        if byDay:
+            rule += f";BYDAY={byDay}"  # `byDay` 應該已經是逗號分隔的格式，如 `WE,FR,SA`
+            
+        recurrence_rules.append(rule)
+        # print(f"recurrence_rules: {recurrence_rules}")
         return recurrence_rules
 
+    # Generate recurrence rules only if valid recurrence_info is provided
     recurrence_rules = None
-
-    # Generate recurrence rules
+    # print(f"recurrence_info: {recurrence_info}")
     if recurrence_info:
-        frequency = recurrence_info['Frequency_Notion_Name']
-        interval = recurrence_info['Recur_Interval_Notion_Name']
-        byDay = recurrence_info['Days_Notion_Name']
-        byMonth = recurrence_info['Months_Notion_Name']
-        byMonthDay = recurrence_info['Days_of_Month_Notion_Name']
-        byYearDay = recurrence_info['Days_of_Year_Notion_Name']
-        byWeekNum = recurrence_info['Week_Numbers_of_Year_Notion_Name']
-        until = recurrence_info['Recur_Until_Notion_Name']
-        count = recurrence_info['Recur_Count_Notion_Name']
-        
-        recurrence_rules = generate_recurrence_rules(frequency, interval, byDay, byMonth, byMonthDay, byYearDay, byWeekNum, until, count)
+        frequency = recurrence_info.get('Frequency_Notion_Name')
+        if frequency not in ['DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY']:
+            raise ValueError(f"Invalid frequency: {frequency}")
 
-    try:
-        if recurrence_rules:
+        interval = recurrence_info.get('Recur_Interval_Notion_Name', '1')  # 默認為1，避免None值
+        byDay = recurrence_info.get('Days_Notion_Name')
+        byMonth = recurrence_info.get('Months_Notion_Name')
+        byMonthDay = recurrence_info.get('Days_of_Month_Notion_Name')
+        byYearDay = recurrence_info.get('Days_of_Year_Notion_Name')
+        byWeekNum = recurrence_info.get('Week_Numbers_of_Year_Notion_Name')
+        until = recurrence_info.get('Recur_Until_Notion_Name')
+        count = recurrence_info.get('Recur_Count_Notion_Name')
+
+        recurrence_rules = generate_recurrence_rules(
+            frequency, interval, byDay, byMonth, byMonthDay, byYearDay, byWeekNum, until, count
+        )
             
-            if eventStartTime == eventEndTime:
-                
-                # 全天事件
-                event_body = {
-                    'summary': eventName if eventName else current_event.get('summary', 'Unnamed Event'),
-                    'description': eventDescription if eventDescription else current_event.get('description', ''),
-                    'recurrence': recurrence_rules,
-                    'start': {
-                        'date': eventStartTime.date().isoformat(),  # 使用 date 格式
-                    },
-                    'end': {
-                        'date': eventEndTime.date().isoformat(),  # 使用 date 格式
-                    }
+    # print(f"生成的重複規則: {recurrence_rules}")
+
+    def is_rule_identical(existing_rules, new_rules):
+        # 忽略順序進行集合比較
+        existing_rules_set = set([rule.strip() for rule in existing_rules if rule.startswith('RRULE')])
+        new_rules_set = set([rule.strip() for rule in new_rules if rule.startswith('RRULE')])
+        return existing_rules_set == new_rules_set
+
+
+    current_recurrence = current_event.get('recurrence', [])
+    if recurrence_rules is not None and not is_rule_identical(current_recurrence, recurrence_rules):
+        if eventStartTime == eventEndTime:
+            event_body = {
+                'summary': eventName if eventName else current_event.get('summary', 'Unnamed Event'),
+                'description': eventDescription if eventDescription else current_event.get('description', ''),
+                'recurrence': recurrence_rules,
+                'start': {
+                    'date': eventStartTime.date().isoformat(),
+                },
+                'end': {
+                    'date': eventEndTime.date().isoformat(),
                 }
-
-                # 更新事件
+            }
+            try:
                 x = service.events().update(calendarId=CalId, eventId=eventId, body=event_body).execute()
-                # print("Recurrence rule updated successfully!")
-                # print(x)
-            
+                got_new_update = True
+                return got_new_update
+            except HttpError as e:
+                print(e)
+                got_new_update = False
+        
             # 判斷事件類型
             if eventStartTime.hour == 0 and eventStartTime.minute == 0 and eventEndTime.hour == 0 and eventEndTime.minute == 0 and eventStartTime != eventEndTime:            
                 if AllDayEventOption == 1:                    
@@ -862,9 +892,10 @@ def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, event
                 }
                 event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, False, recurrence_rules=recurrence_rules)
 
-    except Exception as e:
-        print(f"Failed to update recurrence rule: {e}")
-
+        else:
+            got_new_update = False
+    else:
+        got_new_update = False    
 
     # Build event with recurrence rules if applicable
     event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, all_day=True, recurrence_rules=recurrence_rules)
@@ -884,7 +915,7 @@ def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, event
     else:
         # print("Recurrence information is empty or not valid.")
         try:
-            print("Recurrence information is empty or not valid.")
+            # print("Recurrence information is empty or not valid.")
             original_event = service.events().get(calendarId=currentCalId, eventId=eventId).execute()
             event['recurrence'] = original_event.get('recurrence')
         except googleapiclient.errors.HttpError as e:
@@ -903,7 +934,7 @@ def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, event
         if currentCalId == CalId:
             # print(f"Updating event {eventId} in calendar {CalId}.")
             x = service.events().update(calendarId=CalId, eventId=eventId, body=event).execute()
-            print(x)
+            # print(x)
         else:
             # 移動事件
             x = service.events().move(calendarId=currentCalId, eventId=eventId, destination=CalId).execute()
@@ -970,10 +1001,10 @@ def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, event
 
     # 最後檢查 x
     if x is not None and 'id' in x:
-        return x['id']
+        return x['id'], got_new_update
     else:
         print("Event ID was not found in the response.")
-        return None  # 或者根據需要返回一個其他值
+        return got_new_update  # 或者根據需要返回一個其他值
 
 
 def create_event_body(eventName, eventDescription, startTime, endTime, sourceURL, isAllDay, recurrence_rules):
@@ -2118,7 +2149,9 @@ if len(resultList) > 0:
             Recur_Untils.append("")
 
         try:
-            Recur_Days.append(el['properties'][Days_Notion_Name]['multi_select'][0]['name'])
+            # 將所有選擇的天數提取到一個列表中，並使用逗號連接
+            days = [day['name'] for day in el['properties'][Days_Notion_Name]['multi_select']]
+            Recur_Days.append(",".join(days))
         except:
             Recur_Days.append("")
             
@@ -2163,13 +2196,8 @@ if len(resultList) > 0:
         pageId = el['id']
 
         try:
-            updated_events_counter += 1
-            updated_tasks.append((GCalEventId, task_name))  # 將 GCalEventId 和 task_name 作為元組添加到列表中
-            created_single_day_events.add(updatingCalEventIds[i])  # 标记为已创建
-            No_pages_modified = False
-            no_new_updated = False
             # 先尝试使用所有参数调用 upDateCalEvent
-            calEventId = upDateCalEvent(
+            got_new_update = upDateCalEvent(
                 task_name,
                 makeEventDescription(Frequencies[i], ExtraInfo[i]),
                 parse_date(start_Dates[i]),
@@ -2192,6 +2220,12 @@ if len(resultList) > 0:
                     "Week_Numbers_of_Year_Notion_Name": byWeekNumbers[i],
                 },
             )
+            if got_new_update is True:
+                updated_events_counter += 1
+                updated_tasks.append((GCalEventId, task_name))  # 將 GCalEventId 和 task_name 作為元組添加到列表中
+                created_single_day_events.add(updatingCalEventIds[i])  # 标记为已创建
+                No_pages_modified = False
+                no_new_updated = False
         except Exception as e:
             # 处理异常情况
             logging.error(f"Error updating calendar event: {e}")
