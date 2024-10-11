@@ -758,48 +758,133 @@ number = 0
 new_titles = []
 
 def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, eventId, eventEndTime, currentCalId, CalId, thread, recurrence_info=None):
-
     x = None
+    recurrence_rules = None
 
-    # Step 1: 檢查 autorename_notion_name
+    # 獲取當前事件狀態
+    current_event = service.events().get(calendarId=CalId, eventId=eventId).execute()
+
+    # Define recurrence rules only if recurrence_info is provided
+    def generate_recurrence_rules(frequency, interval, byDay, byMonth, byMonthDay, byYearDay, byWeekNum, until, count):
+        recurrence_rules = []
+        if frequency:
+            rule = f"RRULE:FREQ={frequency.upper()}"
+            if interval and interval != '1':  # 避免冗余默認值
+                rule += f";INTERVAL={interval}"
+            if byDay:
+                rule += f";BYDAY={byDay}"
+            if byMonth:
+                rule += f";BYMONTH={byMonth}"
+            if byMonthDay:
+                rule += f";BYMONTHDAY={byMonthDay}"
+            if byYearDay:
+                rule += f";BYYEARDAY={byYearDay}"
+            if byWeekNum:
+                rule += f";BYWEEKNO={byWeekNum}"
+            if until:
+                if isinstance(until, datetime):
+                    until = until.replace(hour=23, minute=59, second=59).astimezone(eventStartTime.tzinfo)
+                    rule += f";UNTIL={until.strftime('%Y%m%dT%H%M%SZ')}"
+                else:
+                    print(f"警告: 'until' 參數不是有效的 datetime 對象: {until}")
+            if count:
+                rule += f";COUNT={count}"
+            recurrence_rules.append(rule)
+        return recurrence_rules
+
+    recurrence_rules = None
+
+    # Generate recurrence rules
+    if recurrence_info:
+        frequency = recurrence_info['Frequency_Notion_Name']
+        interval = recurrence_info['Recur_Interval_Notion_Name']
+        byDay = recurrence_info['Days_Notion_Name']
+        byMonth = recurrence_info['Months_Notion_Name']
+        byMonthDay = recurrence_info['Days_of_Month_Notion_Name']
+        byYearDay = recurrence_info['Days_of_Year_Notion_Name']
+        byWeekNum = recurrence_info['Week_Numbers_of_Year_Notion_Name']
+        until = recurrence_info['Recur_Until_Notion_Name']
+        count = recurrence_info['Recur_Count_Notion_Name']
+        
+        recurrence_rules = generate_recurrence_rules(frequency, interval, byDay, byMonth, byMonthDay, byYearDay, byWeekNum, until, count)
+
+    try:
+        if recurrence_rules:
+            
+            if eventStartTime == eventEndTime:
+                
+                # 全天事件
+                event_body = {
+                    'summary': eventName if eventName else current_event.get('summary', 'Unnamed Event'),
+                    'description': eventDescription if eventDescription else current_event.get('description', ''),
+                    'recurrence': recurrence_rules,
+                    'start': {
+                        'date': eventStartTime.date().isoformat(),  # 使用 date 格式
+                    },
+                    'end': {
+                        'date': eventEndTime.date().isoformat(),  # 使用 date 格式
+                    }
+                }
+
+                # 更新事件
+                x = service.events().update(calendarId=CalId, eventId=eventId, body=event_body).execute()
+                # print("Recurrence rule updated successfully!")
+                # print(x)
+            
+            # 判斷事件類型
+            if eventStartTime.hour == 0 and eventStartTime.minute == 0 and eventEndTime.hour == 0 and eventEndTime.minute == 0 and eventStartTime != eventEndTime:            
+                if AllDayEventOption == 1:                    
+                    eventStartTime = datetime.combine(eventStartTime, datetime.min.time()) + timedelta(hours=DEFAULT_EVENT_START) 
+                    eventEndTime = eventStartTime + timedelta(minutes=DEFAULT_EVENT_LENGTH)
+                    event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, False, recurrence_rules=recurrence_rules)
+                else:
+                    eventEndTime += timedelta(days=1)
+                    event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, True, recurrence_rules=recurrence_rules)
+
+            elif eventStartTime.hour == 0 and eventStartTime.minute == 0 and eventEndTime.hour == 0 and eventEndTime.minute == 0 and eventStartTime != eventEndTime:  # 多天事件
+                eventEndTime += timedelta(days=1)  
+                event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, True, recurrence_rules=recurrence_rules)
+
+            else:  # 处理具体的开始时间和结束时间
+                # 具體時間事件
+                event_body = {
+                    'summary': eventName if eventName else current_event.get('summary', 'Unnamed Event'),
+                    'description': eventDescription if eventDescription else current_event.get('description', ''),
+                    'recurrence': recurrence_rules,
+                    'start': {
+                        'dateTime': eventStartTime.isoformat(),  # 使用 dateTime 格式
+                        'timeZone': timezone,
+                    },
+                    'end': {
+                        'dateTime': eventEndTime.isoformat(),  # 使用 dateTime 格式
+                        'timeZone': timezone,
+                    }
+                }
+                event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, False, recurrence_rules=recurrence_rules)
+
+    except Exception as e:
+        print(f"Failed to update recurrence rule: {e}")
+
+
+    # Build event with recurrence rules if applicable
+    event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, all_day=True, recurrence_rules=recurrence_rules)
+
+    # Check if the event should be renamed, handle update or move
     if AutoRename_Notion_Name:
-        eventName = generate_unique_title(
-            CurrentCalList,  
-            task_name,       
-            new_titles,      
-            number,          
-            resultList,      
-            current_page=el,
-        )
+        eventName = generate_unique_title(CurrentCalList, task_name, new_titles, number, resultList, current_page=el)
 
     stop_clear_and_print()
     animate_text_wave("updating", repeat=1)
     start_dynamic_counter_indicator()
 
-    # 事件時間處理
-    if eventStartTime.hour == 0 and eventStartTime.minute == 0 and eventEndTime == eventStartTime:  # 单日事件
-        if AllDayEventOption == 1:
-            eventStartTime = datetime.combine(eventStartTime, datetime.min.time()) + timedelta(hours=DEFAULT_EVENT_START) 
-            eventEndTime = eventStartTime + timedelta(minutes=DEFAULT_EVENT_LENGTH)
-            event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, False)
-        else:
-            eventEndTime += timedelta(days=1)
-            event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, True)
-
-    elif eventStartTime.hour == 0 and eventStartTime.minute == 0 and eventEndTime.hour == 0 and eventEndTime.minute == 0 and eventStartTime != eventEndTime:  # 多天事件
-        eventEndTime += timedelta(days=1)  
-        event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, True)
-
-    else:  # 处理具体的开始时间和结束时间
-        event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, False)
-
     # 提取重複信息
     recurrence_info = extract_recurrence_info(service, CalId, event, el)
-    if recurrence_info and isinstance(recurrence_info, list) and len(recurrence_info) > 0 and validate_rrule(recurrence_info[0]):
+    if recurrence_info and isinstance(recurrence_info, list) and len(recurrence_info) > 0:
         event['recurrence'] = recurrence_info
     else:
         # print("Recurrence information is empty or not valid.")
         try:
+            print("Recurrence information is empty or not valid.")
             original_event = service.events().get(calendarId=currentCalId, eventId=eventId).execute()
             event['recurrence'] = original_event.get('recurrence')
         except googleapiclient.errors.HttpError as e:
@@ -808,7 +893,7 @@ def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, event
     # 檢查已存在的事件
     existing_events = service.events().list(calendarId=CalId, q=eventName).execute().get('items', [])
     existing_event_ids = [event['id'] for event in existing_events]
-
+    
     # 檢查當前事件是否已存在於目標日曆
     if eventId in existing_event_ids:
         # print(f"Event ID {eventId} already exists in calendar {CalId}. Skipping update.")
@@ -818,6 +903,7 @@ def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, event
         if currentCalId == CalId:
             # print(f"Updating event {eventId} in calendar {CalId}.")
             x = service.events().update(calendarId=CalId, eventId=eventId, body=event).execute()
+            print(x)
         else:
             # 移動事件
             x = service.events().move(calendarId=currentCalId, eventId=eventId, destination=CalId).execute()
@@ -845,7 +931,7 @@ def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, event
                     'description': event['description'],
                     'start': event['start'],
                     'end': event['end'],
-                    'recurrence': recurrence_info if recurrence_info else [],
+                    'recurrence': recurrence_rules,
                     'source': event.get('source', {}),
                 }
                 new_event_response = service.events().insert(calendarId=CalId, body=new_event).execute()
@@ -890,7 +976,7 @@ def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, event
         return None  # 或者根據需要返回一個其他值
 
 
-def create_event_body(eventName, eventDescription, startTime, endTime, sourceURL, isAllDay):
+def create_event_body(eventName, eventDescription, startTime, endTime, sourceURL, isAllDay, recurrence_rules):
     if isAllDay:
         return {
             'summary': eventName,
@@ -906,7 +992,8 @@ def create_event_body(eventName, eventDescription, startTime, endTime, sourceURL
             'source': {
                 'title': 'Notion Link',
                 'url': sourceURL,
-            }
+            },
+            'recurrence': recurrence_rules
         }
     else:
         return {
@@ -923,7 +1010,8 @@ def create_event_body(eventName, eventDescription, startTime, endTime, sourceURL
             'source': {
                 'title': 'Notion Link',
                 'url': sourceURL,
-            }
+            },
+            'recurrence': recurrence_rules
         }
 
 def handle_http_error(e, currentCalId, eventId, event, recurrence_info):
@@ -1333,319 +1421,381 @@ untitled_counter = 1
 # 初始化计数器
 untitled_counter = 1
 
-def process_date(date_str):
+def make_aware(dt, timezone):
+    """將 naive datetime 轉換為指定時區的 aware datetime"""
+    if dt.tzinfo is None:
+        return timezone.localize(dt)  # 將 naive datetime 加上時區
+    return dt.astimezone(timezone)  # 將 aware datetime 轉換為指定時區
+
+def process_date(date_str, local_tz=None):
     if not date_str:
         return None
     if isinstance(date_str, datetime):
-        return date_str  # 如果是 datetime 對象，直接返回
+        return make_aware(date_str, local_tz) if local_tz else date_str  # 如果是 datetime 對象，轉換為 aware
     try:
-        return parser.parse(date_str)
+        parsed_date = parser.parse(date_str)
+        return make_aware(parsed_date, local_tz) if local_tz else parsed_date
     except Exception as e:
         print(f"無法解析日期 {date_str}: {e}")
         return None
 
-def auto_set_recur_days(start_date, until_date):
-    """根據開始日期和結束日期範圍返回所有對應的星期幾"""
-    print(f"start_date: {start_date}, until_date: {until_date}")
-    if start_date and until_date:
-        days = []
-        current_date = start_date
-        while current_date <= until_date:
-            day_of_week = current_date.strftime('%A').upper()
-            days.append(day_of_week[:2])  # 例如 'SA', 'SU'
-            current_date += timedelta(days=1)
-        return days
-    return []
+def auto_set_recur_days(start_date, until_date=None):
+    """根据开始日期和结束日期范围返回所有对应的星期几"""
+    # print(f"start_date: {start_date}, until_date: {until_date}")
+
+    # 确保 start_date 是 aware datetime
+    if start_date.tzinfo is None:
+        raise ValueError("start_date 必须是 aware datetime")
+
+    # 如果 until_date 为 None，返回 start_date 的星期
+    if until_date is None:
+        day_of_week = start_date.strftime('%A').upper()  # 获取对应的星期几
+        return [day_of_week[:2]]  # 例如 'MO'，只返回 start_date 的星期
+
+    if until_date.tzinfo is None:
+        raise ValueError("until_date 必须是 aware datetime")
+
+    days = []
+    current_date = start_date
+    while current_date <= until_date:
+        day_of_week = current_date.strftime('%A').upper()
+        days.append(day_of_week[:2])  # 例如 'SA', 'SU'
+        current_date += timedelta(days=1)
+    return days
+
+
+# 如果 multi_select 沒有值，則使用自動生成的 days_list
+local_tz = pytz.timezone(timezone)
+
+Recur_Days = []
 
 if len(resultList) > 0:
     for i, el in enumerate(resultList):
-        try:
-            # 檢查標題列表是否為空
-            if el['properties'][Task_Notion_Name].get('title') and el['properties'][Task_Notion_Name]['title'][0]['text']['content']:
-                TaskNames.append(el['properties'][Task_Notion_Name]['title'][0]['text']['content'])
-            else:
-                # 生成唯一的標題
-                while True:
-                    new_title = f"Untitled {untitled_counter}"
-                    if new_title not in TaskNames:
-                        TaskNames.append(new_title)
-                        untitled_counter += 1
-                        break
+        # 檢查標題列表是否為空
+        if el['properties'][Task_Notion_Name].get('title') and el['properties'][Task_Notion_Name]['title'][0]['text']['content']:
+            TaskNames.append(el['properties'][Task_Notion_Name]['title'][0]['text']['content'])
+        else:
+            # 生成唯一的標題
+            while True:
+                new_title = f"Untitled {untitled_counter}"
+                if new_title not in TaskNames:
+                    TaskNames.append(new_title)
                     untitled_counter += 1
+                    break
+                untitled_counter += 1
 
-            # 解析開始和結束日期
-            start_date_str = el['properties'][Date_Notion_Name]['date']['start']
-            end_date_str = el['properties'][Date_Notion_Name]['date']['end'] if el['properties'][Date_Notion_Name]['date']['end'] else start_date_str
+        # 解析開始和結束日期
+        start_date_str = el['properties'][Date_Notion_Name]['date']['start']
+        end_date_str = el['properties'][Date_Notion_Name]['date']['end'] if el['properties'][Date_Notion_Name]['date']['end'] else start_date_str
 
-            start_date_dt = process_date(start_date_str)
-            end_date_dt = process_date(end_date_str)
+        local_tz = pytz.timezone(timezone)
 
-            # 檢查日期對象的類型
-            if not isinstance(start_date_dt, datetime):
-                # print(f"警告: 開始日期 '{start_date_str}' 轉換為 datetime 失敗")
-                continue
+        # 在這裡使用 process_date 函數
+        start_date_dt = process_date(start_date_str, local_tz)
+        end_date_dt = process_date(end_date_str, local_tz)
 
-            if not isinstance(end_date_dt, datetime):
-                # print(f"警告: 結束日期 '{end_date_str}' 轉換為 datetime 失敗")
-                end_date_dt = start_date_dt + timedelta(hours=1)  # 設置默認結束日期
 
-            is_all_day_event = len(start_date_str) <= 10 and len(end_date_str) <= 10
-            if is_all_day_event:
-                # 確保使用 datetime 對象
-                if isinstance(start_date_dt, datetime) and isinstance(end_date_dt, datetime):
-                    notion_start_date_str = start_date_dt.strftime("%Y-%m-%d")
-                    notion_end_date_str = end_date_dt.strftime("%Y-%m-%d")
-                else:
-                    print(f"錯誤: 開始或結束日期不是有效的 datetime 對象。")
-                    continue
+        # 檢查日期對象的類型
+        if not isinstance(start_date_dt, datetime):
+            # print(f"警告: 開始日期 '{start_date_str}' 轉換為 datetime 失敗")
+            continue
 
-                # 對於 Google Calendar，結束日期需要加一天
-                gcal_end_date_dt = end_date_dt + timedelta(days=1)
-                gcal_end_date_str = gcal_end_date_dt.strftime("%Y-%m-%d")
+        if not isinstance(end_date_dt, datetime):
+            # print(f"警告: 結束日期 '{end_date_str}' 轉換為 datetime 失敗")
+            end_date_dt = start_date_dt + timedelta(hours=1)  # 設置默認結束日期
 
-                if notion_start_date_str == notion_end_date_str:
-                    my_page = notion.pages.update(
-                        **{
-                            "page_id": el['id'], 
-                            "properties": {
-                                Date_Notion_Name: {
-                                    "date":{
-                                        'start': notion_start_date_str,
-                                        'end': None,
-                                    }
-                                },
-                            },
-                        },
-                    )
-                else:
-                    my_page = notion.pages.update(
-                        **{
-                            "page_id": el['id'], 
-                            "properties": {
-                                Date_Notion_Name: {
-                                    "date":{
-                                        'start': notion_start_date_str,
-                                        'end': notion_end_date_str,
-                                    }
-                                },
-                            },
-                        },
-                    )
+        is_all_day_event = len(start_date_str) <= 10 and len(end_date_str) <= 10
+        if is_all_day_event:
+            # 確保使用 datetime 對象
+            if isinstance(start_date_dt, datetime) and isinstance(end_date_dt, datetime):
+                notion_start_date_str = start_date_dt.strftime("%Y-%m-%d")
+                notion_end_date_str = end_date_dt.strftime("%Y-%m-%d")
             else:
-                # 非全天事件保持不變
-                notion_start_date_str = start_date_str
-                notion_end_date_str = end_date_str
-                gcal_end_date_str = end_date_str
-            
-            # 更新start_Dates和end_Times列表
-            start_Dates.append(notion_start_date_str)
-            end_Times.append(notion_end_date_str)
-
-            # 如果 start_Dates 有日期和時間但沒有對應的 end_Times，則跳過當前迭代
-            if 'T' in start_Dates[i] and start_Dates[i] == end_Times[i]:
+                print(f"錯誤: 開始或結束日期不是有效的 datetime 對象。")
                 continue
-            
-            # 處理其他屬性...
-            try:
-                First_Days.append(el['properties'][First_Day_of_Week_Notion_Name]['select']['name'])
-            except:
-                First_Days.append("")
-            
-            try:
-                Frequencies.append(el['properties'][Frequency_Notion_Name]['select']['name'])
-            except:
-                Frequencies.append("")
-            
-            try:
-                Recur_Intervals.append(el['properties'][Recur_Interval_Notion_Name]['number'])
-            except:
-                Recur_Intervals.append("")
 
-            try:
-                recur_until = el['properties'][Recur_Until_Notion_Name]['date']['start']
-                recur_until_dt = process_date(recur_until)  # 解析日期字符串
+            # 對於 Google Calendar，結束日期需要加一天
+            gcal_end_date_dt = end_date_dt + timedelta(days=1)
+            gcal_end_date_str = gcal_end_date_dt.strftime("%Y-%m-%d")
 
-                # 檢查是否為單日事件，且時間為開始時間
-                if recur_until_dt and recur_until_dt.time() == datetime.min.time():  
-                    recur_until_dt = recur_until_dt.replace(hour=23, minute=59, second=59)  # 調整為當天的最後一刻
-
-                    # 轉換為當地時區的時間
-                    local_recur_until_dt = recur_until_dt.astimezone(local_tz)
-
-                    pageId = el['id']
-                    notion.pages.update(
-                        **{
-                            "page_id": pageId, 
-                            "properties": {
-                                Recur_Until_Notion_Name: {
-                                    "date":{
-                                        'start': local_recur_until_dt.strftime("%Y-%m-%d %H:%M:%S%z"),
-                                        'end': None,
-                                    }
+            if notion_start_date_str == notion_end_date_str:
+                my_page = notion.pages.update(
+                    **{
+                        "page_id": el['id'], 
+                        "properties": {
+                            Date_Notion_Name: {
+                                "date":{
+                                    'start': notion_start_date_str,
+                                    'end': None,
                                 }
                             },
                         },
-                    )
-
-                    Recur_Untils.append(local_recur_until_dt.strftime("%Y-%m-%d %H:%M:%S"))  # 存儲調整後的日期
-                else:
-                    Recur_Untils.append(recur_until_dt)
-            except:
-                Recur_Untils.append("")
-                        
-            Recur_Days = []
-                        
-            # 檢查 Days_Notion_Name 的 multi_select 是否有值，並確保鍵存在
-            if 'multi_select' in el['properties'][Days_Notion_Name] and el['properties'][Days_Notion_Name]['multi_select']:
-                # 如果 multi_select 有值，則提取選項並更新 Recur_Days
-                selected_days = el['properties'][Days_Notion_Name]['multi_select']
-                Recur_Days.append([day['name'] for day in selected_days])
-                # print(f"Recur_Days after appending selected days: {Recur_Days}")
+                    },
+                )
             else:
-                # 如果 multi_select 沒有值，則使用自動生成的 days_list
-                local_tz = pytz.timezone(timezone)
-                if start_date_dt.tzinfo is None:
-                    start_date_dt = local_tz.localize(start_date_dt)
-                
-                # print(f"Before auto_set_recur_days: start_date_dt = {start_date_dt}, recur_until_dt = {recur_until_dt}")
-                
-                # 調用 auto_set_recur_days 並檢查返回值
-                days_list = auto_set_recur_days(start_date_dt, recur_until_dt)
-                # print(f"Returned days_list from auto_set_recur_days: {days_list}")
-                
-                # 更新 Notion 中的 Days_Notion_Name 屬性
-                notion_days = [{"name": day} for day in days_list]
-                page_id = el['id']
+                my_page = notion.pages.update(
+                    **{
+                        "page_id": el['id'], 
+                        "properties": {
+                            Date_Notion_Name: {
+                                "date":{
+                                    'start': notion_start_date_str,
+                                    'end': notion_end_date_str,
+                                }
+                            },
+                        },
+                    },
+                )
+        else:
+            # 非全天事件保持不變
+            notion_start_date_str = start_date_str
+            notion_end_date_str = end_date_str
+            gcal_end_date_str = end_date_str
+        
+        # 更新start_Dates和end_Times列表
+        start_Dates.append(notion_start_date_str)
+        end_Times.append(notion_end_date_str)
+
+        # 如果 start_Dates 有日期和時間但沒有對應的 end_Times，則跳過當前迭代
+        if 'T' in start_Dates[i] and start_Dates[i] == end_Times[i]:
+            continue
+        
+        # 處理其他屬性...
+        try:
+            First_Days.append(el['properties'][First_Day_of_Week_Notion_Name]['select']['name'])
+        except:
+            First_Days.append("")
+        
+        try:
+            Frequencies.append(el['properties'][Frequency_Notion_Name]['select']['name'])
+        except:
+            Frequencies.append("")
+        
+        try:
+            Recur_Intervals.append(el['properties'][Recur_Interval_Notion_Name]['number'])
+        except:
+            Recur_Intervals.append("")
+
+        try:
+            Recur_Counts.append(el['properties'][Recur_Count_Notion_Name]['number'])
+        except:
+            Recur_Counts.append("")
+            
+        if 'date' in el['properties'][Recur_Until_Notion_Name] and el['properties'][Recur_Until_Notion_Name]['date']:
+            recur_until = el['properties'][Recur_Until_Notion_Name]['date']['start']
+            recur_until_dt = process_date(recur_until, local_tz)  # 添加 timezone
+
+            # 檢查是否為單日事件，且時間為開始時間
+            if recur_until_dt and recur_until_dt.time() == datetime.min.time():  
+                recur_until_dt = recur_until_dt.replace(hour=23, minute=59, second=59)  # 調整為當天的最後一刻
+
+                # 轉換為當地時區的時間
+                local_recur_until_dt = recur_until_dt.astimezone(local_tz)
+
+                pageId = el['id']
                 notion.pages.update(
                     **{
-                        "page_id": page_id,
+                        "page_id": pageId, 
                         "properties": {
-                            Days_Notion_Name: {
-                                "multi_select": notion_days
+                            Recur_Until_Notion_Name: {
+                                "date":{
+                                    'start': local_recur_until_dt.strftime("%Y-%m-%d %H:%M:%S%z"),
+                                    'end': None,
+                                }
                             }
                         },
                     },
                 )
-                
-                # 將生成的 days_list 加入 Recur_Days
-                if days_list:
-                    Recur_Days.append(days_list)
-                else:
-                    Recur_Days.append([])  # 確保結構一致，即使 days_list 為空
-                # print(f"Updated Recur_Days: {Recur_Days}")
-            
-            try:
-                Recur_Months.append(el['properties'][Months_Notion_Name]['multi_select'][0]['name'])
-            except:
-                Recur_Months.append("")
-            
-            try:
-                byMonthDays.append(el['properties'][Days_of_Month_Notion_Name]['number'])
-            except:
-                byMonthDays.append("")
-            
-            try:
-                byYearDays.append(el['properties'][Days_of_Year_Notion_Name]['number'])
-            except:
-                byYearDays.append("")
-            
-            try:
-                byWeekNumbers.append(el['properties'][Week_Numbers_of_Year_Notion_Name]['number'])
-            except:
-                byWeekNumbers.append("")
 
-            try:
-                Recur_Counts.append(el['properties'][Recur_Count_Notion_Name]['number'])
-            except:
-                Recur_Counts.append("")
-            
-            try: 
-                ExtraInfo.append(el['properties'][ExtraInfo_Notion_Name]['rich_text'][0]['text']['content'])
-            except:
-                ExtraInfo.append("")
+                Recur_Untils.append(local_recur_until_dt.strftime("%Y-%m-%d %H:%M:%S"))  # 存儲調整後的日期
+            else:
+                Recur_Untils.append(recur_until_dt)
+        else:
 
-            URL_list.append(makeTaskURL(el['id'], urlRoot))
-            
-            try:
-                CalendarList.append(calendarDictionary[el['properties'][Calendar_Notion_Name]['select']['name']])
-            except:
-                CalendarList.append(calendarDictionary[DEFAULT_CALENDAR_NAME])
+            # 在调用之前检查 recur_until_dt 是否定义
+            if 'recur_until_dt' not in locals():
+                recur_until_dt = None  # 或者设置为其他默认值，例如 datetime.now()
 
-            pageId = el['id']
+
+            # 調用 auto_set_recur_days 並檢查返回值
+            days_list = auto_set_recur_days(start_date_dt, recur_until_dt)
+            # print(f"Returned days_list from auto_set_recur_days: {days_list}")
+
+            # 更新 Notion 中的 Days_Notion_Name 属性
+            notion_days = [{"name": day} for day in days_list]
+            page_id = el['id']
             notion.pages.update(
                 **{
-                    "page_id": pageId, 
+                    "page_id": page_id,
                     "properties": {
-                        On_GCal_Notion_Name: {
-                            "checkbox": True 
-                        },
-                        LastUpdatedTime_Notion_Name: {
-                            "date":{
-                                'start': notion_time(),
-                                'end': None,
-                            }
-                        },
+                        Days_Notion_Name: {
+                            "multi_select": notion_days
+                        }
                     },
                 },
             )
 
-            # 創建日曆事件
-            calendar_id = CalendarList[i]
-            unique_title = generate_unique_title(existing_titles[calendar_id], TaskNames[i], [], 1, resultList, current_page=el)
-            TaskNames[i] = unique_title
-            existing_titles[calendar_id].append(unique_title)
-
-            # 用於確保 Recur_Until 時間部分正確的方法
-            def adjust_until_date(until_date):
-                if not until_date:
-                    return None
-                if until_date.time() == datetime.min.time():  # 如果時間是 00:00，則設置為 23:59:59
-                    return until_date.replace(hour=23, minute=59, second=59)
-                return until_date  # 若已包含時間，則直接返回
-
-            if i < len(Recur_Untils) and Recur_Untils[i]:
-                # 在呼叫 makeCalEvent 前進行調整
-               until_adjusted = adjust_until_date(process_date(Recur_Untils[i]))
+            # 将生成的 days_list 加入 Recur_Days
+            if days_list:
+                Recur_Days.append(days_list)
             else:
-                until_adjusted = None
-
-            byDay = ",".join(Recur_Days[i])  # 生成用逗號分隔的字符串
+                Recur_Days.append([])  # 确保结构一致，即使 days_list 为空
+                
+            Recur_Untils.append("")
+                    
+        
+        
+        # 檢查 Days_Notion_Name 的 multi_select 是否有值，並確保鍵存在
+        if 'multi_select' in el['properties'][Days_Notion_Name] and el['properties'][Days_Notion_Name]['multi_select']:
+            # 如果 multi_select 有值，則提取選項並更新 Recur_Days
+            selected_days = el['properties'][Days_Notion_Name]['multi_select']
+            Recur_Days.append([day['name'] for day in selected_days])
+            # print(f"Recur_Days after appending selected days: {Recur_Days}")
+        else:
+            start_date_dt = make_aware(start_date_dt, local_tz)
+            if not end_date_dt:
+                end_date_dt = start_date_dt + timedelta(hours=1)  # 預設結束日期為開始日期的下一小時
+            else:
+                end_date_dt = make_aware(end_date_dt, local_tz)  # 確保結束日期是 aware
             
-            if i < len(TaskNames) and i < len(Recur_Days):
-                calEventId = makeCalEvent(TaskNames[i], 
-                                        makeEventDescription(Frequencies[i], ExtraInfo[i]), 
-                                        start_date_dt, 
-                                        URL_list[i], 
-                                        gcal_end_date_dt if is_all_day_event else end_date_dt, 
-                                        CalendarList[i], 
-                                        all_day=is_all_day_event, 
-                                        frequency=Frequencies[i], 
-                                        interval=Recur_Intervals[i], 
-                                        byDay=byDay,  # 使用格式化後的 Recur_Days
-                                        byMonth=Recur_Months[i], 
-                                        byMonthDay=byMonthDays[i], 
-                                        byYearDay=byYearDays[i], 
-                                        byWeekNum=byWeekNumbers[i], 
-                                        until=until_adjusted,  # 確保這裡是 datetime 對象
-                                        count=Recur_Counts[i])
+            # print(f"Before auto_set_recur_days: start_date_dt = {start_date_dt}, recur_until_dt = {recur_until_dt}")
 
-            if calEventId:
-                calEventIdList.append(calEventId)
-                # 更新 Notion 頁面
-                notion.pages.update(
-                    **{
-                        "page_id": pageId,
-                        "properties": {
-                            Task_Notion_Name: {"title": [{"text": {"content": unique_title}}]},
-                            GCalEventId_Notion_Name: {"rich_text": [{"text": {"content": calEventId}}]},
-                            Current_Calendar_Id_Notion_Name: {"rich_text": [{"text": {"content": CalendarList[i]}}]}
-                        },
-                    }
-                )
+            # 在调用之前检查 recur_until_dt 是否定义
+            if 'recur_until_dt' not in locals():
+                recur_until_dt = None  # 或者设置为其他默认值，例如 datetime.now()
 
-        except Exception as e:
-            print(f"處理事件 '{TaskNames[i] if i < len(TaskNames) else 'Unknown'}' ({i}/{len(resultList)}) 時發生錯誤: {e}")
-            continue
+            # 調用 auto_set_recur_days 並檢查返回值
+            days_list = auto_set_recur_days(start_date_dt, recur_until_dt)
+            # print(f"Returned days_list from auto_set_recur_days: {days_list}")
+            
+            # 更新 Notion 中的 Days_Notion_Name 屬性
+            notion_days = [{"name": day} for day in days_list]
+            page_id = el['id']
+            notion.pages.update(
+                **{
+                    "page_id": page_id,
+                    "properties": {
+                        Days_Notion_Name: {
+                            "multi_select": notion_days
+                        }
+                    },
+                },
+            )
+            
+            # 將生成的 days_list 加入 Recur_Days
+            if days_list:
+                Recur_Days.append(days_list)
+            else:
+                Recur_Days.append([])  # 確保結構一致，即使 days_list 為空
+            # print(f"Updated Recur_Days: {Recur_Days}")
+        
+        try:
+            Recur_Months.append(el['properties'][Months_Notion_Name]['multi_select'][0]['name'])
+        except:
+            Recur_Months.append("")
+        
+        try:
+            byMonthDays.append(el['properties'][Days_of_Month_Notion_Name]['number'])
+        except:
+            byMonthDays.append("")
+        
+        try:
+            byYearDays.append(el['properties'][Days_of_Year_Notion_Name]['number'])
+        except:
+            byYearDays.append("")
+        
+        try:
+            byWeekNumbers.append(el['properties'][Week_Numbers_of_Year_Notion_Name]['number'])
+        except:
+            byWeekNumbers.append("")
+        
+        try: 
+            ExtraInfo.append(el['properties'][ExtraInfo_Notion_Name]['rich_text'][0]['text']['content'])
+        except:
+            ExtraInfo.append("")
+
+        URL_list.append(makeTaskURL(el['id'], urlRoot))
+        
+        try:
+            CalendarList.append(calendarDictionary[el['properties'][Calendar_Notion_Name]['select']['name']])
+        except:
+            CalendarList.append(calendarDictionary[DEFAULT_CALENDAR_NAME])
+
+        pageId = el['id']
+        notion.pages.update(
+            **{
+                "page_id": pageId, 
+                "properties": {
+                    On_GCal_Notion_Name: {
+                        "checkbox": True 
+                    },
+                    LastUpdatedTime_Notion_Name: {
+                        "date":{
+                            'start': notion_time(),
+                            'end': None,
+                        }
+                    },
+                },
+            },
+        )
+
+        # 創建日曆事件
+        calendar_id = CalendarList[i]
+        unique_title = generate_unique_title(existing_titles[calendar_id], TaskNames[i], [], 1, resultList, current_page=el)
+        TaskNames[i] = unique_title
+        existing_titles[calendar_id].append(unique_title)
+
+        # 用於確保 Recur_Until 時間部分正確的方法
+        def adjust_until_date(until_date):
+            if not until_date:
+                return None
+            if until_date.time() == datetime.min.time():  # 如果時間是 00:00，則設置為 23:59:59
+                return until_date.replace(hour=23, minute=59, second=59)
+            return until_date  # 若已包含時間，則直接返回
+
+        if i < len(Recur_Untils) and Recur_Untils[i]:
+            # 在呼叫 makeCalEvent 前進行調整
+            until_adjusted = adjust_until_date(process_date(Recur_Untils[i]))
+        else:
+            until_adjusted = None
+
+        if i < len(Recur_Days):
+            byDay = ",".join(Recur_Days[i])  # 生成用逗號分隔的字符串
+        else:
+            # print(f"警告: Recur_Days 列表長度不足，當前索引: {i}")
+            byDay = ""
+        
+        if i < len(TaskNames) and i < len(Recur_Days):
+            calEventId = makeCalEvent(TaskNames[i], 
+                                    makeEventDescription(Frequencies[i], ExtraInfo[i]), 
+                                    start_date_dt, 
+                                    URL_list[i], 
+                                    gcal_end_date_dt if is_all_day_event else end_date_dt, 
+                                    CalendarList[i], 
+                                    all_day=is_all_day_event, 
+                                    frequency=Frequencies[i], 
+                                    interval=Recur_Intervals[i], 
+                                    byDay=byDay,  # 使用格式化後的 Recur_Days
+                                    byMonth=Recur_Months[i], 
+                                    byMonthDay=byMonthDays[i], 
+                                    byYearDay=byYearDays[i], 
+                                    byWeekNum=byWeekNumbers[i], 
+                                    until=until_adjusted,  # 確保這裡是 datetime 對象
+                                    count=Recur_Counts[i])
+
+        if calEventId:
+            calEventIdList.append(calEventId)
+            # 更新 Notion 頁面
+            notion.pages.update(
+                **{
+                    "page_id": pageId,
+                    "properties": {
+                        Task_Notion_Name: {"title": [{"text": {"content": unique_title}}]},
+                        GCalEventId_Notion_Name: {"rich_text": [{"text": {"content": calEventId}}]},
+                        Current_Calendar_Id_Notion_Name: {"rich_text": [{"text": {"content": CalendarList[i]}}]}
+                    },
+                }
+            )
 
     # 在使用 calEventIdList 之前檢查其長度
     if calEventIdList:
@@ -1906,7 +2056,10 @@ ExtraInfo = []
 URL_list = []
 CalendarList = []
 CurrentCalList = []
+updated_tasks = []
 tasks_by_calendar = {}
+
+updated_events_counter = 0
 
 created_single_day_events = set()
 
@@ -1916,6 +2069,7 @@ if len(resultList) > 0:
             
         calendar_name = el['properties'][Calendar_Notion_Name]['select']['name']
         task_name = el['properties'][Task_Notion_Name]['title'][0]['text']['content']
+        # print(f"task name: {task_name}")
 
         # If the calendar name is not in the dictionary, add it with an empty list
         if calendar_name not in tasks_by_calendar:
@@ -1926,22 +2080,73 @@ if len(resultList) > 0:
         
         TaskNames.append(el['properties'][Task_Notion_Name]['title'][0]['text']['content'])
         start_Dates.append(el['properties'][Date_Notion_Name]['date']['start'])
-        
+
+        if el['properties'][GCalEventId_Notion_Name]['rich_text']:
+            GCalEventId = el['properties'][GCalEventId_Notion_Name]['rich_text'][0]['text']['content']
+            # print(f"GCal Event ID: {GCalEventId}")
+        else:
+            GCalEventId = DEFAULT_CALENDAR_ID
+
         if el['properties'][Date_Notion_Name]['date']['end'] != None:
             end_Times.append(el['properties'][Date_Notion_Name]['date']['end'])
         else:
             end_Times.append(el['properties'][Date_Notion_Name]['date']['start'])
 
+        try:
+            First_Days.append(el['properties'][First_Day_of_Week_Notion_Name]['select']['name'])
+        except:
+            First_Days.append("")
         
         try:
             Frequencies.append(el['properties'][Frequency_Notion_Name]['select']['name'])
         except:
             Frequencies.append("")
         
+        try:
+            Recur_Intervals.append(el['properties'][Recur_Interval_Notion_Name]['number'])
+        except:
+            Recur_Intervals.append("")
+
+        try:
+            Recur_Counts.append(el['properties'][Recur_Count_Notion_Name]['number'])
+        except:
+            Recur_Counts.append("")
+
+        try:
+            Recur_Untils.append(el['properties'][Recur_Until_Notion_Name]['date']['start'])
+        except:
+            Recur_Untils.append("")
+
+        try:
+            Recur_Days.append(el['properties'][Days_Notion_Name]['multi_select'][0]['name'])
+        except:
+            Recur_Days.append("")
+            
+        try:
+            Recur_Months.append(el['properties'][Months_Notion_Name]['multi_select'][0]['name'])
+        except:
+            Recur_Months.append("")
+        
+        try:
+            byMonthDays.append(el['properties'][Days_of_Month_Notion_Name]['number'])
+        except:
+            byMonthDays.append("")
+        
+        try:
+            byYearDays.append(el['properties'][Days_of_Year_Notion_Name]['number'])
+        except:
+            byYearDays.append("")
+        
+        try:
+            byWeekNumbers.append(el['properties'][Week_Numbers_of_Year_Notion_Name]['number'])
+        except:
+            byWeekNumbers.append("")
+
         try: 
             ExtraInfo.append(el['properties'][ExtraInfo_Notion_Name]['rich_text'][0]['text']['content'])
         except:
             ExtraInfo.append("")
+            
         URL_list.append(makeTaskURL(el['id'], urlRoot))
 
         # CalendarList.append(calendarDictionary[el['properties'][Calendar_Notion_Name]['select']['name']])
@@ -1957,23 +2162,40 @@ if len(resultList) > 0:
 
         pageId = el['id']
 
-        #depending on the format of the dates, we'll update the gCal event as necessary
         try:
-            calEventId = upDateCalEvent(task_name, makeEventDescription(Frequencies[i], ExtraInfo[i]), parse_date(start_Dates[i]), URL_list[i], updatingCalEventIds[i],  parse_date(end_Times[i]), CurrentCalList[i], CalendarList[i], thread)
+            updated_events_counter += 1
+            updated_tasks.append((GCalEventId, task_name))  # 將 GCalEventId 和 task_name 作為元組添加到列表中
             created_single_day_events.add(updatingCalEventIds[i])  # 标记为已创建
             No_pages_modified = False
             no_new_updated = False
-        except:
-            try:
-                calEventId = upDateCalEvent(task_name, makeEventDescription(Frequencies[i], ExtraInfo[i]), parse_date(start_Dates[i]), URL_list[i], updatingCalEventIds[i],  parse_date(end_Times[i]), CurrentCalList[i], CalendarList[i], thread)
-                created_single_day_events.add(updatingCalEventIds[i])  # 标记为已创建
-                No_pages_modified = False
-                no_new_updated = False
-            except:
-                calEventId = upDateCalEvent(TaskNames[i], makeEventDescription(Frequencies[i], ExtraInfo[i]), parse_date(start_Dates[i]), URL_list[i], updatingCalEventIds[i],  parse_date(end_Times[i]), CurrentCalList[i], CalendarList[i], thread)
-                created_single_day_events.add(updatingCalEventIds[i])  # 标记为已创建
-                No_pages_modified = False     
-                no_new_updated = False
+            # 先尝试使用所有参数调用 upDateCalEvent
+            calEventId = upDateCalEvent(
+                task_name,
+                makeEventDescription(Frequencies[i], ExtraInfo[i]),
+                parse_date(start_Dates[i]),
+                URL_list[i],
+                updatingCalEventIds[i],
+                parse_date(end_Times[i]),
+                CurrentCalList[i],
+                CalendarList[i],
+                thread,
+                {
+                    "Frequency_Notion_Name": Frequencies[i],
+                    "First_Day_of_Week_Notion_Name": First_Days[i],
+                    "Recur_Interval_Notion_Name": Recur_Intervals[i],
+                    "Recur_Count_Notion_Name": Recur_Counts[i],
+                    "Recur_Until_Notion_Name": Recur_Untils[i],
+                    "Days_Notion_Name": Recur_Days[i],
+                    "Months_Notion_Name": Recur_Months[i],
+                    "Days_of_Month_Notion_Name": byMonthDays[i],
+                    "Days_of_Year_Notion_Name": byYearDays[i],
+                    "Week_Numbers_of_Year_Notion_Name": byWeekNumbers[i],
+                },
+            )
+        except Exception as e:
+            # 处理异常情况
+            logging.error(f"Error updating calendar event: {e}")
+            # 这里可以选择重试或记录详细的错误信息
         
 
         my_page = notion.pages.update( ##### This updates the last time that the page in Notion was updated by the code
@@ -1996,6 +2218,76 @@ if len(resultList) > 0:
                 },
             },
         )
+
+# After the loop, calculate the visual width of the longest title
+max_width = 0
+if updated_tasks:
+    widths = [wcswidth(task[1]) for task in updated_tasks]
+    if widths:
+        max_width = max(widths)
+
+# After the loop, convert updated_tasks to a set to remove duplicates
+unique_updated_tasks = [{id: name} for id, name in updated_tasks]
+
+# Count occurrences of each task title
+task_counts = {}
+for task in unique_updated_tasks:
+    _, task_name = list(task.items())[0]
+    task_counts[task_name] = task_counts.get(task_name, 0) + 1
+
+# Calculate total count of all added tasks
+total_count = sum(task_counts.values())
+
+# Initialize a set to keep track of printed titles
+printed_titles = set()
+
+# This will track the correct sequential number for printed tasks
+printed_index = 1
+
+# Check if there are any new tasks added
+if unique_updated_tasks:
+    stop_clear_and_print()
+    print("\n")
+    start_dynamic_counter_indicator()
+    
+    # Sort tasks by their IDs (or any other specified key)
+    sorted_tasks = sorted(unique_updated_tasks, key=lambda x: list(x.keys())[0])
+        
+    for task in sorted_tasks:
+        stop_clear_and_print()
+        animate_text_wave("Updatin'", repeat=1)
+        start_dynamic_counter_indicator()
+        
+        id, task_name = list(task.items())[0]
+
+        # 使用 `new_title` 如果它存在，否則使用 `title`
+        current_title = task_name if task_name else x['summary']
+
+        # 跳過已經打印的標題
+        if current_title in printed_titles:
+            continue
+        printed_titles.add(current_title)
+
+        # 使用 `.get()` 方法，設置默認值以避免 KeyError
+        title_count = task_counts.get(current_title, 0)
+        title_with_count = f"{current_title} (x{title_count})" if title_count > 1 else current_title
+
+        # 計算空間並格式化輸出
+        spaces_to_add = max_width - wcswidth(title_with_count)
+        title_with_count += ' ' * spaces_to_add
+
+        stop_clear_and_print()
+        print(f"{format_string(f'{printed_index}', bold=True, italic=True)}{formatted_dot} {format_string(title_with_count, italic=True)}  ")
+
+        # 增加 printed_index 以便處理下一個標題
+        printed_index += 1
+
+if updated_events_counter > 0:
+    formatted_updated_counter = format_string(updated_events_counter, "C2") 
+    print(f"\nTotal {formatted_updated} G.Event : {formatted_updated_counter}\n\n")
+    start_dynamic_counter_indicator()
+    No_pages_modified = False
+    no_new_updated = False
 
 todayDate = datetime.today().strftime("%Y-%m-%d")
 
@@ -3296,6 +3588,7 @@ def update_google_calendar_event_title(service, calendar_id, event_id, new_title
         # print(event.get('recurrence', 'No recurrence info available'))
         event['summary'] = new_title
         updated_event = service.events().update(calendarId=calendar_id, eventId=event_id, body=event).execute()
+        print(updated_event.get('recurrence'))
         # print(f"Updating event ID: {event_id} with title: {new_title}")
     except HttpError as error:
         print(f"An error occurred: {error}")
