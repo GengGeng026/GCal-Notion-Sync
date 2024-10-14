@@ -421,6 +421,7 @@ def check_last_line_status(text):
         return 'Unknown'
 
 
+total_sync_count = 0
 modified_pages_count = 0
 added_pages_count = 0
 deleted_pages_count = 0
@@ -472,6 +473,17 @@ def check_pipeline_status(jenkins_url, username, password, job_name):
                 if len(parts) == 2:
                     modified_pages_count = int(parts[1].strip())  # 確保賦值正確
                     status = 'SUCCESS'
+            if 'Total Modified New N.Event' in line:
+                parts = line.split(':')
+                if len(parts) == 2:
+                    modified_pages_count = int(parts[1].strip())  # 確保賦值正確
+                    status = 'SUCCESS'
+            if 'Total Updated G.Event' in line:
+                parts = line.split(':')
+                if len(parts) == 2:
+                    modified_pages_count = int(parts[1].strip())  # 確保賦值正確
+                    status = 'SUCCESS'
+            total_sync_count += modified_pages_count
         
         if status == 'SUCCESS' and no_changes:
             return 'SUCCESS'
@@ -561,9 +573,9 @@ def trigger_and_notify(channel_id):
                 # 檢查每個條件，避免過早的 break
                 
                 
-                print(f"modified_pages_count: {modified_pages_count}")
-                if modified_pages_count is not None and modification_message_sent is False:
-                    client.chat_postMessage(channel=channel_id, text=f"〓 ` {modified_pages_count} `件同步完成")
+                print(f"modified_pages_count: {total_sync_count}")
+                if total_sync_count is not None and modified_pages_count is not None and modification_message_sent is False:
+                    client.chat_postMessage(channel=channel_id, text=f"〓 ` {total_sync_count} `件同步完成")
                     modification_message_sent = True
                     confirmation_message_sent = True
                     no_change_notified = True
