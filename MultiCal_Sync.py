@@ -762,249 +762,252 @@ def extract_recurrence_info(service, calendar_id, event, el):
 
     return None, None
 
+# Define recurrence rules only if recurrence_info is provided
+def generate_recurrence_rules(frequency, interval, byDay, byMonth, byMonthDay, byYearDay, byWeekNum, until, count):
+    recurrence_rules = []
+    print(f"generating recurrence rules ...")
+    rule = f"RRULE:FREQ={frequency.upper()}"
+    
+    if interval and interval != '1':
+        rule += f";INTERVAL={interval}"
+    if byMonth:
+        rule += f";BYMONTH={byMonth}"
+    if byMonthDay:
+        rule += f";BYMONTHDAY={byMonthDay}"
+    if until and count is None:
+        # 將字符串格式的日期轉換為日期物件
+        try:
+            until_date = datetime.fromisoformat(until.replace("Z", "+00:00"))
+            rule += f";UNTIL={until_date.strftime('%Y%m%dT%H%M%SZ')}"
+        except ValueError as e:
+            print(f"Invalid `until` date format: {e}")
+            return None
+    elif count:
+        rule += f";COUNT={count}"
+    if byDay:
+        rule += f";BYDAY={byDay}"  # `byDay` 應該已經是逗號分隔的格式，如 `WE,FR,SA`
+        
+    recurrence_rules.append(rule)
+    print(f"recurrence_rules: {recurrence_rules}")
+    return recurrence_rules
+
+def is_rule_identical(existing_rules, new_rules):
+    # 忽略順序進行集合比較
+    existing_rules_set = set([rule.strip() for rule in existing_rules if rule.startswith('RRULE')])
+    new_rules_set = set([rule.strip() for rule in new_rules if rule.startswith('RRULE')])
+    return existing_rules_set == new_rules_set
+
 number = 0
 new_titles = []
 got_new_update = False
 
-def upDateCalEvent(eventName, eventDescription, eventStartTime, sourceURL, eventId, eventEndTime, currentCalId, CalId, thread, recurrence_info=None):
+def upDateCalEvent(eventName, autoRename,eventDescription, eventStartTime, sourceURL, eventId, eventEndTime, currentCalId, CalId, thread, recurrence_info=None):
 
     # 設置初始值
+    x = None
+    recurrence_rules = None
     got_new_update = False
     updated_event_id = None
 
-    # print(f"Updating {eventName} ...")
-    x = None
-    recurrence_rules = None
+    stop_clear_and_print()
+    animate_text_wave("updating", repeat=1)
 
-    # 獲取當前事件狀態
-    current_event = service.events().get(calendarId=CalId, eventId=eventId).execute()
-    # print(f"current event recurrence: {current_event.get('recurrence')}")
+    # print(f"Initial values - eventName: {eventName}, eventId: {eventId}, currentCalId: {currentCalId}, CalId: {CalId}")
 
-    # Define recurrence rules only if recurrence_info is provided
-    def generate_recurrence_rules(frequency, interval, byDay, byMonth, byMonthDay, byYearDay, byWeekNum, until, count):
-        recurrence_rules = []
-        # print(f"generating recurrence rules ...")
-        rule = f"RRULE:FREQ={frequency.upper()}"
-        
-        if interval and interval != '1':
-            rule += f";INTERVAL={interval}"
-        if byMonth:
-            rule += f";BYMONTH={byMonth}"
-        if byMonthDay:
-            rule += f";BYMONTHDAY={byMonthDay}"
-        if until and count is None:
-            # 將字符串格式的日期轉換為日期物件
-            try:
-                until_date = datetime.fromisoformat(until.replace("Z", "+00:00"))
-                rule += f";UNTIL={until_date.strftime('%Y%m%dT%H%M%SZ')}"
-            except ValueError as e:
-                print(f"Invalid `until` date format: {e}")
-                return None
-        elif count:
-            rule += f";COUNT={count}"
-        if byDay:
-            rule += f";BYDAY={byDay}"  # `byDay` 應該已經是逗號分隔的格式，如 `WE,FR,SA`
-            
-        recurrence_rules.append(rule)
-        # print(f"recurrence_rules: {recurrence_rules}")
-        return recurrence_rules
+    # 檢查已存在的事件
+    existing_events = service.events().list(calendarId=CalId, q=eventName).execute().get('items', [])
+    existing_event_ids = [event['id'] for event in existing_events]
+    # print(f"Existing events in target calendar: {existing_event_ids}")
+    
+    # 檢查當前事件是否已存在於目標日曆
+    if eventId in existing_event_ids:
+        # print(f"Event ID {eventId} already exists in calendar {CalId}. Skipping update.")
+        return None
 
-    # Generate recurrence rules only if valid recurrence_info is provided
-    recurrence_rules = None
-    # print(f"recurrence_info: {recurrence_info}")
-    if recurrence_info:
-        frequency = recurrence_info.get('Frequency_Notion_Name')
-        if frequency not in ['DAILY', 'WEEKLY', 'MONTHLY', 'YEARLY']:
-            raise ValueError(f"Invalid frequency: {frequency}")
-
-        interval = recurrence_info.get('Recur_Interval_Notion_Name', '1')  # 默認為1，避免None值
-        byDay = recurrence_info.get('Days_Notion_Name')
-        byMonth = recurrence_info.get('Months_Notion_Name')
-        byMonthDay = recurrence_info.get('Days_of_Month_Notion_Name')
-        byYearDay = recurrence_info.get('Days_of_Year_Notion_Name')
-        byWeekNum = recurrence_info.get('Week_Numbers_of_Year_Notion_Name')
-        until = recurrence_info.get('Recur_Until_Notion_Name')
-        count = recurrence_info.get('Recur_Count_Notion_Name')
-
-        recurrence_rules = generate_recurrence_rules(
-            frequency, interval, byDay, byMonth, byMonthDay, byYearDay, byWeekNum, until, count
-        )
-            
-    # print(f"生成的重複規則: {recurrence_rules}")
-
-    def is_rule_identical(existing_rules, new_rules):
-        # 忽略順序進行集合比較
-        existing_rules_set = set([rule.strip() for rule in existing_rules if rule.startswith('RRULE')])
-        new_rules_set = set([rule.strip() for rule in new_rules if rule.startswith('RRULE')])
-        return existing_rules_set == new_rules_set
-
-
-    current_recurrence = current_event.get('recurrence', [])
-    if recurrence_rules is not None and not is_rule_identical(current_recurrence, recurrence_rules):
-        if eventStartTime == eventEndTime:
-            event_body = {
-                'summary': eventName if eventName else current_event.get('summary', 'Unnamed Event'),
-                'description': eventDescription if eventDescription else current_event.get('description', ''),
-                'recurrence': recurrence_rules,
-                'start': {
-                    'date': eventStartTime.date().isoformat(),
-                },
-                'end': {
-                    'date': eventEndTime.date().isoformat(),
-                }
-            }
-            try:
-                x = service.events().update(calendarId=CalId, eventId=eventId, body=event_body).execute()
-                got_new_update = True
-                return got_new_update
-            except HttpError as e:
-                print(e)
-                got_new_update = False
-        
-            # 判斷事件類型
-            if eventStartTime.hour == 0 and eventStartTime.minute == 0 and eventEndTime.hour == 0 and eventEndTime.minute == 0 and eventStartTime != eventEndTime:            
-                if AllDayEventOption == 1:                    
-                    eventStartTime = datetime.combine(eventStartTime, datetime.min.time()) + timedelta(hours=DEFAULT_EVENT_START) 
-                    eventEndTime = eventStartTime + timedelta(minutes=DEFAULT_EVENT_LENGTH)
-                    event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, False, recurrence_rules=recurrence_rules)
+    try:
+        try:
+            if currentCalId == CalId:
+                # print(f"Updating event {eventId} directly in the same calendar {CalId}.")
+                x = service.events().update(calendarId=CalId, eventId=eventId, body=event).execute()
+                if x:
+                    # print("Event updated successfully.")
+                    got_new_update = True
                 else:
-                    eventEndTime += timedelta(days=1)
-                    event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, True, recurrence_rules=recurrence_rules)
+                    print("Failed to update event.")
+            else:
+                # print(f"Moving event {eventId} from calendar {currentCalId} to {CalId}.\n")
+                x = service.events().move(calendarId=currentCalId, eventId=eventId, destination=CalId).execute()
+                if x:
+                    # print("Event moved successfully.")
+                    
+                    # 反转calendarDictionary字典並獲取日曆名稱
+                    # print(f"calendarDictionary: {calendarDictionary}")
+                    id_to_calendar_name = {v: k for k, v in calendarDictionary.items()}
+                    currentCalName = id_to_calendar_name.get(currentCalId, "Unknown Calendar")
+                    CalName = id_to_calendar_name.get(CalId, "Unknown Calendar")
 
-            elif eventStartTime.hour == 0 and eventStartTime.minute == 0 and eventEndTime.hour == 0 and eventEndTime.minute == 0 and eventStartTime != eventEndTime:  # 多天事件
-                eventEndTime += timedelta(days=1)  
-                event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, True, recurrence_rules=recurrence_rules)
+                    # 打印事件信息
+                    print(format_string(eventName, bold=True))  # 打印事件标题
+                    
+                    formattedCurrentCalName = format_string(currentCalName, less_visible=True)
+                    formattedCalName = format_string(CalName, italic=True, light_color=True)
+                    print(f'{formattedCurrentCalName} {formatted_right_arrow} {formattedCalName}\n')
+                    got_new_update = True
 
-            else:  # 处理具体的开始时间和结束时间
-                # 具體時間事件
+                else:
+                    print("Failed to move event.")
+            
+            # 驗證是否成功移動/更新
+            if x:
+                moved_event_id = x.get('id', eventId)
+                event = service.events().get(calendarId=CalId, eventId=moved_event_id).execute()
+                if moved_event_id in existing_event_ids:
+                    # print(f"Moved event ID {moved_event_id} already exists in calendar {CalId}. Skipping further update.")
+                    return None
+                else:
+                    # print(f"\nMoved event to {CalId}, attempting to update with new info.")
+                    x = service.events().update(calendarId=CalId, eventId=moved_event_id, body=event).execute()
+                    if x:
+                        # print("Update after move successful.")
+                        got_new_update = True
+                    else:
+                        print("Update after move failed.")
+            else:
+                print("No response after move attempt.")
+                
+            # print(f"got_new_update status: {got_new_update}")
+            return got_new_update
+
+        except googleapiclient.errors.HttpError as e:
+            print(f"Google API HttpError: {e}")
+            if e.resp.status == 400 and 'cannotChangeOrganizer' in str(e):
+                print("Organizer cannot be changed, creating a new event instead.")
+                # 嘗試創建新的事件
+                try:
+                    new_event = {
+                        'summary': eventName,
+                        'description': eventDescription,
+                        'start': eventStartTime,
+                        'end': eventEndTime,
+                        'recurrence': recurrence_info,
+                        'source': event.get('source', {}),
+                    }
+                    new_event_response = service.events().insert(calendarId=CalId, body=new_event).execute()
+                    new_event_id = new_event_response.get('id')
+                    print(f"New event created with ID: {new_event_id}. Attempting to delete old event.")
+                    
+                    # 刪除舊事件
+                    try:
+                        service.events().delete(calendarId=currentCalId, eventId=eventId).execute()
+                        print("Old event deleted successfully.")
+                    except googleapiclient.errors.HttpError as delete_error:
+                        print(f"Failed to delete old event: {delete_error}")
+                        
+                except Exception as ex:
+                    print(f"Error creating or deleting event: {ex}")
+                    raise
+
+        # Generate recurrence rules only if valid recurrence_info is provided
+        recurrence_rules = None
+
+        # 提取重複信息
+        recurrence_info = extract_recurrence_info(service, CalId, event, el)
+        if recurrence_info:
+            recurrence_rules = generate_recurrence_rules(
+                recurrence_info.get('Frequency_Notion_Name'),
+                recurrence_info.get('Recur_Interval_Notion_Name', '1'),
+                recurrence_info.get('Days_Notion_Name'),
+                recurrence_info.get('Months_Notion_Name'),
+                recurrence_info.get('Days_of_Month_Notion_Name'),
+                recurrence_info.get('Days_of_Year_Notion_Name'),
+                recurrence_info.get('Week_Numbers_of_Year_Notion_Name'),
+                recurrence_info.get('Recur_Until_Notion_Name'),
+                recurrence_info.get('Recur_Count_Notion_Name')
+            )
+            
+        print(f"生成的重複規則: {recurrence_rules}")
+
+        # 獲取當前事件狀態
+        current_event = service.events().get(calendarId=CalId, eventId=eventId).execute()
+        current_recurrence = current_event.get('recurrence', [])
+        print(f"current event recurrence: {current_event.get('recurrence')}")
+
+        # Check if the event should be renamed, handle update or move
+        print(f"AutoRename_Notion_Name: {AutoRenames}")
+        if AutoRenames:
+            eventName = generate_unique_title(CurrentCalList, task_name, new_titles, number, resultList, current_page=el)
+            # print(f"生成的新標題: {eventName}")
+        
+        if recurrence_rules is not None and not is_rule_identical(current_recurrence, recurrence_rules):
+            if eventStartTime == eventEndTime:
                 event_body = {
                     'summary': eventName if eventName else current_event.get('summary', 'Unnamed Event'),
                     'description': eventDescription if eventDescription else current_event.get('description', ''),
                     'recurrence': recurrence_rules,
                     'start': {
-                        'dateTime': eventStartTime.isoformat(),  # 使用 dateTime 格式
-                        'timeZone': timezone,
+                        'date': eventStartTime.date().isoformat(),
                     },
                     'end': {
-                        'dateTime': eventEndTime.isoformat(),  # 使用 dateTime 格式
-                        'timeZone': timezone,
+                        'date': eventEndTime.date().isoformat(),
                     }
                 }
-                event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, False, recurrence_rules=recurrence_rules)
-
-        else:
-            got_new_update = False
-    else:
-        got_new_update = False    
-
-    # Build event with recurrence rules if applicable
-    event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, all_day=True, recurrence_rules=recurrence_rules)
-
-    # Check if the event should be renamed, handle update or move
-    if AutoRename_Notion_Name:
-        eventName = generate_unique_title(CurrentCalList, task_name, new_titles, number, resultList, current_page=el)
-
-    stop_clear_and_print()
-    animate_text_wave("updating", repeat=1)
-    start_dynamic_counter_indicator()
-
-    # 提取重複信息
-    recurrence_info = extract_recurrence_info(service, CalId, event, el)
-    if recurrence_info and isinstance(recurrence_info, list) and len(recurrence_info) > 0:
-        event['recurrence'] = recurrence_info
-    else:
-        # print("Recurrence information is empty or not valid.")
-        try:
-            # print("Recurrence information is empty or not valid.")
-            original_event = service.events().get(calendarId=currentCalId, eventId=eventId).execute()
-            event['recurrence'] = original_event.get('recurrence')
-        except googleapiclient.errors.HttpError as e:
-            print(f"Failed to fetch original event recurrence: {e}")
-
-    # 檢查已存在的事件
-    existing_events = service.events().list(calendarId=CalId, q=eventName).execute().get('items', [])
-    existing_event_ids = [event['id'] for event in existing_events]
-    
-    # 檢查當前事件是否已存在於目標日曆
-    if eventId in existing_event_ids:
-        # print(f"Event ID {eventId} already exists in calendar {CalId}. Skipping update.")
-        return None  # 直接返回，避免重複更新
-
-    try:
-        if currentCalId == CalId:
-            # print(f"Updating event {eventId} in calendar {CalId}.")
-            x = service.events().update(calendarId=CalId, eventId=eventId, body=event).execute()
-            # print(x)
-        else:
-            # 移動事件
-            x = service.events().move(calendarId=currentCalId, eventId=eventId, destination=CalId).execute()
-            if x is not None:
-                # print(f"Event moved successfully, response: {x}.")
-                
-                # 檢查移動後的事件是否已存在
-                moved_event_id = x.get('id', eventId)
-                if moved_event_id in existing_event_ids:
-                    # print(f"Moved event ID {moved_event_id} already exists in calendar {CalId}. Skipping update.")
-                    return None
-                
-                # 更新事件的屬性
-                x = service.events().update(calendarId=CalId, eventId=moved_event_id, body=event).execute()
-            else:
-                logging.error("Failed to move event, no response received.")
-
-    except googleapiclient.errors.HttpError as e:
-        logging.error(f"Google API HttpError: {e}")
-        if e.resp.status == 400 and 'cannotChangeOrganizer' in str(e):
-            try:
-                # print("Organizer cannot be changed, creating a new event.")
-                new_event = {
-                    'summary': event['summary'],
-                    'description': event['description'],
-                    'start': event['start'],
-                    'end': event['end'],
-                    'recurrence': recurrence_rules,
-                    'source': event.get('source', {}),
-                }
-                new_event_response = service.events().insert(calendarId=CalId, body=new_event).execute()
-                # print(f"New event created with ID: {new_event_response.get('id')}.")
-
-                # 刪除舊事件
                 try:
-                    service.events().delete(calendarId=currentCalId, eventId=eventId).execute()
-                except googleapiclient.errors.HttpError as delete_error:
-                    if delete_error.resp.status == 410:
-                        print("Old event has already been deleted.")
-                    else:
-                        print(f"Failed to delete old event: {delete_error}")
-            except Exception as ex:
-                logging.error(f"Error creating or deleting event: {ex}")
-                raise
+                    x = service.events().update(calendarId=CalId, eventId=eventId, body=event_body).execute()
+                    got_new_update = True
+                except HttpError as e:
+                    print(e)
+                    got_new_update = False
+            else:
+                got_new_update = False
         else:
-            logging.error(f"Unhandled Google API error: {e}")
-            raise
+            got_new_update = False    
 
 
-    # 反转calendarDictionary字典並獲取日曆名稱
-    id_to_calendar_name = {v: k for k, v in calendarDictionary.items()}
-    currentCalName = id_to_calendar_name.get(currentCalId, "Unknown Calendar")
-    CalName = id_to_calendar_name.get(CalId, "Unknown Calendar")
+        # 判斷事件類型
+        if eventStartTime.hour == 0 and eventStartTime.minute == 0 and eventEndTime.hour == 0 and eventEndTime.minute == 0 and eventStartTime != eventEndTime:            
+            if AllDayEventOption == 1:                    
+                eventStartTime = datetime.combine(eventStartTime, datetime.min.time()) + timedelta(hours=DEFAULT_EVENT_START) 
+                eventEndTime = eventStartTime + timedelta(minutes=DEFAULT_EVENT_LENGTH)
+                event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, False, recurrence_rules=recurrence_rules)
+            else:
+                eventEndTime += timedelta(days=1)
+                event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, True, recurrence_rules=recurrence_rules)
 
-    # 打印事件信息
-    stop_clear_and_print()
-    if currentCalName != CalName:
-        print(format_string(eventName, bold=True))  # 打印事件标题
-        
-        formattedCurrentCalName = format_string(currentCalName, less_visible=True)
-        formattedCalName = format_string(CalName, italic=True, light_color=True)
-        print(f'{formattedCurrentCalName} {formatted_right_arrow} {formattedCalName}\n')
-    start_dynamic_counter_indicator()
+        elif eventStartTime.hour == 0 and eventStartTime.minute == 0 and eventEndTime.hour == 0 and eventEndTime.minute == 0 and eventStartTime != eventEndTime:  # 多天事件
+            eventEndTime += timedelta(days=1)  
+            event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, True, recurrence_rules=recurrence_rules)
 
-    # 最後檢查 x
-    if x is not None and 'id' in x:
-        return x['id'], got_new_update
-    else:
-        print("Event ID was not found in the response.")
-        return got_new_update  # 或者根據需要返回一個其他值
+        else:  # 处理具体的开始时间和结束时间
+            # 具體時間事件
+            event_body = {
+                'summary': eventName if eventName else current_event.get('summary', 'Unnamed Event'),
+                'description': eventDescription if eventDescription else current_event.get('description', ''),
+                'recurrence': recurrence_rules,
+                'start': {
+                    'dateTime': eventStartTime.isoformat(),  # 使用 dateTime 格式
+                    'timeZone': timezone,
+                },
+                'end': {
+                    'dateTime': eventEndTime.isoformat(),  # 使用 dateTime 格式
+                    'timeZone': timezone,
+                }
+            }
+            event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, False, recurrence_rules=recurrence_rules)
+
+
+        # Build event with recurrence rules if applicable
+        event = create_event_body(eventName, eventDescription, eventStartTime, eventEndTime, sourceURL, all_day=True, recurrence_rules=recurrence_rules)
+
+        # print(f"Final got_new_update status: {got_new_update}")
+    except Exception as ex:
+        print(f"Error updating event after move: {ex}")
+    finally:
+        # 最後檢查 x
+        if x and 'id' in x:
+            return got_new_update
+        else:
+            print("Event ID was not found in the response.")
+            return got_new_update  # 或者根據需要返回一個其他值
 
 
 def create_event_body(eventName, eventDescription, startTime, endTime, sourceURL, isAllDay, recurrence_rules):
@@ -2080,6 +2083,7 @@ for result in resultList:
     updatingCalEventIds.append(calId)
 
 TaskNames = []
+AutoRenames = []
 start_Dates = []
 end_Times = []
 Frequencies = []
@@ -2097,10 +2101,16 @@ created_single_day_events = set()
 if len(resultList) > 0:
     
     for i, el in enumerate(resultList):
+        # print(f"Processing {i+1} of {len(resultList)}")
             
         calendar_name = el['properties'][Calendar_Notion_Name]['select']['name']
+        # print(f"calendar_name: {calendar_name}")
+        
         task_name = el['properties'][Task_Notion_Name]['title'][0]['text']['content']
         # print(f"task name: {task_name}")
+        
+        new_title = el['properties'][AutoRename_Notion_Name]['formula']['string']
+        AutoRenames.append(new_title)
 
         # If the calendar name is not in the dictionary, add it with an empty list
         if calendar_name not in tasks_by_calendar:
@@ -2185,11 +2195,13 @@ if len(resultList) > 0:
         # CalendarList.append(calendarDictionary[el['properties'][Calendar_Notion_Name]['select']['name']])
         try:
             CalendarList.append(calendarDictionary[el['properties'][Calendar_Notion_Name]['select']['name']])
+            # print(f"CalendarList: {CalendarList}")
         except: #keyerror occurs when there's nothing put into the calendar in the first place
             CalendarList.append(calendarDictionary[DEFAULT_CALENDAR_NAME])
 
         if el['properties'][Current_Calendar_Id_Notion_Name]['rich_text']:
             CurrentCalList.append(el['properties'][Current_Calendar_Id_Notion_Name]['rich_text'][0]['text']['content'])
+            # print(f"CurrentCalList: {CurrentCalList}")
         else:
             continue
 
@@ -2197,8 +2209,10 @@ if len(resultList) > 0:
 
         try:
             # 先尝试使用所有参数调用 upDateCalEvent
+            # print(f"got_new_update: {got_new_update}")
             got_new_update = upDateCalEvent(
                 task_name,
+                AutoRenames[i],
                 makeEventDescription(Frequencies[i], ExtraInfo[i]),
                 parse_date(start_Dates[i]),
                 URL_list[i],
@@ -2220,6 +2234,7 @@ if len(resultList) > 0:
                     "Week_Numbers_of_Year_Notion_Name": byWeekNumbers[i],
                 },
             )
+            # print(f"got_new_update: {got_new_update}")
             if got_new_update is True:
                 updated_events_counter += 1
                 updated_tasks.append((GCalEventId, task_name))  # 將 GCalEventId 和 task_name 作為元組添加到列表中
@@ -2228,10 +2243,13 @@ if len(resultList) > 0:
                 no_new_updated = False
         except Exception as e:
             # 处理异常情况
-            logging.error(f"Error updating calendar event: {e}")
+            print(f"Error updating calendar event: {e}")
             # 这里可以选择重试或记录详细的错误信息
         
 
+        calendar_id_to_name = {v: k for k, v in calendarDictionary.items()}
+        calendar_name = calendar_id_to_name[CalendarList[i]]
+        
         my_page = notion.pages.update( ##### This updates the last time that the page in Notion was updated by the code
             **{
                 "page_id": pageId, 
@@ -2249,6 +2267,11 @@ if len(resultList) > 0:
                             }
                         }]
                     },
+                    Calendar_Notion_Name:  {
+                        'select': {
+                            "name": calendar_name
+                        },
+                    }
                 },
             },
         )
@@ -2266,8 +2289,9 @@ unique_updated_tasks = [{id: name} for id, name in updated_tasks]
 # Count occurrences of each task title
 task_counts = {}
 for task in unique_updated_tasks:
-    _, task_name = list(task.items())[0]
+    task_name = ','.join(AutoRenames) if isinstance(AutoRenames, list) else AutoRenames or list(task.items())[0][1]
     task_counts[task_name] = task_counts.get(task_name, 0) + 1
+
 
 # Calculate total count of all added tasks
 total_count = sum(task_counts.values())
@@ -2292,28 +2316,31 @@ if unique_updated_tasks:
         animate_text_wave("Updatin'", repeat=1)
         start_dynamic_counter_indicator()
         
-        id, task_name = list(task.items())[0]
+        if AutoRenames and len(AutoRenames) == 2:
+            id, task_name = AutoRenames
+        else:
+            item = list(task.items())[0]
+            if len(item) == 2:
+                id, task_name = item
+            else:
+                # 提供預設值或其他處理方式以避免 ValueError
+                id, task_name = None, item[0] if item else (None, None)
 
-        # 使用 `new_title` 如果它存在，否則使用 `title`
-        current_title = task_name if task_name else x['summary']
+        current_title = task_name if task_name else id
 
-        # 跳過已經打印的標題
         if current_title in printed_titles:
             continue
         printed_titles.add(current_title)
 
-        # 使用 `.get()` 方法，設置默認值以避免 KeyError
         title_count = task_counts.get(current_title, 0)
         title_with_count = f"{current_title} (x{title_count})" if title_count > 1 else current_title
 
-        # 計算空間並格式化輸出
         spaces_to_add = max_width - wcswidth(title_with_count)
         title_with_count += ' ' * spaces_to_add
 
         stop_clear_and_print()
         print(f"{format_string(f'{printed_index}', bold=True, italic=True)}{formatted_dot} {format_string(title_with_count, italic=True)}  ")
 
-        # 增加 printed_index 以便處理下一個標題
         printed_index += 1
 
 if updated_events_counter > 0:
@@ -2517,6 +2544,8 @@ for i, gCalId in enumerate(notion_gCal_IDs):
         for calendarID in calendarDictionary.keys():
             try:
                 x = service.events().get(calendarId=calendarDictionary[calendarID], eventId=gCalId).execute()
+                # print("calendarDictionary contents:", calendarDictionary)
+
             except HttpError:
                 continue
 
@@ -2527,6 +2556,8 @@ for i, gCalId in enumerate(notion_gCal_IDs):
                 currentCalId = notion_gCal_CalNames[notion_index]
                 newCalId = calendarID
                 eventName = x['summary']
+                # print(f"eventName: {eventName}", "newCalId: ", newCalId, "currentCalId: ", currentCalId)
+                
                 gCal_titles.append(eventName)
                 gCal_CalIds.append(calendarID)
 
@@ -2538,6 +2569,12 @@ for i, gCalId in enumerate(notion_gCal_IDs):
 
                 # 更新日曆信息
                 if currentCalId != newCalId:
+                    
+                    calendar_name_to_id = {v: k for k, v in calendarDictionary.items()}
+                    # print("Reversed dictionary:", calendar_name_to_id)
+                    
+                    calendar_email = calendarDictionary.get(newCalId)
+
                     formattedCurrentCalName = format_string(currentCalId, less_visible=True)
                     formattedCalName = format_string(newCalId, italic=True, light_color=True)
                     print(f"{eventName}")
@@ -2552,6 +2589,13 @@ for i, gCalId in enumerate(notion_gCal_IDs):
                                         'name': newCalId
                                         }
                                     },
+                                Current_Calendar_Id_Notion_Name: {
+                                    "rich_text": [{
+                                        'text': {
+                                            'content': calendar_email
+                                        }
+                                    }]
+                                },
                                 LastUpdatedTime_Notion_Name: {
                                     "date":{
                                         'start': notion_time(), #has to be adjsuted for when daylight savings is different
