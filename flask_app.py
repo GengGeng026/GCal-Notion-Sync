@@ -421,7 +421,6 @@ def check_last_line_status(text):
         return 'Unknown'
 
 
-total_sync_count = 0
 modified_pages_count = 0
 added_pages_count = 0
 deleted_pages_count = 0
@@ -447,9 +446,14 @@ def check_pipeline_status(jenkins_url, username, password, job_name):
         status = 'Unknown'
         no_changes = False
         all_finished = False
-        modified_pages_count = None
-        added_pages_count = None
-        deleted_pages_count = None
+        
+        # 初始化計數器
+        if modified_pages_count is None:
+            modified_pages_count = 0
+        if added_pages_count is None:
+            added_pages_count = 0
+        if deleted_pages_count is None:
+            deleted_pages_count = 0
         
         for line in lines:
             if 'No Condition is Met' in line or 'No Operation is Performed' in line or 'No Page is Modified' in line:
@@ -471,19 +475,18 @@ def check_pipeline_status(jenkins_url, username, password, job_name):
             if 'Total Pages Modified' in line:
                 parts = line.split(':')
                 if len(parts) == 2:
-                    modified_pages_count = int(parts[1].strip())  # 確保賦值正確
+                    modified_pages_count += int(parts[1].strip())  # 累加修改頁面數量
                     status = 'SUCCESS'
             if 'Total Modified New N.Event' in line:
                 parts = line.split(':')
                 if len(parts) == 2:
-                    modified_pages_count = int(parts[1].strip())  # 確保賦值正確
+                    modified_pages_count += int(parts[1].strip())  # 累加修改頁面數量
                     status = 'SUCCESS'
             if 'Total Updated G.Event' in line:
                 parts = line.split(':')
                 if len(parts) == 2:
-                    modified_pages_count = int(parts[1].strip())  # 確保賦值正確
+                    modified_pages_count += int(parts[1].strip())  # 累加修改頁面數量
                     status = 'SUCCESS'
-            total_sync_count += modified_pages_count
         
         if status == 'SUCCESS' and no_changes:
             return 'SUCCESS'
@@ -557,61 +560,51 @@ def trigger_and_notify(channel_id):
         message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs is not None else f"✦  TimeLinkr™ {current_build_number}\n檢查中 · · ·"
         client.chat_postMessage(channel=channel_id, text=message)
     
-        max_attempts = 3
+        max_attempts = 1
         attempt = 0
         
         # 等待 Jenkins 作業完成
         while True:
             time.sleep(10)
             result = check_pipeline_status(jenkins_url, username, password, job_name)
-            
+
+            # 用於跟蹤每次嘗試的結果
+            # print(f"BEFORE: attempt: {attempt}")
+            # print(f"result: {result}")
             messages_sent = False  # 假設所有消息都將發送成功
             
-            print(f"BEFORE: attempt: {attempt}")
-            print(f"result: {result}")
-            if result == 'SUCCESS' and messages_sent is False:
-                # 檢查每個條件，避免過早的 break
-                
-                
-                print(f"modified_pages_count: {total_sync_count}")
-                if total_sync_count is not None and modified_pages_count is not None and modification_message_sent is False:
-                    client.chat_postMessage(channel=channel_id, text=f"〓 ` {total_sync_count} `件同步完成")
-                    modification_message_sent = True
-                    confirmation_message_sent = True
-                    no_change_notified = True
+            # 確保在達到最大嘗試次數之前累加所有計數
+            if attempt < max_attempts:
+                # print(f"modified_pages_count: {modified_pages_count}")
+                # print(f"added_pages_count: {added_pages_count}")
+                # print(f"deleted_pages_count: {deleted_pages_count}")
 
-                print(f"added_pages_count: {added_pages_count}")
-                if added_pages_count is not None and addition_message_sent is False:
-                    client.chat_postMessage(channel=channel_id, text=f"＋ ` {added_pages_count} `新頁")
-                    addition_message_sent = True
-                    confirmation_message_sent = True
-                    no_change_notified = True
+                if result == 'SUCCESS':
+                    # 根據計數器的狀態發送消息
+                    if modified_pages_count > 0 and not modification_message_sent:
+                        client.chat_postMessage(channel=channel_id, text=f"〓 ` {modified_pages_count} `件同步完成")
+                        modification_message_sent = True
 
-                print(f"deleted_pages_count: {deleted_pages_count}")
-                if deleted_pages_count is not None and deletion_message_sent is False:
-                    client.chat_postMessage(channel=channel_id, text=f"－ ` {deleted_pages_count} `舊頁")
-                    deletion_message_sent = True
-                    confirmation_message_sent = True
-                    no_change_notified = True
+                    if added_pages_count > 0 and not addition_message_sent:
+                        client.chat_postMessage(channel=channel_id, text=f"＋ ` {added_pages_count} `新頁")
+                        addition_message_sent = True
 
-                attempt += 1
-                
-                # 檢查是否所有消息都已發送
-                print(f"AFTER: attempt: {attempt}")
-                if attempt >= max_attempts:
-                    messages_sent = True
-                    break  # 所有消息已發送，退出循環
+                    if deleted_pages_count > 0 and not deletion_message_sent:
+                        client.chat_postMessage(channel=channel_id, text=f"－ ` {deleted_pages_count} `舊頁")
+                        deletion_message_sent = True
+
+                    attempt += 1  # 增加嘗試計數
+                elif result == 'No Change':
+                    client.chat_postMessage(channel=channel_id, text="🪺 無新頁")
+                    break
+                elif result == 'FAILURE':
+                    client.chat_postMessage(channel=channel_id, text="🚨 作業失敗")
+                    break
             
-            elif result == 'No Change':
-                client.chat_postMessage(channel=channel_id, text="🪺 無新頁")
-                confirmation_message_sent = True
-                no_change_notified = True
-                break
-            
-            elif result == 'FAILURE':
-                confirmation_message_sent = True
-                no_change_notified = True
-                break
+            # 在最大嘗試次數後發送消息
+            if attempt >= max_attempts:
+                messages_sent = True
+                break  # 所有消息已發送，退出循環
     
     finally:
         is_syncing = False
@@ -639,6 +632,7 @@ def parse_notion_message(blocks):
         'previous_start': '',
         'previous_end': '',
         'last_updated_time': '',
+        'current_calendar_id': '',
         'calendar': '',
         'on_gcal': ''
     }
@@ -651,9 +645,11 @@ def parse_notion_message(blocks):
                     if 'edited in' in text:
                         message_info['title'] = text
                     elif 'Calendar' in text:
-                        calendar_info = text.split('*Calendar*')[-1].split('*On GCal?*')
-                        message_info['calendar'] = calendar_info[0].strip()
-                        message_info['on_gcal'] = calendar_info[1].strip() if len(calendar_info) > 1 else ''
+                        calendar_info = text.split('→')
+                        if len(calendar_info) > 1:
+                            message_info['calendar'] = calendar_info[0].strip()
+                            message_info['current_calendar_id'] = calendar_info[1].strip().split()[0]
+                            message_info['on_gcal'] = 'Yes' if 'Yes' in text else 'No'
         elif block['type'] == 'section' and 'fields' in block:
             for field in block['fields']:
                 text = field['text']
@@ -687,6 +683,61 @@ BUFFER_TIME = 22
 previous_messages = []
 other_messages = []
 last_updated_tasks_count = 0
+last_message_text = None  # 用於追蹤最後一次發送的訊息內容
+
+
+def process_buffer():
+    global message_buffer, buffer_timer, updated_tasks, last_updated_tasks_count, last_message_text
+    
+    with buffer_lock:
+        if not message_buffer:
+            return
+
+        channel_id = message_buffer[0]['channel']
+        notion_messages = [msg for msg in message_buffer if is_message_from_notion(msg['user_id'])]
+
+        # 以 set 去重，避免重複
+        unique_messages = {msg['notion_info']['last_updated_time']: msg for msg in notion_messages}
+        notion_messages = list(unique_messages.values())
+
+        current_buffer = message_buffer.copy()
+        message_buffer.clear()
+        if not current_buffer:
+            return
+
+        animate_text_wave(f"Processing {len(current_buffer)} buffer", repeat=2)
+        print("\r\033[K", end="")
+
+        def check_conditions(notion_messages):
+            has_previous = any('previous' in str(message).lower() for message in notion_messages)
+            has_user_edited = any('geng and python-integration edited in' in str(message).lower() for message in notion_messages)
+            has_calendar = any('calendar' in str(message).lower() for message in notion_messages)
+            has_calendar_id = any('current calendar Id' in str(message).lower() for message in notion_messages)
+            return has_previous, has_user_edited, has_calendar, has_calendar_id
+
+        has_previous, has_user_edited, has_calendar, has_calendar_id = check_conditions(notion_messages)
+
+        # 只在所有檢查完畢後才追加至 `updated_tasks`
+        if has_previous or has_user_edited or has_calendar or has_calendar_id:
+            updated_tasks += notion_messages
+
+        total_detected = f"{len(set(msg['notion_info']['last_updated_time'] for msg in updated_tasks))}"
+        
+        # 如果 total_detected 為 0，則不發送任何訊息
+        if total_detected != "0":
+            message_text = f"確認 ` {total_detected} ` 件完畢 ✓\n\n"
+            # 確保只發送一次相同內容的訊息
+            if message_text != last_message_text:
+                try:
+                    response = client.chat_postMessage(channel=channel_id, text=message_text)
+                    last_message_text = message_text  # 更新最後一次發送的訊息內容
+                except Exception as e:
+                    print(f"發送消息時出錯: {e}")
+
+        # 清空以便下次使用
+        updated_tasks = []
+        message_buffer.clear()
+        buffer_timer = None
 
 @slack_event_adapter.on('message')
 def message(payload):
@@ -774,11 +825,31 @@ def message(payload):
                 'text': notion_info['last_updated_time']
             })
         
+        if notion_info['calendar']:
+            other_messages.append({
+                'type': 'calendar',
+                'text': notion_info['calendar']
+            })
+        
+        if notion_info['on_gcal']:
+            other_messages.append({
+                'type': 'on_gcal',
+                'text': notion_info['on_gcal']
+            })
+        
+        if notion_info['current_calendar_id']:
+            other_messages.append({
+                'type': 'current_calendar_id',
+                'text': notion_info['current_calendar_id']
+            })
+        
         if previous_messages:
             Done_checking = True
+            print("已檢查到歷史消息，準備更新任務。")  # 調試信息
         elif previous_messages is None:
             Done_checking = False
-            
+            print("未檢查到歷史消息。")  # 調試信息
+
     # 檢查消息是否來自Notion
     if is_message_from_notion(user_id):
         with buffer_lock:
@@ -810,11 +881,13 @@ def message(payload):
             elif Done_checking is True:
                 # # client.chat_postMessage(channel=channel_id, text="確認完畢 ✅✅")
                 updated_tasks.append((channel_id, text))  # 添加到列表中
-                # print("Updated tasks added:", len(updated_tasks))
+                print("Updated tasks added:", len(updated_tasks))
                 # print("Previous Start:", notion_info['previous_start'])
                 # print("Previous End:", notion_info['previous_end'])
                 # print("\n")
                 pass
+            else:
+                print("未進入添加更新任務的邏輯。")  # 調試信息
             no_change_notified = False
             return previous_messages, other_messages, notion_info, message_buffer, updated_tasks
     else:
@@ -910,46 +983,6 @@ def message(payload):
                         
             no_change_notified = True
     return message_buffer, is_syncing, updated_tasks
-
-
-
-def process_buffer():
-    global message_buffer, buffer_timer, modified_pages_count, updated_tasks, last_updated_tasks_count
-    
-    with buffer_lock:
-        if not message_buffer:
-            return
-    
-        channel_id = message_buffer[0]['channel']
-        notion_messages = [msg for msg in message_buffer if is_message_from_notion(msg['user_id'])]
-
-        # 累积更新任务
-        # print(f"累計更新 {len(updated_tasks)} 件\n")
-
-        current_buffer = message_buffer.copy()
-        message_buffer.clear()
-        if not current_buffer:
-            return
-
-        print("\r\033[K" + f"Processing {len(current_buffer)} message from buffer", end="")
-
-        # 檢查是否有包含 "Previous" 的消息
-        def check_previous(notion_messages):
-            has_previous = any('previous' in str(message).lower() for message in notion_messages)
-            return has_previous
-        has_previous = check_previous(notion_messages)
-
-        total_previous = f"{len(updated_tasks)}" if has_previous else ""
-        
-        # 检查累积任务数量是否发生变化
-        if has_previous:
-            if len(updated_tasks) > 0:  # Check the length of the list
-                client.chat_postMessage(channel=channel_id, text=f"確認 ` {total_previous} ` 件完畢 ✓\n\n")
-
-        # 清空緩衝區
-        message_buffer.clear()
-        updated_tasks = []
-        buffer_timer = None
 
 def check_and_confirm(channel_id):
     global received_previous_start, received_previous_end, buffer_timer
