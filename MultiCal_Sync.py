@@ -406,28 +406,6 @@ CLIENT_SECRET_FILE = os.getenv("GOOGLE_CALENDAR_CLI_SECRET_FILE")
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly', 'https://www.googleapis.com/auth/calendar.events']
 DEFAULT_CALENDAR_ID = 'primary'  # Replace with your Calendar ID
 
-# 從環境變數中讀取 Google Calendar 憑證路徑
-credentials_path = os.getenv("GOOGLE_CALENDAR_CREDENTIALS_LOCATION")
-
-if credentials_path:
-    with open(credentials_path, 'rb') as token:
-        creds = pickle.load(token)
-
-    # 初始化 Google Calendar 客戶端
-    from googleapiclient.discovery import build
-    gc = build('calendar', 'v3', credentials=creds)
-else:
-    print("憑證路徑不存在")
-
-def event_exists(service, calendar_id, event_id):
-    try:
-        service.events().get(calendarId=calendar_id, eventId=event_id).execute()
-        return True
-    except HttpError as e:
-        if e.resp.status == 404:
-            return False
-        else:
-            raise
 
 # Function to refresh token
 def refresh_token():
@@ -459,6 +437,33 @@ def refresh_token():
         thread = threading.Thread(target=dynamic_counter_indicator, args=(stop_event, "."))
         thread.start()
     return credentials
+
+# 從環境變數中讀取 Google Calendar 憑證路徑
+credentials_path = os.getenv("GOOGLE_CALENDAR_CREDENTIALS_LOCATION")
+
+if credentials_path:
+    try:
+        with open(credentials_path, 'rb') as token:
+            creds = pickle.load(token)
+    except FileNotFoundError:
+        print("Error: token.pickle file not found. Re-running authentication flow...")
+        credentials = refresh_token()
+
+    # 初始化 Google Calendar 客戶端
+    from googleapiclient.discovery import build
+    gc = build('calendar', 'v3', credentials=creds)
+else:
+    print("憑證路徑不存在")
+
+def event_exists(service, calendar_id, event_id):
+    try:
+        service.events().get(calendarId=calendar_id, eventId=event_id).execute()
+        return True
+    except HttpError as e:
+        if e.resp.status == 404:
+            return False
+        else:
+            raise
 
 # Function to obtain calendar
 def obtain_calendar(service):

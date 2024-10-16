@@ -595,7 +595,7 @@ def trigger_and_notify(channel_id):
 
                     attempt += 1  # 增加嘗試計數
                 elif result == 'No Change':
-                    client.chat_postMessage(channel=channel_id, text="🪺 無新頁")
+                    client.chat_postMessage(channel=channel_id, text="🪺 無動態")
                     break
                 elif result == 'FAILURE':
                     client.chat_postMessage(channel=channel_id, text="🚨 作業失敗")
@@ -697,7 +697,7 @@ def process_buffer():
         notion_messages = [msg for msg in message_buffer if is_message_from_notion(msg['user_id'])]
 
         # 以 set 去重，避免重複
-        unique_messages = {msg['notion_info']['last_updated_time']: msg for msg in notion_messages}
+        unique_messages = {msg['notion_info']['last_updated_time']: msg for msg in notion_messages if isinstance(msg, dict)}
         notion_messages = list(unique_messages.values())
 
         current_buffer = message_buffer.copy()
@@ -716,12 +716,15 @@ def process_buffer():
             return has_previous, has_user_edited, has_calendar, has_calendar_id
 
         has_previous, has_user_edited, has_calendar, has_calendar_id = check_conditions(notion_messages)
+        
+        print(f"has_previous: {has_previous}, has_user_edited: {has_user_edited}, has_calendar: {has_calendar}, has_calendar_id: {has_calendar_id}")
 
-        # 只在所有檢查完畢後才追加至 `updated_tasks`
+        # 只在所有檢查完畢後才追加符合條件且為字典類型的消息至 `updated_tasks`
         if has_previous or has_user_edited or has_calendar or has_calendar_id:
-            updated_tasks += notion_messages
+            updated_tasks += [msg for msg in notion_messages if isinstance(msg, dict) and 'notion_info' in msg]
 
-        total_detected = f"{len(set(msg['notion_info']['last_updated_time'] for msg in updated_tasks))}"
+        # 確保只有格式正確的消息才進行集合操作
+        total_detected = f"{len(set(msg['notion_info']['last_updated_time'] for msg in updated_tasks if 'notion_info' in msg))}"
         
         # 如果 total_detected 為 0，則不發送任何訊息
         if total_detected != "0":
