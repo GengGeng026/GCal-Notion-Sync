@@ -685,6 +685,13 @@ other_messages = []
 last_updated_tasks_count = 0
 last_message_text = None  # 用於追蹤最後一次發送的訊息內容
 
+has_previous = False
+together_edited = False
+geng_edited = False
+has_calendar = False
+has_calendar_id = False
+
+
 def check_conditions(notion_messages):
             has_previous = any('previous' in str(message).lower() for message in notion_messages)
             together_edited = any('geng and python-integration edited in' in str(message).lower() for message in notion_messages)
@@ -695,6 +702,7 @@ def check_conditions(notion_messages):
 
 def process_buffer():
     global message_buffer, buffer_timer, updated_tasks, last_updated_tasks_count, last_message_text
+    global has_previous, together_edited, geng_edited, has_calendar, has_calendar_id  # 加入這行
     
     with buffer_lock:
         if not message_buffer:
@@ -716,9 +724,20 @@ def process_buffer():
         print("\r\033[K", end="")
 
         has_previous, together_edited, geng_edited, has_calendar, has_calendar_id = check_conditions(notion_messages)
-        
-        print(f"has_previous: {has_previous}, together_edited: {together_edited}, geng_edited: {geng_edited}, has_calendar: {has_calendar}, has_calendar_id: {has_calendar_id}")
 
+        # if has_previous or geng_edited or has_calendar or has_calendar_id:
+        #     print("準備觸發 trigger_and_notify")
+        #     threading.Thread(target=trigger_and_notify, args=(channel_id,)).start()
+
+        # print(f"has_previous: {has_previous}, together_edited: {together_edited}, geng_edited: {geng_edited}, has_calendar: {has_calendar}, has_calendar_id: {has_calendar_id}")
+
+        # 更新全局變量
+        has_previous = has_previous
+        together_edited = together_edited
+        geng_edited = geng_edited
+        has_calendar = has_calendar
+        has_calendar_id = has_calendar_id
+        
         # 只在所有檢查完畢後才追加符合條件且為字典類型的消息至 `updated_tasks`
         if has_previous or together_edited or geng_edited or has_calendar or has_calendar_id:
             updated_tasks += [msg for msg in notion_messages if isinstance(msg, dict) and 'notion_info' in msg]
@@ -745,6 +764,7 @@ def process_buffer():
 @slack_event_adapter.on('message')
 def message(payload):
     global no_change_notified, buffer_timer, last_triggered_keyword, last_message_was_related, waiting_for_confirmation, confirmation_message_sent, last_trigger_time, is_syncing, updated_tasks, message_buffer
+    global has_previous, together_edited, geng_edited, has_calendar, has_calendar_id  # 引入全局變量
     
     # 重置相關變量
     last_triggered_keyword = None
@@ -855,34 +875,7 @@ def message(payload):
 
     # 檢查消息是否來自Notion
     if is_message_from_notion(user_id):
-        with buffer_lock:
-
-            notion_messages = [msg for msg in message_buffer if is_message_from_notion(msg['user_id'])]
-            has_previous, together_edited, geng_edited, has_calendar, has_calendar_id = check_conditions(notion_messages)
-
-            if has_previous or geng_edited or has_calendar or has_calendar_id:
-                current_time = time.time()
-                if current_time - last_trigger_time < COOLDOWN_PERIOD:
-                    client.chat_postMessage(channel=channel_id, text=f"Ops， ` {COOLDOWN_PERIOD} ` s 內只能觸發 1 次喲")
-                    return
-                
-                if not is_syncing:
-                    with trigger_lock:
-                        if not is_syncing:  # 雙重檢查
-                            is_syncing = True
-                            last_trigger_time = current_time
-                            # client.chat_postMessage(channel=channel_id, text="⚡️ 成功觸發")
-                            threading.Thread(target=trigger_and_notify, args=(channel_id,)).start()
-                else:
-                    pass
-                    # client.chat_postMessage(channel=channel_id, text="同步操作正在進行中，請稍後再試。")
-                
-                last_triggered_keyword = keyword or alt_keyword
-                last_message_was_related = True
-                no_change_notified = True
-                confirmation_message_sent = True
-                waiting_for_confirmation = False
-        
+        with buffer_lock:        
             notion_info = parse_notion_message(blocks)
             message_buffer.append({
                 'channel': channel_id,
@@ -894,7 +887,20 @@ def message(payload):
             if buffer_timer is None:
                 buffer_timer = threading.Timer(BUFFER_TIME, process_buffer)
                 buffer_timer.start()
-
+            
+            # 檢查全局變量
+            if geng_edited and (has_previous or has_calendar or has_calendar_id):
+                # print("準備觸發 trigger_and_notify")
+                threading.Thread(target=trigger_and_notify, args=(channel_id,)).start()
+            # else:
+            #     print("條件不符合，未觸發 trigger_and_notify")
+                
+                last_triggered_keyword = keyword or alt_keyword
+                last_message_was_related = True
+                no_change_notified = True
+                confirmation_message_sent = True
+                waiting_for_confirmation = False
+                
             if Done_checking is False:
                 response = requests.get(api_url, auth=(username, password))
                 if response.status_code == 200:
