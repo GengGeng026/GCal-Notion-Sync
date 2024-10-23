@@ -477,11 +477,6 @@ def check_pipeline_status(jenkins_url, username, password, job_name):
                 if len(parts) == 2:
                     modified_pages_count += int(parts[1].strip())  # 累加修改頁面數量
                     status = 'SUCCESS'
-            if 'Total Modified New N.Event' in line:
-                parts = line.split(':')
-                if len(parts) == 2:
-                    modified_pages_count += int(parts[1].strip())  # 累加修改頁面數量
-                    status = 'SUCCESS'
             if 'Total Updated G.Event' in line:
                 parts = line.split(':')
                 if len(parts) == 2:
@@ -710,9 +705,14 @@ def process_buffer():
 
         channel_id = message_buffer[0]['channel']
         notion_messages = [msg for msg in message_buffer if is_message_from_notion(msg['user_id'])]
+        print(f"Received {len(notion_messages)} messages from Notion")
 
         # 以 set 去重，避免重複
-        unique_messages = {msg['notion_info']['last_updated_time']: msg for msg in notion_messages if isinstance(msg, dict)}
+        unique_messages = {
+            (msg['notion_info']['title']): msg 
+            for msg in notion_messages if isinstance(msg, dict) and 'notion_info' in msg
+        }
+        print(f"Unique messages after filtering: {len(unique_messages)}")
         notion_messages = list(unique_messages.values())
 
         current_buffer = message_buffer.copy()
@@ -743,7 +743,7 @@ def process_buffer():
             updated_tasks += [msg for msg in notion_messages if isinstance(msg, dict) and 'notion_info' in msg]
 
         # 確保只有格式正確的消息才進行集合操作
-        total_detected = f"{len(set(msg['notion_info']['last_updated_time'] for msg in updated_tasks if 'notion_info' in msg))}"
+        total_detected = f"{len(set(msg['notion_info']['title'] for msg in updated_tasks if 'notion_info' in msg))}"
         
         # 如果 total_detected 為 0，則不發送任何訊息
         if total_detected != "0":
