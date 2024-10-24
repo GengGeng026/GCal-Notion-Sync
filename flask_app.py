@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 import pickle
 from dotenv import load_dotenv
-from threading import Lock
 import requests
 from slack_sdk import WebClient
 from flask import Flask, request, Response
@@ -551,92 +550,84 @@ geng_edited = False
 has_calendar = False
 has_calendar_id = False
 
-trigger_lock = Lock()
-
 def trigger_and_notify(channel_id):
     global no_change_notified, is_syncing, confirmation_message_sent, modification_message_sent, addition_message_sent, deletion_message_sent, messages_sent
     global modified_pages_count, added_pages_count, deleted_pages_count
     
-    # 使用 trigger_lock 保護多線程環境下的執行
-    with trigger_lock:
-        if not is_syncing:  # 確保不會重複觸發
-            is_syncing = True
-            try:
-                # 重置計數器
-                modified_pages_count = 0
-                added_pages_count = 0
-                deleted_pages_count = 0
+    # 重置計數器
+    modified_pages_count = 0
+    added_pages_count = 0
+    deleted_pages_count = 0
+    
+    try:
+        # 觸發 Jenkins 作業
+        response = requests.get(api_url, auth=(username, password))
+        if response.status_code == 200:
+            build_info = response.json()
+            build_number = build_info['lastBuild']['number'] + 1
+            current_build_number = f" ` {build_number} ` "
+        
+        triggered_jobs = trigger_jenkins_job()
+        message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs is not None else f"✦  TimeLinkr™ {current_build_number}\n檢查中 · · ·"
+        client.chat_postMessage(channel=channel_id, text=message)
+    
+        max_attempts = 1
+        attempt = 0
+        
+        # 等待 Jenkins 作業完成
+        while True:
+            modified_pages_count = None
+            added_pages_count = None
+            deleted_pages_count = None
+            time.sleep(10)
+            result = check_pipeline_status(jenkins_url, username, password, job_name)
 
-                # 觸發 Jenkins 作業
-                response = requests.get(api_url, auth=(username, password))
-                if response.status_code == 200:
-                    build_info = response.json()
-                    build_number = build_info['lastBuild']['number'] + 1
-                    current_build_number = f" ` {build_number} ` "
-                
-                triggered_jobs = trigger_jenkins_job()
-                message = f"{triggered_jobs}\n檢查中 · · ·" if triggered_jobs is not None else f"✦  TimeLinkr™ {current_build_number}\n檢查中 · · ·"
-                client.chat_postMessage(channel=channel_id, text=message)
+            # 用於跟蹤每次嘗試的結果
+            # print(f"BEFORE: attempt: {attempt}")
+            # print(f"result: {result}")
+            messages_sent = False  # 假設所有消息都將發送成功
+            
+            # 確保在達到最大嘗試次數之前累加所有計數
+            if attempt < max_attempts:
+                # print(f"modified_pages_count: {modified_pages_count}")
+                # print(f"added_pages_count: {added_pages_count}")
+                # print(f"deleted_pages_count: {deleted_pages_count}")
 
-                max_attempts = 3
-                attempt = 0
+                if result == 'SUCCESS':
+                    # 根據計數器的狀態發送消息
+                    if modified_pages_count > 0 and not modification_message_sent:
+                        client.chat_postMessage(channel=channel_id, text=f"〓 ` {modified_pages_count} `件同步完成")
+                        modification_message_sent = True
 
-                # 等待 Jenkins 作業完成
-                while True:
-                    modified_pages_count = None
-                    added_pages_count = None
-                    deleted_pages_count = None
-                    time.sleep(10)
-                    result = check_pipeline_status(jenkins_url, username, password, job_name)
+                    if added_pages_count > 0 and not addition_message_sent:
+                        client.chat_postMessage(channel=channel_id, text=f"＋ ` {added_pages_count} `新頁")
+                        addition_message_sent = True
 
-                    # 用於跟蹤每次嘗試的結果
-                    # print(f"BEFORE: attempt: {attempt}")
-                    # print(f"result: {result}")
-                    messages_sent = False  # 假設所有消息都將發送成功
-                    
-                    # 確保在達到最大嘗試次數之前累加所有計數
-                    if attempt < max_attempts:
-                        # print(f"modified_pages_count: {modified_pages_count}")
-                        # print(f"added_pages_count: {added_pages_count}")
-                        # print(f"deleted_pages_count: {deleted_pages_count}")
+                    if deleted_pages_count > 0 and not deletion_message_sent:
+                        client.chat_postMessage(channel=channel_id, text=f"－ ` {deleted_pages_count} `舊頁")
+                        deletion_message_sent = True
 
-                        if result == 'SUCCESS':
-                            # 根據計數器的狀態發送消息
-                            if modified_pages_count > 0 and not modification_message_sent:
-                                client.chat_postMessage(channel=channel_id, text=f"〓 ` {modified_pages_count} `件同步完成")
-                                modification_message_sent = True
+                    attempt += 1  # 增加嘗試計數
+                elif result == 'No Change' and last_message_text != "🪺 無動態":
+                    client.chat_postMessage(channel=channel_id, text="🪺 無動態")
+                    last_message_text = "🪺 無動態"
+                    break
+                elif result == 'FAILURE':
+                    client.chat_postMessage(channel=channel_id, text="🚨 作業失敗")
+                    break
+            
+            # 在最大嘗試次數後發送消息
+            if attempt >= max_attempts:
+                messages_sent = True
+                break  # 所有消息已發送，退出循環
 
-                            if added_pages_count > 0 and not addition_message_sent:
-                                client.chat_postMessage(channel=channel_id, text=f"＋ ` {added_pages_count} `新頁")
-                                addition_message_sent = True
-
-                            if deleted_pages_count > 0 and not deletion_message_sent:
-                                client.chat_postMessage(channel=channel_id, text=f"－ ` {deleted_pages_count} `舊頁")
-                                deletion_message_sent = True
-
-                            attempt += 1  # 增加嘗試計數
-                            
-                        elif result == 'No Change' and last_message_text != "🪺 無動態":
-                            client.chat_postMessage(channel=channel_id, text="🪺 無動態")
-                            last_message_text = "🪺 無動態"
-                            break
-                        
-                        elif result == 'FAILURE':
-                            client.chat_postMessage(channel=channel_id, text="🚨 作業失敗")
-                            break
-                    
-                    # 在最大嘗試次數後發送消息
-                    if attempt >= max_attempts:
-                        messages_sent = True
-                        break  # 所有消息已發送，退出循環
-
-                modification_message_sent = False
-                addition_message_sent = False
-                deletion_message_sent = False
-                
-            finally:
-                is_syncing = False
-                return no_change_notified, confirmation_message_sent, modification_message_sent, addition_message_sent, deletion_message_sent, messages_sent
+        modification_message_sent = False
+        addition_message_sent = False
+        deletion_message_sent = False
+        
+    finally:
+        is_syncing = False
+        return no_change_notified, confirmation_message_sent, modification_message_sent, addition_message_sent, deletion_message_sent, messages_sent
 
 
 def extract_text_from_blocks(blocks):
@@ -907,7 +898,7 @@ def message(payload):
             
             # 檢查全局變量
             if geng_edited and (has_previous or has_calendar or has_calendar_id):
-                print("準備觸發 trigger_and_notify")
+                # print("準備觸發 trigger_and_notify")
                 threading.Thread(target=trigger_and_notify, args=(channel_id,)).start()
             # else:
             #     print("條件不符合，未觸發 trigger_and_notify")
